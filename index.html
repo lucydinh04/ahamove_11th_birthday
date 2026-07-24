@@ -394,6 +394,30 @@
         width: min(155px, 48vw);
       }
     }
+
+    .intro-brand-logo {
+      position: absolute;
+      top: calc(7% + env(safe-area-inset-top));
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 4;
+      margin: 0;
+      width: min(220px, 55vw);
+      pointer-events: none;
+    }
+
+    .intro-brand-logo .brand-logo {
+      width: 100%;
+      max-height: 58px;
+      object-fit: contain;
+    }
+
+    @media (max-width: 640px) {
+      .intro-brand-logo {
+        top: calc(6% + env(safe-area-inset-top));
+        width: min(178px, 52vw);
+      }
+    }
   </style>
 </head>
 
@@ -410,7 +434,7 @@
     </div>
 
     <div class="brand-logo-wrap intro-brand-logo">
-          <img class="brand-logo" src="/public/ahamove-logo.svg" alt="Ahamove">
+          <img class="brand-logo" src="/ahamove-logo.svg" alt="Ahamove">
         </div>
         <div class="intro-copy">
       <p class="intro-eyebrow">AHAMOVE 11 YEARS</p>
