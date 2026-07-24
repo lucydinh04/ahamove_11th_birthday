@@ -4683,6 +4683,116 @@
       }
     }
 
+  
+    /* RSVP CLICK / HIT AREA FIX */
+    .combined-invite-card,
+    .combined-rsvp,
+    .button-group {
+      overflow: visible !important;
+    }
+
+    .combined-rsvp {
+      position: relative !important;
+      z-index: 80 !important;
+      isolation: isolate;
+    }
+
+    .rsvp-button {
+      position: relative !important;
+      z-index: 90 !important;
+      pointer-events: auto !important;
+      touch-action: manipulation !important;
+      user-select: none;
+      -webkit-user-select: none;
+      cursor: pointer !important;
+    }
+
+    .rsvp-button > * {
+      pointer-events: none !important;
+    }
+
+    .rsvp-button::before,
+    .rsvp-button::after {
+      pointer-events: none !important;
+    }
+
+    .combined-invite-card::before,
+    .combined-invite-card::after,
+    .message-panel::before,
+    .event-zone::before,
+    .rsvp-zone::before,
+    .ai-scene,
+    .intro-space {
+      pointer-events: none !important;
+    }
+
+    .overlay:not(.active) {
+      pointer-events: none !important;
+      visibility: hidden !important;
+    }
+
+    .overlay.active {
+      pointer-events: auto !important;
+    }
+
+    .rsvp-button[data-unavailable="true"] {
+      opacity: .88 !important;
+    }
+
+    .rsvp-button[data-unavailable="true"]:hover {
+      transform: none !important;
+    }
+
+  
+    /* PAGE SCROLL / CONTENT FREEZE FIX */
+    html {
+      min-height: 100%;
+      overflow-x: hidden;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100%;
+      overflow-x: hidden !important;
+      overflow-y: auto;
+    }
+
+    body.opening-invitation {
+      overflow: hidden !important;
+    }
+
+    .tech-intro.opened {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+
+    .invitation-content.visible,
+    .invitation-content {
+      position: relative;
+      min-height: 100vh;
+      overflow: visible !important;
+      pointer-events: auto !important;
+    }
+
+    .invite-shell,
+    .combined-card-shell,
+    .combined-invite-card {
+      pointer-events: auto;
+    }
+
+    @media (max-width: 700px) {
+      html,
+      body {
+        height: auto !important;
+        min-height: 100% !important;
+        overscroll-behavior-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+    }
+
   </style>
 </head>
 
@@ -5156,8 +5266,7 @@
         invitationContent.style.transform = 'none';
         invitationContent.style.filter = 'none';
 
-        document.body.classList.remove('opening-invitation');
-        document.body.style.overflow = '';
+        unlockInvitationScroll();
         window.scrollTo({ top: 0, behavior: 'auto' });
       }, 820);
     }
@@ -5315,8 +5424,10 @@ function setLoadingState() {
         nameElement.textContent = 'Ahamover';
         responseStatus.textContent = 'Đường dẫn thư mời không hợp lệ hoặc thiếu token.';
         responseStatus.style.color = '#ff9d9d';
-        confirmButton.disabled = true;
-        declineButton.disabled = true;
+        confirmButton.disabled = false;
+        declineButton.disabled = false;
+        confirmButton.dataset.unavailable = 'true';
+        declineButton.dataset.unavailable = 'true';
         return;
       }
 
@@ -5339,6 +5450,10 @@ function setLoadingState() {
         nameElement.textContent = result.invitation.name || 'Ahamover';
         currentStatus = result.invitation.status || '';
         currentEvent = result.invitation.event;
+        delete confirmButton.dataset.unavailable;
+        delete declineButton.dataset.unavailable;
+        confirmButton.disabled = false;
+        declineButton.disabled = false;
         formatEvent(currentEvent);
         showExistingStatus(currentStatus);
       } catch (error) {
@@ -5346,12 +5461,25 @@ function setLoadingState() {
         responseStatus.textContent =
           error.message || 'Không thể tải thông tin thư mời.';
         responseStatus.style.color = '#ff9d9d';
-        confirmButton.disabled = true;
-        declineButton.disabled = true;
+        confirmButton.disabled = false;
+        declineButton.disabled = false;
+        confirmButton.dataset.unavailable = 'true';
+        declineButton.dataset.unavailable = 'true';
       }
     }
 
     async function submitResponse(status, note = '') {
+      if (
+        confirmButton.dataset.unavailable === 'true' ||
+        declineButton.dataset.unavailable === 'true'
+      ) {
+        responseStatus.textContent =
+          'Không thể ghi nhận phản hồi vì đường dẫn thư mời chưa hợp lệ. Vui lòng mở đúng link cá nhân từ email.';
+        responseStatus.style.color = '#ffb0b0';
+        responseStatus.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+
       if (!invitationToken) {
         responseStatus.textContent = 'Không tìm thấy token thư mời.';
         responseStatus.style.color = '#ff9d9d';
@@ -5418,12 +5546,28 @@ function setLoadingState() {
       }
     }
 
-    confirmButton.addEventListener(
-      'click',
-      () => submitResponse('THAM DỰ')
-    );
+    confirmButton.addEventListener('click', event => {
+      event.preventDefault();
+      event.stopPropagation();
 
-    declineButton.addEventListener('click', () => {
+      if (confirmButton.disabled) return;
+      submitResponse('THAM DỰ');
+    });
+
+    declineButton.addEventListener('click', event => {
+      event.preventDefault();
+      event.stopPropagation();
+
+      if (declineButton.disabled) return;
+
+      if (declineButton.dataset.unavailable === 'true') {
+        responseStatus.textContent =
+          'Không thể ghi nhận phản hồi vì đường dẫn thư mời chưa hợp lệ. Vui lòng mở đúng link cá nhân từ email.';
+        responseStatus.style.color = '#ffb0b0';
+        responseStatus.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+
       reasonError.textContent = '';
       declineReasonOverlay.classList.add('active');
       window.setTimeout(() => declineReasonInput.focus(), 220);
@@ -5531,7 +5675,7 @@ loadInvitation();
           invitationPage.removeAttribute('aria-hidden');
         }
 
-        document.body.style.overflow = '';
+        document.body.style.overflow = 'auto';
         window.scrollTo({ top: 0, behavior: 'auto' });
       }, 720);
     }
