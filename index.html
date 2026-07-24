@@ -2898,6 +2898,436 @@
       }
     }
 
+  
+    /* BALANCED HERO + VIETNAMESE ACCENT FIX */
+    .hero-tech-layout {
+      grid-template-columns: 122px minmax(230px, 1fr) 122px !important;
+      gap: 14px !important;
+      margin-bottom: 10px !important;
+    }
+
+    .hero-number-stage {
+      width: min(100%, 270px) !important;
+      min-height: 245px !important;
+    }
+
+    .hero-number-visual {
+      min-height: 185px !important;
+      margin-bottom: -4px !important;
+    }
+
+    .hero-number-image {
+      width: min(100%, 245px) !important;
+      max-height: 205px !important;
+      object-fit: contain !important;
+      transform: scale(.96) !important;
+    }
+
+    .hero-years-text {
+      margin-top: 0 !important;
+      font-size: 14px !important;
+      letter-spacing: .48em !important;
+    }
+
+    .campaign-title-tech {
+      width: min(100%, 560px) !important;
+      margin-top: 8px !important;
+      padding: 18px 12px 10px !important;
+      overflow: visible !important;
+    }
+
+    .campaign-title-orange,
+    .campaign-title-blue {
+      display: block !important;
+      overflow: visible !important;
+      white-space: nowrap !important;
+      line-height: 1.16 !important;
+      padding-top: .18em !important;
+      padding-bottom: .08em !important;
+      font-family: 'Lexend', Arial, sans-serif !important;
+      font-weight: 700 !important;
+      letter-spacing: -.035em !important;
+    }
+
+    .campaign-title-orange {
+      margin-bottom: 2px !important;
+    }
+
+    .campaign-title-orange::before,
+    .campaign-title-orange::after,
+    .campaign-title-blue::before,
+    .campaign-title-blue::after {
+      content: none !important;
+      display: none !important;
+    }
+
+    @media (max-width: 620px) {
+      .hero {
+        min-height: 760px !important;
+      }
+
+      .hero-tech-layout {
+        grid-template-columns: 78px minmax(160px, 1fr) 78px !important;
+        gap: 6px !important;
+      }
+
+      .hero-number-stage {
+        width: 190px !important;
+        min-height: 185px !important;
+      }
+
+      .hero-number-visual {
+        min-height: 145px !important;
+      }
+
+      .hero-number-image {
+        width: 175px !important;
+        max-height: 150px !important;
+      }
+
+      .hero-years-text {
+        font-size: 10px !important;
+        letter-spacing: .40em !important;
+      }
+
+      .campaign-title-tech {
+        width: min(100%, 380px) !important;
+        padding-top: 20px !important;
+      }
+
+      .campaign-title-orange,
+      .campaign-title-blue {
+        white-space: normal !important;
+        font-size: clamp(34px, 9.6vw, 42px) !important;
+        line-height: 1.14 !important;
+      }
+    }
+
+    @media (max-width: 390px) {
+      .hero-tech-layout {
+        grid-template-columns: 70px minmax(150px, 1fr) 70px !important;
+      }
+
+      .hero-number-stage {
+        width: 175px !important;
+      }
+
+      .hero-number-image {
+        width: 160px !important;
+      }
+
+      .campaign-title-orange,
+      .campaign-title-blue {
+        font-size: 33px !important;
+      }
+    }
+
+  
+    /* COHESIVE INVITATION LAYOUT */
+    .invite-shell {
+      background-position: center top !important;
+      background-size: auto 1180px !important;
+      background-repeat: no-repeat !important;
+      background-color: #020813 !important;
+    }
+
+    .hero {
+      min-height: 770px !important;
+      padding-bottom: 88px !important;
+    }
+
+    .cohesive-content {
+      position: relative;
+      z-index: 20;
+      margin-top: -42px;
+      padding: 34px 20px calc(48px + env(safe-area-inset-bottom)) !important;
+      border: 1px solid rgba(68,170,255,.22);
+      border-bottom: 0;
+      border-radius: 30px 30px 0 0 !important;
+      background:
+        linear-gradient(180deg, rgba(5,19,44,.96), rgba(3,10,25,.995)) !important;
+      box-shadow:
+        0 -24px 80px rgba(0,0,0,.42),
+        inset 0 1px 0 rgba(255,255,255,.05);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+    }
+
+    .cohesive-content::before {
+      width: 92px !important;
+      height: 3px !important;
+      background: linear-gradient(90deg, #24a8ff, #f26522) !important;
+      box-shadow: 0 0 18px rgba(38,159,255,.38);
+    }
+
+    .content-kicker {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 18px;
+      color: #82d2ff;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+    }
+
+    .kicker-line {
+      width: 42px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(77,190,255,.72));
+    }
+
+    .kicker-line:last-child {
+      background: linear-gradient(90deg, rgba(242,101,34,.72), transparent);
+    }
+
+    .message-panel,
+    .event-zone,
+    .rsvp-zone {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(69,161,235,.24);
+      background:
+        linear-gradient(145deg, rgba(9,35,68,.82), rgba(4,16,36,.92));
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.04),
+        inset 0 0 32px rgba(38,159,255,.035),
+        0 18px 42px rgba(0,0,0,.18);
+    }
+
+    .message-panel {
+      padding: 22px;
+      border-radius: 22px;
+    }
+
+    .message-panel::before,
+    .event-zone::before,
+    .rsvp-zone::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 2px;
+      background: linear-gradient(90deg, #269fff, transparent 42%, #f26522);
+      opacity: .7;
+    }
+
+    .greeting {
+      font-size: 18px !important;
+      line-height: 1.45;
+    }
+
+    .paragraph {
+      font-size: 14px !important;
+      line-height: 1.72 !important;
+    }
+
+    .closing-copy {
+      margin-top: 18px !important;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,.07);
+    }
+
+    .value-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px !important;
+      margin-top: 18px !important;
+    }
+
+    .value-item {
+      min-height: 72px;
+      align-items: center !important;
+      padding: 13px 14px !important;
+      border-color: rgba(54,170,255,.20) !important;
+      background:
+        linear-gradient(145deg, rgba(10,51,96,.60), rgba(27,28,49,.76)) !important;
+      color: #e9f5ff !important;
+    }
+
+    .value-icon {
+      display: inline-flex;
+      width: 28px;
+      height: 28px;
+      flex: 0 0 28px !important;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255,128,54,.54);
+      border-radius: 8px;
+      color: #ff9d58;
+      font-size: 9px;
+      font-weight: 700;
+      box-shadow: 0 0 12px rgba(242,101,34,.10);
+    }
+
+    .event-zone {
+      margin-top: 16px;
+      padding: 22px;
+      border-radius: 22px;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: flex-start;
+      gap: 13px;
+      margin-bottom: 16px;
+    }
+
+    .section-heading-index {
+      display: inline-flex;
+      min-width: 64px;
+      height: 28px;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(70,185,255,.34);
+      border-radius: 8px;
+      background: rgba(38,159,255,.08);
+      color: #77ceff;
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: .12em;
+    }
+
+    .event-label {
+      margin: 0 0 5px !important;
+    }
+
+    .event-zone h2 {
+      margin: 0 !important;
+      font-size: 22px !important;
+      line-height: 1.3;
+    }
+
+    .event-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 152px;
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .event-location {
+      min-height: 126px;
+      padding: 16px;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 16px;
+      background: rgba(255,255,255,.035);
+    }
+
+    .date-box {
+      margin: 0 !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-color: rgba(38,159,255,.20) !important;
+      background:
+        radial-gradient(circle at top right, rgba(38,159,255,.14), transparent 42%),
+        rgba(255,255,255,.04) !important;
+    }
+
+    .event-meta-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 152px;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .meta-card {
+      padding: 17px;
+      border: 1px solid rgba(255,255,255,.09);
+      border-radius: 16px;
+      background: rgba(255,255,255,.035);
+    }
+
+    .deadline-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background:
+        radial-gradient(circle at top right, rgba(242,101,34,.16), transparent 48%),
+        rgba(255,255,255,.035);
+    }
+
+    .deadline-time {
+      margin: 7px 0 0;
+      color: #ff9853;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -.04em;
+    }
+
+    .deadline-date {
+      margin: 3px 0 0;
+      color: #dcecff;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .08em;
+    }
+
+    .rsvp-zone {
+      margin-top: 16px;
+      padding: 20px;
+      border-radius: 22px;
+      text-align: center;
+    }
+
+    .rsvp-zone-label {
+      margin: 0 0 14px;
+      color: #82d2ff;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .22em;
+    }
+
+    .button-group {
+      margin-top: 0 !important;
+    }
+
+    .footer-note {
+      margin-top: 22px !important;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255,255,255,.06);
+    }
+
+    @media (max-width: 560px) {
+      .hero {
+        min-height: 715px !important;
+      }
+
+      .cohesive-content {
+        margin-top: -30px;
+        padding: 28px 14px calc(40px + env(safe-area-inset-bottom)) !important;
+      }
+
+      .message-panel,
+      .event-zone,
+      .rsvp-zone {
+        padding: 17px;
+        border-radius: 18px;
+      }
+
+      .value-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .value-item {
+        min-height: 60px;
+      }
+
+      .event-grid,
+      .event-meta-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .date-box,
+      .deadline-card {
+        min-height: 118px;
+      }
+
+      .button-group {
+        grid-template-columns: 1fr !important;
+      }
+    }
+
   </style>
 </head>
 
@@ -3046,64 +3476,99 @@
         </h1>
       </header>
 
-      <main class="content">
-        <p class="greeting">Thân gửi <span class="employee-name">Ahamover</span>,</p>
-
-        <p class="paragraph">Từ những chuyến giao hàng đầu tiên đến hành trình không ngừng mở rộng về dịch vụ, công nghệ và con người, mỗi dấu mốc của Ahamove đều được tạo nên từ tinh thần sẵn sàng thay đổi để tiến về phía trước.</p>
-
-        <p class="paragraph">Bước sang tuổi 11, <strong style="color:#fff">“Chuyển mình”</strong> không chỉ là nhìn lại chặng đường chúng ta đã đi qua, mà còn là lời khẳng định cho một hành trình mới:</p>
-
-        <div class="value-list">
-          <div class="value-item"><span>🧡</span><span>Chuyển mình trong tư duy</span></div>
-          <div class="value-item"><span>🧡</span><span>Chuyển mình trong cách làm việc</span></div>
-          <div class="value-item"><span>🧡</span><span>Chuyển mình cùng công nghệ và AI</span></div>
-          <div class="value-item"><span>🧡</span><span>Chuyển mình để tạo nên những bước tiến bứt phá</span></div>
+      
+      <main class="content cohesive-content">
+        <div class="content-kicker">
+          <span class="kicker-line"></span>
+          <span>THƯ MỜI CÁ NHÂN</span>
+          <span class="kicker-line"></span>
         </div>
 
-        <p class="paragraph">Sinh nhật Ahamove 11 tuổi sẽ là dịp để chúng ta cùng nhìn lại hành trình đã qua, ghi nhận những con người đã góp phần tạo nên từng dấu ấn và cùng sẵn sàng bước vào chặng đường tiếp theo.</p>
+        <section class="message-panel">
+          <p class="greeting">Thân gửi <span class="employee-name">Ahamover</span>,</p>
 
-        <section class="event-card">
-          <div>
-            <p id="eventLabel" class="event-label">Ahamove Celebration Night</p>
-            <h2 id="venueName">Đang tải địa điểm...</h2>
-            <p id="venueDetail" class="event-place"></p>
-            <p id="venueAddress" class="event-address"></p>
-            <a id="mapLink" class="map-link" href="#" target="_blank" rel="noopener" hidden>📍 Xem bản đồ</a>
+          <p class="paragraph">Từ những chuyến giao hàng đầu tiên đến hành trình không ngừng mở rộng về dịch vụ, công nghệ và con người, mỗi dấu mốc của Ahamove đều được tạo nên từ tinh thần sẵn sàng thay đổi để tiến về phía trước.</p>
+
+          <p class="paragraph">Bước sang tuổi 11, <strong style="color:#fff">“Chuyển mình”</strong> không chỉ là nhìn lại chặng đường đã qua, mà còn là lời khẳng định cho một hành trình mới:</p>
+
+          <div class="value-list value-grid">
+            <div class="value-item"><span class="value-icon">01</span><span>Chuyển mình trong tư duy</span></div>
+            <div class="value-item"><span class="value-icon">02</span><span>Chuyển mình trong cách làm việc</span></div>
+            <div class="value-item"><span class="value-icon">03</span><span>Chuyển mình cùng công nghệ và AI</span></div>
+            <div class="value-item"><span class="value-icon">04</span><span>Chuyển mình để tạo nên những bước tiến bứt phá</span></div>
           </div>
 
-          <div class="date-box">
-            <div class="date-row">
-              <p id="dateNumber" class="date-number">--</p>
-              <div>
-                <p id="dateMeta" class="date-meta">Đang tải...</p>
-                <p id="dateTime" class="date-time">--:--</p>
+          <p class="paragraph closing-copy">Sinh nhật Ahamove 11 tuổi là dịp để chúng ta cùng nhìn lại hành trình đã qua, ghi nhận những con người đã tạo nên từng dấu ấn và sẵn sàng bước vào chặng đường tiếp theo.</p>
+        </section>
+
+        <section class="event-zone">
+          <div class="section-heading">
+            <span class="section-heading-index">EVENT_01</span>
+            <div>
+              <p id="eventLabel" class="event-label">Ahamove Celebration Night</p>
+              <h2 id="venueName">Đang tải địa điểm...</h2>
+            </div>
+          </div>
+
+          <div class="event-grid">
+            <div class="event-location">
+              <p id="venueDetail" class="event-place"></p>
+              <p id="venueAddress" class="event-address"></p>
+              <a id="mapLink" class="map-link" href="#" target="_blank" rel="noopener" hidden>📍 Xem bản đồ</a>
+            </div>
+
+            <div class="date-box">
+              <div class="date-row">
+                <p id="dateNumber" class="date-number">--</p>
+                <div>
+                  <p id="dateMeta" class="date-meta">Đang tải...</p>
+                  <p id="dateTime" class="date-time">--:--</p>
+                </div>
               </div>
+            </div>
+          </div>
+
+          <div class="event-meta-grid">
+            <div class="meta-card">
+              <p class="dresscode-label">Dresscode</p>
+              <p class="dresscode-title">Trắng • Bạc • Xanh dương</p>
+              <p class="dresscode-note">Tỏa sáng theo phiên bản chuyển mình của bạn</p>
+              <div class="swatches" aria-hidden="true">
+                <span class="swatch white"></span>
+                <span class="swatch silver"></span>
+                <span class="swatch blue"></span>
+              </div>
+            </div>
+
+            <div class="meta-card deadline-card">
+              <p class="dresscode-label">Hạn chót đăng ký</p>
+              <p class="deadline-time">12:00</p>
+              <p class="deadline-date">29/07/2026</p>
             </div>
           </div>
         </section>
 
-        <section class="dresscode">
-          <p class="dresscode-label">Dresscode</p>
-          <p class="dresscode-title">Trắng • Bạc • Xanh dương</p>
-          <p class="dresscode-note">Tỏa sáng theo phiên bản chuyển mình của bạn</p>
-          <div class="swatches" aria-hidden="true">
-            <span class="swatch white"></span>
-            <span class="swatch silver"></span>
-            <span class="swatch blue"></span>
+        <section class="rsvp-zone">
+          <p class="rsvp-zone-label">RSVP RESPONSE</p>
+
+          <div class="button-group">
+            <button id="confirmButton" class="rsvp-button confirm-button" type="button">
+              <span class="button-tech-icon">✓</span>
+              <span>XÁC NHẬN THAM DỰ</span>
+            </button>
+
+            <button id="declineButton" class="rsvp-button decline-button" type="button">
+              <span class="button-tech-icon">×</span>
+              <span>KHÔNG THAM GIA</span>
+            </button>
           </div>
+
+          <p id="responseStatus" class="response-status" aria-live="polite">Vui lòng chọn tình trạng tham dự của bạn.</p>
         </section>
-
-        <div class="deadline">Xác nhận trước <strong>12:00 • 29/07/2026</strong></div>
-
-        <div class="button-group">
-          <button id="confirmButton" class="rsvp-button confirm-button" type="button"><span class="button-tech-icon">✓</span><span>XÁC NHẬN THAM DỰ</span></button>
-          <button id="declineButton" class="rsvp-button decline-button" type="button"><span class="button-tech-icon">×</span><span>KHÔNG THAM GIA</span></button>
-        </div>
-
-        <p id="responseStatus" class="response-status" aria-live="polite">Vui lòng chọn tình trạng tham dự của bạn.</p>
 
         <p class="footer-note">Hẹn gặp bạn tại hành trình tiếp theo của Ahamove.<br><strong>Always Moving Together.</strong></p>
       </main>
+
     </div>
   </div>
 
