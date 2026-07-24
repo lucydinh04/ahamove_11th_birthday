@@ -11,6 +11,25 @@ function splitVenue(value) {
   };
 }
 
+
+function normalizeEventDate(value) {
+  if (!value) return '';
+
+  const text = String(value).trim();
+
+  let match = text.match(/^(\d{4})[-\/](\d{1,2})[-\/](\d{1,2})/);
+  if (match) {
+    return `${String(match[3]).padStart(2, '0')}/${String(match[2]).padStart(2, '0')}/${match[1]}`;
+  }
+
+  match = text.match(/^(\d{1,2})[-\/](\d{1,2})[-\/](\d{4})$/);
+  if (match) {
+    return `${String(match[1]).padStart(2, '0')}/${String(match[2]).padStart(2, '0')}/${match[3]}`;
+  }
+
+  return text;
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({
@@ -80,7 +99,7 @@ export default async function handler(req, res) {
         responseTime: source.responseTime || '',
         event: {
           site: event.code || source.eventCode || source.location || 'SGN',
-          eventDate: event.date || '',
+          eventDate: normalizeEventDate(event.date || ''),
           eventTime: event.time || '',
           venueName: venue.venueName,
           venueDetail: venue.venueDetail,
