@@ -1,8 +1,19 @@
 const express = require('express');
+const path = require('path');
 const { JWT } = require('google-auth-library');
 
 const app = express();
 app.use(express.json({ limit: '100kb' }));
+
+const ROOT_DIR = process.cwd();
+const INDEX_FILE = path.join(ROOT_DIR, 'index.html');
+
+// Serve root-level assets such as background.png and ahamove-logo.svg.
+app.use(express.static(ROOT_DIR, {
+  index: false,
+  etag: true,
+  maxAge: '1h'
+}));
 
 const HTML = `<!DOCTYPE html>
 <html lang="vi">
@@ -939,9 +950,16 @@ function noStore(res) {
   res.set('Referrer-Policy', 'no-referrer');
 }
 
-app.get(['/','/i/:token'], (req, res) => {
+app.get(['/', '/i/:token'], (req, res) => {
   noStore(res);
-  res.type('html').send(HTML);
+  res.sendFile(INDEX_FILE, error => {
+    if (error) {
+      console.error('Không thể mở index.html:', error);
+      if (!res.headersSent) {
+        res.status(500).send('Không thể tải giao diện thư mời.');
+      }
+    }
+  });
 });
 
 app.get('/api/invitation', async (req, res) => {
