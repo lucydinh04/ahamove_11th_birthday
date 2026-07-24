@@ -4967,7 +4967,7 @@
           </div>
 
           <div class="combined-greeting">
-            Thân gửi <span class="employee-name">Ahamover</span>, 
+            Thân gửi, <span class="employee-name">Ahamover</span>
           </div>
 
           <p class="combined-intro">
@@ -4977,6 +4977,7 @@
 
           <div class="combined-theme-pill">
             <span class="theme-orange">CHUYỂN MÌNH</span>
+            <span class="theme-separator">–</span>
             <span class="theme-blue">BỨT PHÁ</span>
           </div>
 
@@ -5061,8 +5062,6 @@
                   <p id="dateTime" class="combined-detail-value">--:--</p>
                   <p class="combined-detail-sub">
                     <span id="dateMeta">Đang tải...</span>
-                    <span> · </span>
-                    <span id="dateNumber">--</span>
                   </p>
                 </div>
               </div>
@@ -5389,11 +5388,8 @@ function setLoadingState() {
         mapLink.hidden = true;
       }
 
-      const dateParts = String(event.eventDate || '').split('/');
-      const [day = '--', month = '--', year = '----'] = dateParts;
-      document.getElementById('dateNumber').textContent = day;
       document.getElementById('dateMeta').textContent =
-        `Tháng ${month} • ${year}`;
+        event.eventDate || '--/--/----';
       document.getElementById('dateTime').textContent =
         event.eventTime || '--:--';
 
