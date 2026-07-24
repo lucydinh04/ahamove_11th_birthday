@@ -5,7 +5,7 @@ const { JWT } = require('google-auth-library');
 const app = express();
 app.use(express.json({ limit: '100kb' }));
 
-const ROOT_DIR = process.cwd();
+const ROOT_DIR = __dirname;
 const INDEX_FILE = path.join(ROOT_DIR, 'index.html');
 
 // Serve root-level assets such as background.png and ahamove-logo.svg.
@@ -1064,9 +1064,5 @@ app.post('/api/rsvp', async (req, res) => {
   }
 });
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`Ahamove invitation server running on port ${port}`);
-});
 
 module.exports = app;
