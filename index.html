@@ -3328,6 +3328,325 @@
       }
     }
 
+  
+    /* COMBINED INVITATION FORMAT */
+    .combined-card-shell {
+      position: relative;
+      z-index: 20;
+      margin-top: -48px;
+      padding: 30px 18px calc(48px + env(safe-area-inset-bottom)) !important;
+      border-radius: 28px 28px 0 0 !important;
+      background:
+        linear-gradient(180deg, rgba(3,12,29,.88), rgba(2,7,18,.98)) !important;
+      box-shadow: 0 -26px 80px rgba(0,0,0,.45);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    .combined-invite-card {
+      position: relative;
+      width: 100%;
+      padding: 30px 24px 26px;
+      border: 1px solid rgba(88,177,255,.48);
+      background:
+        linear-gradient(180deg, rgba(8,25,52,.92), rgba(4,14,32,.97));
+      clip-path:
+        polygon(
+          22px 0,
+          calc(100% - 22px) 0,
+          100% 22px,
+          100% calc(100% - 22px),
+          calc(100% - 22px) 100%,
+          22px 100%,
+          0 calc(100% - 22px),
+          0 22px
+        );
+      box-shadow:
+        0 0 54px rgba(35,128,255,.18),
+        inset 0 0 40px rgba(45,120,220,.07);
+      overflow: hidden;
+    }
+
+    .combined-invite-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(37,142,255,.12), transparent 34%),
+        linear-gradient(90deg, transparent, rgba(38,159,255,.025), transparent);
+    }
+
+    .corner {
+      position: absolute;
+      z-index: 3;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #55c6ff;
+      opacity: .95;
+      filter: drop-shadow(0 0 8px rgba(38,159,255,.38));
+    }
+
+    .corner-tl {
+      top: 10px;
+      left: 10px;
+      border-right: 0;
+      border-bottom: 0;
+    }
+
+    .corner-tr {
+      top: 10px;
+      right: 10px;
+      border-left: 0;
+      border-bottom: 0;
+    }
+
+    .corner-bl {
+      bottom: 10px;
+      left: 10px;
+      border-right: 0;
+      border-top: 0;
+    }
+
+    .corner-br {
+      right: 10px;
+      bottom: 10px;
+      border-left: 0;
+      border-top: 0;
+    }
+
+    .combined-card-head {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      color: #ff9a4f;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .34em;
+    }
+
+    .combined-head-line {
+      width: 36px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #f26522);
+    }
+
+    .combined-head-line-right {
+      background: linear-gradient(90deg, #f26522, transparent);
+    }
+
+    .combined-greeting {
+      position: relative;
+      z-index: 2;
+      margin-top: 25px;
+      color: #eff6ff;
+      font-size: clamp(24px, 5.4vw, 34px);
+      font-weight: 700;
+      line-height: 1.35;
+      text-align: center;
+    }
+
+    .combined-greeting .employee-name {
+      color: #ff9346;
+    }
+
+    .combined-intro {
+      position: relative;
+      z-index: 2;
+      margin-top: 14px;
+      color: #c7d8ec;
+      font-size: 15px;
+      line-height: 1.65;
+      text-align: center;
+    }
+
+    .combined-theme-pill {
+      position: relative;
+      z-index: 2;
+      width: min(100%, 440px);
+      margin: 22px auto 0;
+      padding: 14px 20px;
+      border: 1px solid rgba(77,182,255,.46);
+      border-radius: 14px;
+      background: rgba(5,18,40,.78);
+      box-shadow:
+        0 0 22px rgba(38,159,255,.16),
+        inset 0 0 18px rgba(38,159,255,.04);
+      font-size: clamp(18px, 4vw, 24px);
+      font-weight: 700;
+      letter-spacing: .02em;
+      text-align: center;
+    }
+
+    .theme-orange {
+      color: #ff8e3d;
+    }
+
+    .theme-blue {
+      color: #55bfff;
+    }
+
+    .theme-separator {
+      color: #d9e8f5;
+      padding: 0 8px;
+    }
+
+    .combined-details {
+      position: relative;
+      z-index: 2;
+      margin-top: 28px;
+      overflow: hidden;
+      border: 1px solid rgba(74,157,228,.24);
+      border-radius: 20px;
+      background: rgba(3,13,31,.62);
+    }
+
+    .combined-detail-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .combined-detail-item {
+      display: flex;
+      gap: 14px;
+      min-width: 0;
+      padding: 20px 20px;
+      text-align: left;
+    }
+
+    .combined-detail-row-top .combined-detail-item + .combined-detail-item {
+      border-left: 1px solid rgba(74,157,228,.24);
+    }
+
+    .combined-detail-full {
+      border-top: 1px solid rgba(74,157,228,.24);
+    }
+
+    .combined-detail-icon {
+      width: 28px;
+      height: 28px;
+      flex: 0 0 28px;
+      color: #59c7ff;
+    }
+
+    .combined-detail-icon svg {
+      width: 100%;
+      height: 100%;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.7;
+    }
+
+    .combined-detail-label {
+      margin: 0;
+      color: #9db2cd;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+    }
+
+    .combined-detail-value {
+      margin: 6px 0 0;
+      color: #f0f6ff;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    .combined-detail-sub {
+      margin: 4px 0 0;
+      color: #91a8c2;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .combined-map-link {
+      display: inline-flex;
+      margin-top: 8px;
+      color: #55bfff;
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .combined-rsvp {
+      grid-template-columns: 1fr 1fr !important;
+      gap: 16px !important;
+      margin-top: 28px !important;
+    }
+
+    .combined-response-status {
+      position: relative;
+      z-index: 2;
+      min-height: 22px;
+      margin: 22px 0 0;
+      color: #95abc4;
+      font-size: 13px;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    .combined-skip {
+      position: relative;
+      z-index: 2;
+      display: inline-flex;
+      margin-top: 12px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: #55bfff;
+      font-family: inherit;
+      font-size: 14px;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      cursor: pointer;
+    }
+
+    .combined-chevron {
+      display: flex;
+      justify-content: center;
+      margin-top: 24px;
+      color: #8ca4bf;
+      animation: bob 1.8s ease-in-out infinite;
+    }
+
+    .combined-chevron svg {
+      width: 28px;
+      height: 28px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+    }
+
+    @media (max-width: 560px) {
+      .combined-card-shell {
+        margin-top: -30px;
+        padding: 26px 12px calc(40px + env(safe-area-inset-bottom)) !important;
+      }
+
+      .combined-invite-card {
+        padding: 26px 16px 22px;
+      }
+
+      .combined-detail-row {
+        grid-template-columns: 1fr;
+      }
+
+      .combined-detail-row-top .combined-detail-item + .combined-detail-item {
+        border-left: 0;
+        border-top: 1px solid rgba(74,157,228,.24);
+      }
+
+      .combined-rsvp {
+        grid-template-columns: 1fr !important;
+      }
+    }
+
   </style>
 </head>
 
@@ -3477,84 +3796,112 @@
       </header>
 
       
-      <main class="content cohesive-content">
-        <div class="content-kicker">
-          <span class="kicker-line"></span>
-          <span>THƯ MỜI CÁ NHÂN</span>
-          <span class="kicker-line"></span>
-        </div>
+      
+      <main class="content combined-card-shell">
+        <p id="eventLabel" hidden>Ahamove Celebration Night</p>
+        <section class="combined-invite-card">
+          <span class="corner corner-tl"></span>
+          <span class="corner corner-tr"></span>
+          <span class="corner corner-bl"></span>
+          <span class="corner corner-br"></span>
 
-        <section class="message-panel">
-          <p class="greeting">Thân gửi <span class="employee-name">Ahamover</span>,</p>
-
-          <p class="paragraph">Từ những chuyến giao hàng đầu tiên đến hành trình không ngừng mở rộng về dịch vụ, công nghệ và con người, mỗi dấu mốc của Ahamove đều được tạo nên từ tinh thần sẵn sàng thay đổi để tiến về phía trước.</p>
-
-          <p class="paragraph">Bước sang tuổi 11, <strong style="color:#fff">“Chuyển mình”</strong> không chỉ là nhìn lại chặng đường đã qua, mà còn là lời khẳng định cho một hành trình mới:</p>
-
-          <div class="value-list value-grid">
-            <div class="value-item"><span class="value-icon">01</span><span>Chuyển mình trong tư duy</span></div>
-            <div class="value-item"><span class="value-icon">02</span><span>Chuyển mình trong cách làm việc</span></div>
-            <div class="value-item"><span class="value-icon">03</span><span>Chuyển mình cùng công nghệ và AI</span></div>
-            <div class="value-item"><span class="value-icon">04</span><span>Chuyển mình để tạo nên những bước tiến bứt phá</span></div>
+          <div class="combined-card-head">
+            <span class="combined-head-line"></span>
+            <span>THƯ MỜI</span>
+            <span class="combined-head-line combined-head-line-right"></span>
           </div>
 
-          <p class="paragraph closing-copy">Sinh nhật Ahamove 11 tuổi là dịp để chúng ta cùng nhìn lại hành trình đã qua, ghi nhận những con người đã tạo nên từng dấu ấn và sẵn sàng bước vào chặng đường tiếp theo.</p>
-        </section>
-
-        <section class="event-zone">
-          <div class="section-heading">
-            <span class="section-heading-index">EVENT_01</span>
-            <div>
-              <p id="eventLabel" class="event-label">Ahamove Celebration Night</p>
-              <h2 id="venueName">Đang tải địa điểm...</h2>
-            </div>
+          <div class="combined-greeting">
+            Thân gửi, <span class="employee-name">Ahamover</span>
           </div>
 
-          <div class="event-grid">
-            <div class="event-location">
-              <p id="venueDetail" class="event-place"></p>
-              <p id="venueAddress" class="event-address"></p>
-              <a id="mapLink" class="map-link" href="#" target="_blank" rel="noopener" hidden>📍 Xem bản đồ</a>
-            </div>
+          <p class="combined-intro">
+            Ahamove trân trọng kính mời bạn tham dự<br>
+            Sinh nhật 11 tuổi với chủ đề
+          </p>
 
-            <div class="date-box">
-              <div class="date-row">
-                <p id="dateNumber" class="date-number">--</p>
+          <div class="combined-theme-pill">
+            <span class="theme-orange">CHUYỂN MÌNH</span>
+            <span class="theme-separator">–</span>
+            <span class="theme-blue">BỨT PHÁ</span>
+          </div>
+
+          <section class="combined-details">
+            <div class="combined-detail-row combined-detail-row-top">
+              <div class="combined-detail-item">
+                <div class="combined-detail-icon">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="12" cy="12" r="9"></circle>
+                    <path d="M12 7v5l3 2"></path>
+                  </svg>
+                </div>
                 <div>
-                  <p id="dateMeta" class="date-meta">Đang tải...</p>
-                  <p id="dateTime" class="date-time">--:--</p>
+                  <p class="combined-detail-label">Thời gian</p>
+                  <p id="dateTime" class="combined-detail-value">--:--</p>
+                  <p class="combined-detail-sub">
+                    <span id="dateMeta">Đang tải...</span>
+                    <span> · </span>
+                    <span id="dateNumber">--</span>
+                  </p>
+                </div>
+              </div>
+
+              <div class="combined-detail-item">
+                <div class="combined-detail-icon">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 22s7-6.2 7-12a7 7 0 10-14 0c0 5.8 7 12 7 12z"></path>
+                    <circle cx="12" cy="10" r="2.5"></circle>
+                  </svg>
+                </div>
+                <div>
+                  <p class="combined-detail-label">Địa điểm</p>
+                  <p id="venueName" class="combined-detail-value">Đang tải địa điểm...</p>
+                  <p id="venueDetail" class="combined-detail-sub"></p>
+                  <p id="venueAddress" class="combined-detail-sub"></p>
+                  <a id="mapLink" class="combined-map-link" href="#" target="_blank" rel="noopener" hidden>Xem bản đồ</a>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div class="event-meta-grid">
-            <div class="meta-card">
-              <p class="dresscode-label">Dresscode</p>
-              <p class="dresscode-title">Trắng • Bạc • Xanh dương</p>
-              <p class="dresscode-note">Tỏa sáng theo phiên bản chuyển mình của bạn</p>
-              <div class="swatches" aria-hidden="true">
-                <span class="swatch white"></span>
-                <span class="swatch silver"></span>
-                <span class="swatch blue"></span>
+            <div class="combined-detail-item combined-detail-full">
+              <div class="combined-detail-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 4a1.6 1.6 0 100 3.2A1.6 1.6 0 0012 4z"></path>
+                  <path d="M12 7.2v2.3l-8 4.5c-1 .6-.6 2 .6 2h14.8c1.2 0 1.6-1.4.6-2l-8-4.5"></path>
+                </svg>
+              </div>
+              <div>
+                <p class="combined-detail-label">Dresscode</p>
+                <p class="combined-detail-value">
+                  <span class="theme-blue">TRẮNG</span>
+                  <span> · BẠC · </span>
+                  <span class="theme-blue">XANH DƯƠNG</span>
+                </p>
+                <p class="combined-detail-sub">Tỏa sáng theo phiên bản chuyển mình của bạn</p>
               </div>
             </div>
 
-            <div class="meta-card deadline-card">
-              <p class="dresscode-label">Hạn chót đăng ký</p>
-              <p class="deadline-time">12:00</p>
-              <p class="deadline-date">29/07/2026</p>
+            <div class="combined-detail-item combined-detail-full">
+              <div class="combined-detail-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <rect x="4" y="5" width="16" height="16" rx="2"></rect>
+                  <path d="M4 9h16M8 3v4M16 3v4"></path>
+                </svg>
+              </div>
+              <div>
+                <p class="combined-detail-label">Hạn chót đăng ký</p>
+                <p class="combined-detail-value">
+                  <span class="theme-orange">12:00</span>
+                  <span> | 29.07.2026</span>
+                </p>
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
 
-        <section class="rsvp-zone">
-          <p class="rsvp-zone-label">RSVP RESPONSE</p>
-
-          <div class="button-group">
+          <div class="button-group combined-rsvp">
             <button id="confirmButton" class="rsvp-button confirm-button" type="button">
               <span class="button-tech-icon">✓</span>
-              <span>XÁC NHẬN THAM DỰ</span>
+              <span>XÁC NHẬN THAM GIA</span>
             </button>
 
             <button id="declineButton" class="rsvp-button decline-button" type="button">
@@ -3563,11 +3910,27 @@
             </button>
           </div>
 
-          <p id="responseStatus" class="response-status" aria-live="polite">Vui lòng chọn tình trạng tham dự của bạn.</p>
+          <p id="responseStatus" class="combined-response-status" aria-live="polite">
+            *Bạn có thể thay đổi quyết định sau khi đã phản hồi.
+          </p>
+
+          <button id="skipInvitation" class="combined-skip" type="button">
+            Bỏ qua thư mời này
+          </button>
         </section>
 
-        <p class="footer-note">Hẹn gặp bạn tại hành trình tiếp theo của Ahamove.<br><strong>Always Moving Together.</strong></p>
+        <div class="combined-chevron" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M6 9l6 6 6-6"></path>
+          </svg>
+        </div>
+
+        <p class="footer-note">
+          Hẹn gặp bạn tại hành trình tiếp theo của Ahamove.<br>
+          <strong>Always Moving Together.</strong>
+        </p>
       </main>
+
 
     </div>
   </div>
@@ -3922,6 +4285,17 @@
       });
 
       hero.addEventListener('pointerleave', resetHeroParallax);
+    }
+
+
+
+    const skipButton = document.getElementById('skipInvitation');
+
+    if (skipButton) {
+      skipButton.addEventListener('click', () => {
+        responseStatus.textContent = 'Đã bỏ qua thư mời này.';
+        responseStatus.style.color = '#93c5fd';
+      });
     }
 
 
