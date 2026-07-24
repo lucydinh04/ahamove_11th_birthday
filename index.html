@@ -45,6 +45,11 @@
 
     button { font: inherit; }
 
+    html, body, button, input, textarea, select, option {
+      font-family: 'Lexend', Arial, sans-serif !important;
+    }
+
+
     /* TECH OPENING */
     .tech-intro {
       position: fixed;
@@ -209,17 +214,24 @@
     }
 
     .brand-mark {
-      display: flex;
-      width: 34px;
-      height: 34px;
-      align-items: center;
-      justify-content: center;
-      border-radius: 11px;
-      background: var(--orange);
-      color: #fff;
-      font-size: 18px;
-      font-weight: 700;
-      box-shadow: 0 0 22px rgba(242,101,34,.34);
+      width:38px;
+      height:38px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:11px;
+      background:var(--orange);
+      overflow:hidden;
+      flex-shrink:0;
+      box-shadow:0 6px 18px rgba(242,101,34,.35);
+    }
+
+    .brand-logo-img{
+      width:24px;
+      height:24px;
+      display:block;
+      object-fit:contain;
+      filter:brightness(0) invert(1);
     }
 
     .brand-text { text-align: left; }
@@ -374,50 +386,11 @@
       *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .15s !important; }
     }
   
-    .brand-logo-wrap {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 0 auto 18px;
-    }
+    
 
-    .brand-logo {
-      width: min(190px, 52vw);
-      height: auto;
-      display: block;
-      object-fit: contain;
-      filter: drop-shadow(0 8px 22px rgba(0, 0, 0, .28));
-    }
+    
 
-    @media (max-width: 640px) {
-      .brand-logo {
-        width: min(155px, 48vw);
-      }
-    }
-
-    .intro-brand-logo {
-      position: absolute;
-      top: calc(7% + env(safe-area-inset-top));
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 4;
-      margin: 0;
-      width: min(220px, 55vw);
-      pointer-events: none;
-    }
-
-    .intro-brand-logo .brand-logo {
-      width: 100%;
-      max-height: 58px;
-      object-fit: contain;
-    }
-
-    @media (max-width: 640px) {
-      .intro-brand-logo {
-        top: calc(6% + env(safe-area-inset-top));
-        width: min(178px, 52vw);
-      }
-    }
+    
   </style>
 </head>
 
@@ -432,10 +405,6 @@
       <span class="energy-ring ring-3"></span>
       <div class="hologram-number">11</div>
     </div>
-
-    <div class="brand-logo-wrap intro-brand-logo">
-          <img class="brand-logo" src="/ahamove-logo.svg" alt="Ahamove">
-        </div>
         <div class="intro-copy">
       <p class="intro-eyebrow">AHAMOVE 11 YEARS</p>
       <h2 class="intro-title">CHẠM ĐỂ MỞ THƯ MỜI</h2>
@@ -447,7 +416,9 @@
     <div class="invite-shell">
       <header class="hero">
         <div class="brand" aria-label="Ahamove">
-          <div class="brand-mark">A</div>
+          <div class="brand-mark">
+            <img src="/ahamove-logo.svg" alt="Ahamove" class="brand-logo-img">
+          </div>
           <div class="brand-text">
             <p class="brand-name">Ahamove</p>
             <p class="brand-tagline">Always Moving Together</p>
