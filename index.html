@@ -4179,161 +4179,96 @@
     }
 
   
-    /* REFINED INTRO GATE */
-    .tech-intro {
-      background:
-        radial-gradient(circle at 50% 42%, rgba(31,146,255,.34), transparent 26%),
-        radial-gradient(circle at 82% 26%, rgba(242,101,34,.18), transparent 28%),
-        linear-gradient(160deg, #020712 0%, #071f4a 52%, #170b12 100%) !important;
-    }
-
-    .intro-space {
-      opacity: .96;
-    }
-
+    /* RESTORED INTRO NUMBER + CLICK LAYER FIX */
     .intro-ai-panel,
     .intro-system-status {
       display: none !important;
     }
 
-    .energy-core,
-    .orbit-wrap {
-      width: min(64vw, 360px) !important;
-      aspect-ratio: 1;
-      margin: 8px auto 14px !important;
-      display: grid;
-      place-items: center;
-      transform-style: preserve-3d;
+    .tech-intro {
+      pointer-events: auto !important;
+      cursor: pointer !important;
     }
 
-    .intro-number-image {
+    .tech-intro > * {
+      pointer-events: none !important;
+    }
+
+    .tech-intro.launch {
+      pointer-events: none !important;
+    }
+
+    .invite-shell {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .hologram-number {
       position: relative;
-      z-index: 5;
-      width: 58% !important;
-      max-width: 220px;
-      height: auto;
+      z-index: 6;
       display: block;
-      object-fit: contain;
-      filter:
-        drop-shadow(0 0 10px rgba(255,255,255,.22))
-        drop-shadow(0 0 24px rgba(38,159,255,.42))
-        drop-shadow(0 0 18px rgba(242,101,34,.28))
-        drop-shadow(0 24px 28px rgba(0,0,0,.34));
-      animation: refinedIntroNumberFloat 4s ease-in-out infinite;
-      transform-origin: center center;
+      font-family: 'Lexend', Arial, sans-serif;
+      font-size: clamp(88px, 18vw, 150px);
+      line-height: .9;
+      font-weight: 800;
+      letter-spacing: -.08em;
+      color: #ffffff;
+      text-shadow:
+        0 0 8px rgba(255,255,255,.95),
+        0 0 22px rgba(80,184,255,.92),
+        0 0 46px rgba(38,159,255,.58),
+        0 18px 26px rgba(0,0,0,.48);
+      filter: drop-shadow(0 0 12px rgba(38,159,255,.34));
+      animation: restoredNumberPulse 3.4s ease-in-out infinite;
     }
 
     .intro-title {
-      margin-top: 2px !important;
-      color: #d4ecff !important;
-      font-size: 12px !important;
-      font-weight: 600;
-      letter-spacing: .34em !important;
+      position: relative;
+      z-index: 8;
+      margin-top: 8px !important;
+      color: #d9efff !important;
+      font-weight: 600 !important;
       text-shadow:
-        0 0 10px rgba(38,159,255,.32),
-        0 2px 10px rgba(0,0,0,.42);
+        0 0 12px rgba(38,159,255,.32),
+        0 3px 12px rgba(0,0,0,.55);
     }
 
     .tap {
       position: relative;
-      z-index: 6;
-      margin-top: 10px !important;
-      padding: 4px 12px;
+      z-index: 8;
+      margin-top: 8px !important;
       color: #ffffff !important;
       background: none !important;
       -webkit-background-clip: initial !important;
       background-clip: initial !important;
-      font-size: clamp(24px, 5vw, 34px) !important;
-      line-height: 1.15;
-      font-weight: 800 !important;
-      letter-spacing: .03em !important;
       text-shadow:
-        0 0 12px rgba(255,255,255,.28),
-        0 0 22px rgba(38,159,255,.34),
-        0 8px 18px rgba(0,0,0,.36);
-    }
-
-    .tap::after {
-      content: "";
-      position: absolute;
-      left: 50%;
-      bottom: -8px;
-      width: 120px;
-      height: 2px;
-      transform: translateX(-50%);
-      border-radius: 99px;
-      background: linear-gradient(90deg, transparent, #36b7ff, #f26522, transparent);
-      box-shadow:
-        0 0 12px rgba(38,159,255,.38),
-        0 0 10px rgba(242,101,34,.22);
+        0 0 10px rgba(255,255,255,.24),
+        0 0 24px rgba(38,159,255,.34),
+        0 4px 14px rgba(0,0,0,.52);
     }
 
     .tap-sub {
-      margin-top: 18px !important;
-      color: #c7d9ec !important;
-      font-size: 14px !important;
-      line-height: 1.55;
-      text-shadow: 0 2px 10px rgba(0,0,0,.44);
-      opacity: .95;
+      position: relative;
+      z-index: 8;
+      margin-top: 8px !important;
+      color: #c9dbed !important;
+      opacity: .98 !important;
+      text-shadow: 0 3px 12px rgba(0,0,0,.62);
     }
 
-    .chip,
-    .ai-orbit-label {
-      color: #d6efff !important;
-      border-color: rgba(103,205,255,.55) !important;
-      background: rgba(4,19,46,.68) !important;
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.05),
-        0 0 20px rgba(38,159,255,.18) !important;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-    }
-
-    .pulse-dot {
-      margin-top: 20px !important;
-      border-color: rgba(103,205,255,.62) !important;
-      background: rgba(6,25,55,.48);
-      box-shadow:
-        inset 0 0 12px rgba(38,159,255,.08),
-        0 0 18px rgba(38,159,255,.18);
-    }
-
-    @keyframes refinedIntroNumberFloat {
+    @keyframes restoredNumberPulse {
       0%, 100% {
         transform: translateY(0) scale(.98);
+        opacity: .92;
       }
       50% {
-        transform: translateY(-8px) scale(1.02);
-      }
-    }
-
-    @media (max-width: 560px) {
-      .energy-core,
-      .orbit-wrap {
-        width: min(72vw, 300px) !important;
-      }
-
-      .intro-number-image {
-        width: 62% !important;
-        max-width: 190px;
-      }
-
-      .intro-title {
-        font-size: 10px !important;
-        letter-spacing: .28em !important;
-      }
-
-      .tap {
-        font-size: clamp(22px, 7vw, 30px) !important;
-      }
-
-      .tap-sub {
-        font-size: 13px !important;
+        transform: translateY(-7px) scale(1.02);
+        opacity: 1;
       }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .intro-number-image {
+      .hologram-number {
         animation: none !important;
       }
     }
@@ -4372,11 +4307,7 @@
       <span class="energy-ring ring-1"></span>
       <span class="energy-ring ring-2"></span>
       <span class="energy-ring ring-3"></span>
-      <img
-        class="intro-number-image"
-        src="/11_3D.png"
-        alt="Ahamove 11 năm"
-      >
+      <div class="hologram-number">11</div>
     </div>
 
     <div class="intro-copy">
@@ -5052,11 +4983,50 @@
       });
 
       hero.addEventListener('pointerleave', resetHeroParallax);
-    });
+    }
+loadInvitation();
+  
+    /* INTRO CLICK FIX */
+    const introGate = document.querySelector('.tech-intro');
+    const invitationPage = document.querySelector('.invite-shell');
+
+    function revealInvitation() {
+      if (!introGate || introGate.classList.contains('launch')) return;
+
+      introGate.classList.add('launch');
+
+      window.setTimeout(() => {
+        introGate.style.display = 'none';
+
+        if (invitationPage) {
+          invitationPage.classList.add('is-visible');
+          invitationPage.removeAttribute('aria-hidden');
+        }
+
+        document.body.style.overflow = '';
+        window.scrollTo({ top: 0, behavior: 'auto' });
+      }, 720);
     }
 
+    if (introGate) {
+      introGate.setAttribute('role', 'button');
+      introGate.setAttribute('tabindex', '0');
+      introGate.style.cursor = 'pointer';
 
-    loadInvitation();
+      introGate.addEventListener('click', revealInvitation);
+      introGate.addEventListener('touchend', event => {
+        event.preventDefault();
+        revealInvitation();
+      }, { passive: false });
+
+      introGate.addEventListener('keydown', event => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          revealInvitation();
+        }
+      });
+    }
+
   </script>
 </body>
 </html>
