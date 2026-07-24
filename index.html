@@ -2574,6 +2574,264 @@
       }
     }
 
+  
+    /* 3D NUMBER IMAGE + NEON BUTTON UPGRADE */
+    .hero-number-stage {
+      width: min(100%, 320px) !important;
+      min-height: 290px;
+      justify-content: flex-end !important;
+    }
+
+    .hero-number-visual {
+      position: relative;
+      z-index: 5;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: translateZ(44px);
+      animation: numberImageFloat 4s ease-in-out infinite;
+    }
+
+    .hero-number-visual::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: 8%;
+      width: 68%;
+      height: 28%;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      background:
+        radial-gradient(
+          ellipse at center,
+          rgba(38,159,255,.42) 0%,
+          rgba(242,101,34,.22) 38%,
+          transparent 72%
+        );
+      filter: blur(22px);
+      opacity: .9;
+      z-index: -1;
+      animation: numberAura 2.8s ease-in-out infinite;
+    }
+
+    .hero-number-image {
+      width: min(100%, 310px);
+      height: auto;
+      display: block;
+      object-fit: contain;
+      filter:
+        drop-shadow(0 0 8px rgba(255,255,255,.25))
+        drop-shadow(0 0 20px rgba(255,120,36,.26))
+        drop-shadow(0 0 26px rgba(38,159,255,.30))
+        drop-shadow(0 26px 30px rgba(0,0,0,.42));
+      transform: scale(1.02);
+      transform-origin: center bottom;
+    }
+
+    .hero-years-text {
+      margin-top: -4px !important;
+      z-index: 7 !important;
+    }
+
+    .hero-stage-ring-outer {
+      width: 96% !important;
+    }
+
+    .hero-stage-ring-mid {
+      width: 78% !important;
+    }
+
+    .hero-stage-ring-inner {
+      width: 58% !important;
+    }
+
+    .rsvp-button {
+      min-height: 64px !important;
+      border-width: 1px !important;
+      overflow: visible !important;
+      isolation: isolate;
+      transition:
+        transform .22s ease,
+        filter .22s ease,
+        box-shadow .22s ease;
+    }
+
+    .rsvp-button::before {
+      inset: 3px !important;
+      background:
+        linear-gradient(
+          145deg,
+          rgba(4,16,38,.94),
+          rgba(2,10,26,.98)
+        ) !important;
+      box-shadow:
+        inset 0 0 22px rgba(255,255,255,.025);
+    }
+
+    .rsvp-button::after {
+      z-index: 2 !important;
+      opacity: .85;
+      mix-blend-mode: screen;
+    }
+
+    .confirm-button {
+      border-color: rgba(82,210,255,.96) !important;
+      background:
+        linear-gradient(
+          90deg,
+          rgba(0,95,180,.92),
+          rgba(13,52,105,.96)
+        ) !important;
+      box-shadow:
+        0 0 0 1px rgba(102,218,255,.18) inset,
+        0 0 14px rgba(38,159,255,.58),
+        0 0 34px rgba(38,159,255,.30),
+        0 16px 34px rgba(0,0,0,.32) !important;
+      text-shadow:
+        0 0 8px rgba(143,225,255,.7),
+        0 0 16px rgba(38,159,255,.42);
+      animation: blueNeonPulse 2.6s ease-in-out infinite;
+    }
+
+    .decline-button {
+      border-color: rgba(255,139,63,.96) !important;
+      background:
+        linear-gradient(
+          90deg,
+          rgba(116,43,13,.94),
+          rgba(55,19,18,.97)
+        ) !important;
+      box-shadow:
+        0 0 0 1px rgba(255,157,88,.16) inset,
+        0 0 14px rgba(242,101,34,.54),
+        0 0 34px rgba(242,101,34,.26),
+        0 16px 34px rgba(0,0,0,.32) !important;
+      text-shadow:
+        0 0 8px rgba(255,184,126,.68),
+        0 0 16px rgba(242,101,34,.40);
+      animation: orangeNeonPulse 2.6s ease-in-out infinite;
+      animation-delay: .5s;
+    }
+
+    .button-tech-icon {
+      position: relative;
+      z-index: 3;
+      border-width: 1px;
+      box-shadow:
+        0 0 10px currentColor,
+        inset 0 0 10px rgba(255,255,255,.08);
+    }
+
+    .button-tech-icon::after {
+      content: "";
+      position: absolute;
+      inset: -5px;
+      border: 1px solid currentColor;
+      border-radius: 50%;
+      opacity: .18;
+      animation: buttonIconOrbit 1.9s ease-in-out infinite;
+    }
+
+    .rsvp-button:hover {
+      transform: translateY(-4px) scale(1.02) !important;
+      filter: brightness(1.18) saturate(1.08);
+    }
+
+    .confirm-button:hover {
+      box-shadow:
+        0 0 0 1px rgba(102,218,255,.28) inset,
+        0 0 20px rgba(38,159,255,.78),
+        0 0 48px rgba(38,159,255,.42),
+        0 18px 38px rgba(0,0,0,.34) !important;
+    }
+
+    .decline-button:hover {
+      box-shadow:
+        0 0 0 1px rgba(255,157,88,.24) inset,
+        0 0 20px rgba(242,101,34,.74),
+        0 0 48px rgba(242,101,34,.38),
+        0 18px 38px rgba(0,0,0,.34) !important;
+    }
+
+    @keyframes numberImageFloat {
+      0%, 100% {
+        transform: translateZ(44px) translateY(0) rotateX(0deg);
+      }
+      50% {
+        transform: translateZ(58px) translateY(-8px) rotateX(1.5deg);
+      }
+    }
+
+    @keyframes numberAura {
+      0%, 100% { opacity: .55; transform: translateX(-50%) scale(.9); }
+      50% { opacity: 1; transform: translateX(-50%) scale(1.08); }
+    }
+
+    @keyframes blueNeonPulse {
+      0%, 100% {
+        box-shadow:
+          0 0 0 1px rgba(102,218,255,.18) inset,
+          0 0 12px rgba(38,159,255,.48),
+          0 0 28px rgba(38,159,255,.22),
+          0 16px 34px rgba(0,0,0,.32);
+      }
+      50% {
+        box-shadow:
+          0 0 0 1px rgba(102,218,255,.28) inset,
+          0 0 20px rgba(38,159,255,.74),
+          0 0 46px rgba(38,159,255,.36),
+          0 16px 34px rgba(0,0,0,.32);
+      }
+    }
+
+    @keyframes orangeNeonPulse {
+      0%, 100% {
+        box-shadow:
+          0 0 0 1px rgba(255,157,88,.16) inset,
+          0 0 12px rgba(242,101,34,.44),
+          0 0 28px rgba(242,101,34,.20),
+          0 16px 34px rgba(0,0,0,.32);
+      }
+      50% {
+        box-shadow:
+          0 0 0 1px rgba(255,157,88,.26) inset,
+          0 0 20px rgba(242,101,34,.70),
+          0 0 46px rgba(242,101,34,.34),
+          0 16px 34px rgba(0,0,0,.32);
+      }
+    }
+
+    @keyframes buttonIconOrbit {
+      0%, 100% { transform: scale(.82); opacity: .10; }
+      50% { transform: scale(1.18); opacity: .28; }
+    }
+
+    @media (max-width: 620px) {
+      .hero-number-stage {
+        width: 220px !important;
+        min-height: 215px;
+      }
+
+      .hero-number-image {
+        width: 214px;
+      }
+
+      .rsvp-button {
+        min-height: 60px !important;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero-number-visual,
+      .hero-number-visual::before,
+      .confirm-button,
+      .decline-button,
+      .button-tech-icon::after {
+        animation: none !important;
+      }
+    }
+
   </style>
 </head>
 
@@ -2692,7 +2950,13 @@
               <div class="hero-stage-ring hero-stage-ring-outer"></div>
               <div class="hero-stage-ring hero-stage-ring-mid"></div>
               <div class="hero-stage-ring hero-stage-ring-inner"></div>
-              <div class="hero-number-3d">11</div>
+              <div class="hero-number-visual">
+              <img
+                src="/11_3D.png"
+                alt="Ahamove 11 năm"
+                class="hero-number-image"
+              >
+            </div>
               <div class="hero-years-text">YEARS</div>
             </div>
           </div>
