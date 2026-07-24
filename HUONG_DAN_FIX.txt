@@ -1,0 +1,19 @@
+NGUYÊN NHÂN LỖI
+server.js cũ chứa nguyên HTML bên trong biến `HTML`, nên Vercel hiển thị bản giao diện cũ.
+Việc sửa index.html không tác động đến trang live.
+
+CÁCH FIX
+Upload ghi đè 6 file ở thư mục gốc repository:
+- server.js
+- index.html
+- vercel.json
+- background.png
+- ahamove-logo.svg
+- package.json
+
+Sau khi commit:
+1. Chờ Vercel deploy.
+2. Kiểm tra /background.png.
+3. Mở trang bằng cửa sổ ẩn danh hoặc hard refresh.
+
+server.js mới đọc trực tiếp index.html và phục vụ background.png/logo ở thư mục gốc.
