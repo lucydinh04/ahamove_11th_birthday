@@ -1625,12 +1625,418 @@
       }
     }
 
+  
+    /* WOW 3D INTRO EXPERIENCE */
+    .tech-intro {
+      perspective: 1400px;
+      transform-style: preserve-3d;
+      background:
+        radial-gradient(circle at 50% 42%, rgba(27,130,255,.38), transparent 24%),
+        radial-gradient(circle at 78% 20%, rgba(242,101,34,.18), transparent 22%),
+        linear-gradient(160deg, #01040c 0%, #061d44 52%, #020813 100%);
+    }
+
+    .intro-space {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      transform-style: preserve-3d;
+    }
+
+    .intro-nebula {
+      position: absolute;
+      width: 62vw;
+      height: 62vw;
+      max-width: 760px;
+      max-height: 760px;
+      border-radius: 50%;
+      filter: blur(70px);
+      opacity: .24;
+      mix-blend-mode: screen;
+      animation: nebulaDrift 14s ease-in-out infinite alternate;
+    }
+
+    .nebula-blue {
+      left: -18vw;
+      top: -14vw;
+      background:
+        radial-gradient(circle, rgba(31,153,255,.95), rgba(37,58,170,.3) 48%, transparent 72%);
+    }
+
+    .nebula-orange {
+      right: -22vw;
+      bottom: -20vw;
+      background:
+        radial-gradient(circle, rgba(255,112,38,.82), rgba(127,30,57,.24) 48%, transparent 72%);
+      animation-delay: 2.4s;
+    }
+
+    .intro-starfield {
+      position: absolute;
+      inset: -20%;
+      background-repeat: repeat;
+      opacity: .46;
+      animation: starTunnel 18s linear infinite;
+    }
+
+    .starfield-a {
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,.95) 0 1px, transparent 1.5px);
+      background-size: 72px 72px;
+    }
+
+    .starfield-b {
+      background-image:
+        radial-gradient(circle, rgba(70,186,255,.95) 0 1px, transparent 1.7px),
+        radial-gradient(circle, rgba(255,127,55,.82) 0 1px, transparent 1.8px);
+      background-size: 118px 118px, 164px 164px;
+      background-position: 28px 12px, 70px 50px;
+      opacity: .32;
+      animation-duration: 28s;
+      animation-direction: reverse;
+    }
+
+    .intro-portal {
+      position: absolute;
+      left: 50%;
+      top: 43%;
+      width: min(78vw, 560px);
+      aspect-ratio: 1;
+      transform:
+        translate(-50%, -50%)
+        rotateX(66deg)
+        translateZ(-80px);
+      transform-style: preserve-3d;
+    }
+
+    .portal-ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 1px solid rgba(61,183,255,.45);
+      box-shadow:
+        0 0 28px rgba(38,159,255,.20),
+        inset 0 0 26px rgba(38,159,255,.10);
+      animation: portalSpin 10s linear infinite;
+    }
+
+    .portal-ring-2 {
+      inset: 11%;
+      border-style: dashed;
+      border-color: rgba(255,113,35,.54);
+      animation-duration: 14s;
+      animation-direction: reverse;
+    }
+
+    .portal-ring-3 {
+      inset: 24%;
+      border-color: rgba(89,206,255,.62);
+      animation-duration: 7s;
+    }
+
+    .portal-ring-4 {
+      inset: 38%;
+      border-color: rgba(255,255,255,.26);
+      box-shadow:
+        0 0 44px rgba(54,175,255,.24),
+        inset 0 0 34px rgba(54,175,255,.12);
+      animation: portalPulse 2.8s ease-in-out infinite;
+    }
+
+    .intro-holo-floor {
+      position: absolute;
+      left: 50%;
+      bottom: 9%;
+      width: min(76vw, 680px);
+      height: 210px;
+      transform:
+        translateX(-50%)
+        perspective(800px)
+        rotateX(72deg);
+      border-radius: 50%;
+      background:
+        repeating-radial-gradient(
+          circle at center,
+          rgba(54,180,255,.55) 0 1px,
+          transparent 2px 18px
+        ),
+        repeating-linear-gradient(
+          90deg,
+          rgba(54,180,255,.18) 0 1px,
+          transparent 1px 34px
+        );
+      box-shadow:
+        0 0 90px rgba(38,159,255,.22),
+        inset 0 0 60px rgba(38,159,255,.10);
+      opacity: .8;
+      animation: floorBreath 3.4s ease-in-out infinite;
+    }
+
+    .intro-cube {
+      position: absolute;
+      width: 42px;
+      height: 42px;
+      transform-style: preserve-3d;
+      opacity: .52;
+      animation: introCubeFloat 8s ease-in-out infinite;
+    }
+
+    .intro-cube span,
+    .intro-cube::before,
+    .intro-cube::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border: 1px solid rgba(83,198,255,.66);
+      background: rgba(10,52,98,.08);
+      box-shadow: 0 0 18px rgba(38,159,255,.12);
+    }
+
+    .intro-cube span { transform: translateZ(14px); }
+    .intro-cube::before { transform: rotateY(90deg) translateZ(14px); }
+    .intro-cube::after { transform: rotateX(90deg) translateZ(14px); }
+
+    .intro-cube-1 { left: 12%; top: 23%; }
+    .intro-cube-2 { right: 13%; top: 31%; animation-delay: 2.1s; transform: scale(.72); }
+    .intro-cube-3 { left: 19%; bottom: 18%; animation-delay: 4.2s; transform: scale(.55); }
+
+    .intro-ai-panel {
+      position: absolute;
+      top: 20%;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      column-gap: 8px;
+      row-gap: 2px;
+      min-width: 138px;
+      padding: 12px 14px;
+      border: 1px solid rgba(89,195,255,.34);
+      clip-path: polygon(10% 0, 90% 0, 100% 20%, 100% 80%, 90% 100%, 10% 100%, 0 80%, 0 20%);
+      background:
+        linear-gradient(145deg, rgba(13,55,105,.62), rgba(4,17,42,.82));
+      box-shadow:
+        0 0 26px rgba(38,159,255,.12),
+        inset 0 0 22px rgba(38,159,255,.08);
+      color: #c7eaff;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      animation: panelFloat 5s ease-in-out infinite;
+    }
+
+    .intro-ai-panel-left { left: 7%; }
+    .intro-ai-panel-right { right: 7%; animation-delay: 1.2s; }
+
+    .intro-panel-dot {
+      grid-row: 1 / span 2;
+      width: 9px;
+      height: 9px;
+      margin-top: 2px;
+      border-radius: 50%;
+      background: #6bd0ff;
+      box-shadow:
+        0 0 0 4px rgba(38,159,255,.10),
+        0 0 14px rgba(38,159,255,.85);
+      animation: aiDotPulse 1.6s ease-in-out infinite;
+    }
+
+    .intro-ai-panel strong {
+      font-size: 9px;
+      letter-spacing: .16em;
+    }
+
+    .intro-ai-panel small {
+      color: #79bfff;
+      font-size: 7px;
+      letter-spacing: .14em;
+    }
+
+    .energy-core {
+      transform-style: preserve-3d;
+      transition: transform .18s ease-out;
+      filter:
+        drop-shadow(0 0 26px rgba(38,159,255,.18))
+        drop-shadow(0 0 16px rgba(255,106,24,.10));
+    }
+
+    .hologram-number {
+      transform: translateZ(42px);
+    }
+
+    .intro-system-status {
+      position: absolute;
+      left: 50%;
+      bottom: calc(20% + env(safe-area-inset-bottom));
+      z-index: 6;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transform: translateX(-50%);
+      color: rgba(167,218,255,.82);
+      font-size: 8px;
+      letter-spacing: .18em;
+      white-space: nowrap;
+      text-transform: uppercase;
+    }
+
+    .intro-system-status i {
+      width: 52px;
+      height: 2px;
+      border-radius: 99px;
+      background:
+        linear-gradient(
+          90deg,
+          rgba(38,159,255,.10),
+          rgba(95,203,255,.95),
+          rgba(255,117,39,.72)
+        );
+      box-shadow: 0 0 12px rgba(38,159,255,.42);
+      animation: statusScan 1.8s ease-in-out infinite;
+    }
+
+    .tech-intro.launch .intro-space {
+      animation: spaceWarp .95s cubic-bezier(.16,.84,.2,1) forwards;
+    }
+
+    .tech-intro.launch .intro-ai-panel,
+    .tech-intro.launch .intro-system-status {
+      animation: introFadeAway .42s ease forwards;
+    }
+
+    @keyframes nebulaDrift {
+      0% { transform: translate3d(0,0,0) scale(1); }
+      100% { transform: translate3d(4vw,3vw,0) scale(1.12); }
+    }
+
+    @keyframes starTunnel {
+      from { transform: translate3d(0,0,-120px) scale(1); }
+      to { transform: translate3d(0,120px,80px) scale(1.12); }
+    }
+
+    @keyframes portalSpin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes portalPulse {
+      0%, 100% { opacity: .35; transform: scale(.92); }
+      50% { opacity: 1; transform: scale(1.06); }
+    }
+
+    @keyframes floorBreath {
+      0%, 100% { opacity: .48; filter: brightness(.9); }
+      50% { opacity: .92; filter: brightness(1.25); }
+    }
+
+    @keyframes introCubeFloat {
+      0%, 100% {
+        transform: translateY(0) rotateX(18deg) rotateY(24deg);
+      }
+      50% {
+        transform: translateY(-20px) rotateX(196deg) rotateY(164deg);
+      }
+    }
+
+    @keyframes panelFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-7px); }
+    }
+
+    @keyframes statusScan {
+      0%, 100% { transform: scaleX(.72); opacity: .55; }
+      50% { transform: scaleX(1); opacity: 1; }
+    }
+
+    @keyframes spaceWarp {
+      0% { transform: scale(1); filter: blur(0); opacity: 1; }
+      100% { transform: scale(1.18); filter: blur(7px); opacity: 0; }
+    }
+
+    @keyframes introFadeAway {
+      to { opacity: 0; transform: translateY(12px); }
+    }
+
+    @media (max-width: 700px) {
+      .intro-ai-panel {
+        top: 18%;
+        min-width: 106px;
+        padding: 10px 11px;
+      }
+
+      .intro-ai-panel-left { left: 4%; }
+      .intro-ai-panel-right { right: 4%; }
+
+      .intro-ai-panel strong { font-size: 8px; }
+      .intro-ai-panel small { font-size: 6px; }
+
+      .intro-system-status {
+        bottom: calc(22% + env(safe-area-inset-bottom));
+        gap: 7px;
+        font-size: 6px;
+        letter-spacing: .14em;
+      }
+
+      .intro-system-status i {
+        width: 34px;
+      }
+
+      .intro-holo-floor {
+        bottom: 11%;
+        width: 92vw;
+        height: 160px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .intro-nebula,
+      .intro-starfield,
+      .portal-ring,
+      .intro-holo-floor,
+      .intro-cube,
+      .intro-ai-panel,
+      .intro-panel-dot,
+      .intro-system-status i {
+        animation: none !important;
+      }
+    }
+
   </style>
 </head>
 
 <body>
   <div id="techIntro" class="tech-intro" role="button" tabindex="0" aria-label="Mở thư mời">
     <div class="tech-grid"></div>
+
+    <div class="intro-space" aria-hidden="true">
+      <div class="intro-nebula nebula-blue"></div>
+      <div class="intro-nebula nebula-orange"></div>
+      <div class="intro-starfield starfield-a"></div>
+      <div class="intro-starfield starfield-b"></div>
+
+      <div class="intro-portal">
+        <span class="portal-ring portal-ring-1"></span>
+        <span class="portal-ring portal-ring-2"></span>
+        <span class="portal-ring portal-ring-3"></span>
+        <span class="portal-ring portal-ring-4"></span>
+      </div>
+
+      <div class="intro-holo-floor"></div>
+
+      <div class="intro-cube intro-cube-1"><span></span></div>
+      <div class="intro-cube intro-cube-2"><span></span></div>
+      <div class="intro-cube intro-cube-3"><span></span></div>
+
+      <div class="intro-ai-panel intro-ai-panel-left">
+        <span class="intro-panel-dot"></span>
+        <strong>AI CORE</strong>
+        <small>ONLINE</small>
+      </div>
+
+      <div class="intro-ai-panel intro-ai-panel-right">
+        <span class="intro-panel-dot"></span>
+        <strong>INVITATION</strong>
+        <small>DECRYPTED</small>
+      </div>
+    </div>
+
     <div class="scan-line"></div>
     <div class="ai-orbit-label">AI-DRIVEN GALAXY EXPERIENCE</div>
 
@@ -1640,7 +2046,14 @@
       <span class="energy-ring ring-3"></span>
       <div class="hologram-number">11</div>
     </div>
-        <div class="intro-copy">
+        
+    <div class="intro-system-status" aria-hidden="true">
+      <span>INITIALIZING AI INVITATION</span>
+      <i></i>
+      <span>ACCESS GRANTED</span>
+    </div>
+
+    <div class="intro-copy">
       <p class="intro-eyebrow">AHAMOVE 11 YEARS</p>
       <h2 class="intro-title">CHẠM ĐỂ MỞ THƯ MỜI</h2>
       <p class="intro-hint">Một hành trình chuyển mình đang chờ bạn</p>
@@ -1834,6 +2247,56 @@
         document.body.style.overflow = 'auto';
       }, 950);
     }
+
+
+    function applyIntroParallax(clientX, clientY) {
+      if (!techIntro || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        return;
+      }
+
+      const rect = techIntro.getBoundingClientRect();
+      const x = (clientX - rect.left) / rect.width - 0.5;
+      const y = (clientY - rect.top) / rect.height - 0.5;
+
+      const introSpace = techIntro.querySelector('.intro-space');
+      const energyCore = techIntro.querySelector('.energy-core');
+      const panels = techIntro.querySelectorAll('.intro-ai-panel');
+
+      if (introSpace) {
+        introSpace.style.transform =
+          `translate3d(${x * -16}px, ${y * -10}px, 0)`;
+      }
+
+      if (energyCore) {
+        energyCore.style.transform =
+          `rotateY(${x * 10}deg) rotateX(${-y * 8}deg) translateZ(22px)`;
+      }
+
+      panels.forEach((panel, index) => {
+        const direction = index % 2 === 0 ? 1 : -1;
+        panel.style.transform =
+          `translate3d(${x * 10 * direction}px, ${y * 7}px, 0)`;
+      });
+    }
+
+    function resetIntroParallax() {
+      const introSpace = techIntro?.querySelector('.intro-space');
+      const energyCore = techIntro?.querySelector('.energy-core');
+      const panels = techIntro?.querySelectorAll('.intro-ai-panel');
+
+      if (introSpace) introSpace.style.transform = '';
+      if (energyCore) energyCore.style.transform = '';
+      panels?.forEach(panel => {
+        panel.style.transform = '';
+      });
+    }
+
+    techIntro.addEventListener('pointermove', event => {
+      applyIntroParallax(event.clientX, event.clientY);
+    });
+
+    techIntro.addEventListener('pointerleave', resetIntroParallax);
+
 
     techIntro.addEventListener('click', openInvitation);
     techIntro.addEventListener('keydown', event => {
