@@ -1,28 +1,75 @@
-# Ahamove 11 – Bản 4 file, không có folder
+# Ahamove 11 – Vercel Token + Địa điểm SGN/HAN
 
-Upload trực tiếp 4 file này vào GitHub:
+Bản final này dùng:
 
-- `server.js`
-- `package.json`
-- `Code_Email_Sender.gs`
-- `README.md`
+- Một website duy nhất trên Vercel.
+- Mỗi nhân viên có một token ngẫu nhiên riêng.
+- Link dạng `https://TEN-PROJECT.vercel.app/i/TOKEN`.
+- SGN và HAN lấy ngày, giờ, venue, sảnh, địa chỉ và Google Maps từ tab `EVENT_CONFIG`.
+- Apps Script chỉ tạo token/link và gửi email.
+- Vercel Functions đọc/ghi Google Sheet bằng Service Account.
 
-Không còn folder `api` và `public`.
-Logo đã được nhúng thẳng vào `server.js`.
+## 1. Google Sheet
 
-## Deploy Vercel
+### Tab INVITATION
 
-1. Tạo GitHub repository.
-2. Add file → Upload files.
-3. Chọn cả 4 file và upload.
-4. Commit changes.
-5. Vercel → Add New Project → Import repository.
-6. Framework Preset: Other.
-7. Deploy.
+| Cột | Header          |
+| ---- | --------------- |
+| A    | ID              |
+| B    | Name            |
+| C    | Email           |
+| D    | Site            |
+| E    | RSVP            |
+| F    | Response Time   |
+| G    | Note            |
+| H    | Token           |
+| I    | Invitation Link |
+| J    | Email Status    |
+| K    | Sent Time       |
+| L    | Error           |
 
-Vercel hỗ trợ triển khai Express app và tự nhận diện server entrypoint.
+Cột D chỉ dùng `SGN` hoặc `HAN`.
 
-## Environment Variables trên Vercel
+### Tab EVENT_CONFIG
+
+| Cột | Header       |
+| ---- | ------------ |
+| A    | Site         |
+| B    | Event Date   |
+| C    | Event Time   |
+| D    | Venue Name   |
+| E    | Venue Detail |
+| F    | Address      |
+| G    | Map URL      |
+
+Mẫu:
+
+```text
+SGN | 07/08/2026 | 18:00 | Tên venue SGN | Tên sảnh | Địa chỉ | Google Maps
+HAN | 14/08/2026 | 18:00 | Tên venue HAN | Tên sảnh | Địa chỉ | Google Maps
+```
+
+Chạy `setupBirthdaySheets()` để tạo/cập nhật header và hai dòng cấu hình mẫu.
+
+## 2. Service Account
+
+1. Google Cloud Console → tạo/chọn project.
+2. Enable Google Sheets API.
+3. IAM & Admin → Service Accounts → Create.
+4. Tạo JSON key.
+5. Share Google Sheet cho `client_email` trong file JSON với quyền Editor.
+6. Không upload file JSON hoặc private key lên GitHub.
+
+## 3. Deploy Vercel
+
+1. Upload toàn bộ thư mục này lên GitHub.
+2. Vercel → Add New → Project → Import repo.
+3. Framework Preset: Other.
+4. Deploy.
+
+## 4. Environment Variables
+
+Thêm trong Vercel:
 
 ```text
 GOOGLE_SERVICE_ACCOUNT_EMAIL
@@ -32,40 +79,9 @@ GOOGLE_INVITATION_SHEET=INVITATION
 GOOGLE_EVENT_CONFIG_SHEET=EVENT_CONFIG
 ```
 
-Sau khi thêm biến môi trường, Redeploy.
+Sau khi thêm hoặc đổi biến môi trường, redeploy.
 
-## Google Sheet
-
-### INVITATION
-
-```text
-A ID
-B Name
-C Email
-D Site
-E RSVP
-F Response Time
-G Note
-H Token
-I Invitation Link
-J Email Status
-K Sent Time
-L Error
-```
-
-### EVENT_CONFIG
-
-```text
-A Site
-B Event Date
-C Event Time
-D Venue Name
-E Venue Detail
-F Address
-G Map URL
-```
-
-## Apps Script
+## 5. Apps Script gửi email
 
 Mở `Code_Email_Sender.gs`, sửa:
 
@@ -75,10 +91,36 @@ TEST_EMAIL: 'email-cua-ban@ahamove.com'
 TEST_EMPLOYEE_ID: '257988'
 ```
 
-Chạy:
+Dán toàn bộ vào Apps Script gắn với Google Sheet.
+
+Chạy lần lượt:
 
 1. `setupBirthdaySheets`
-2. `validateBirthdayData`
-3. `generateTokensAndInvitationLinks`
-4. `sendTestInvitationVercel`
-5. `sendAllInvitationsVercel`
+2. Điền dữ liệu nhân viên và venue SGN/HAN
+3. `validateBirthdayData`
+4. `generateTokensAndInvitationLinks`
+5. `sendTestInvitationVercel`
+6. Test trên Gmail điện thoại
+7. `sendAllInvitationsVercel`
+
+## 6. Test trực tiếp
+
+Link thư mời:
+
+```text
+https://TEN-PROJECT.vercel.app/i/TOKEN
+```
+
+Test API:
+
+```text
+https://TEN-PROJECT.vercel.app/api/invitation?token=TOKEN
+```
+
+## 7. Khi đổi địa điểm
+
+Chỉ sửa tab `EVENT_CONFIG`. Không cần sửa HTML, API hay redeploy Vercel.
+
+Email đã gửi trước đó vẫn mở ra thông tin venue mới nhất vì landing page luôn tải dữ liệu từ Sheet.
+
+Lưu ý: Nội dung venue hiển thị ngay trong email là dữ liệu tại thời điểm gửi; landing page là dữ liệu cập nhật theo thời gian thực.
