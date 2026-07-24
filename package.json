@@ -1,16 +1,11 @@
 {
   "name": "ahamove-11-invitation",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "private": true,
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  },
   "engines": {
-    "node": "22.x"
+    "node": "20.x"
   },
   "dependencies": {
-    "express": "^5.1.0",
-    "google-auth-library": "^10.3.0"
+    "google-auth-library": "^9.15.1"
   }
 }
