@@ -1,29 +1,22 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
+  "functions": {
+    "server.js": {
+      "includeFiles": [
+        "index.html",
+        "background.png",
+        "ahamove-logo.svg"
+      ]
+    }
+  },
   "builds": [
     {
       "src": "server.js",
       "use": "@vercel/node"
-    },
-    {
-      "src": "background.png",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "ahamove-logo.svg",
-      "use": "@vercel/static"
     }
   ],
   "routes": [
-    {
-      "src": "/background.png",
-      "dest": "/background.png"
-    },
-    {
-      "src": "/ahamove-logo.svg",
-      "dest": "/ahamove-logo.svg"
-    },
     {
       "src": "/(.*)",
       "dest": "/server.js"
