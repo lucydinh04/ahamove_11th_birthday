@@ -3647,6 +3647,149 @@
       }
     }
 
+  
+    /* OLD MAIL STORY CONTENT — COMBINED INTO NEW LAYOUT */
+    .combined-story {
+      position: relative;
+      z-index: 2;
+      margin-top: 24px;
+      padding: 22px;
+      border: 1px solid rgba(76,166,238,.20);
+      border-radius: 18px;
+      background:
+        linear-gradient(145deg, rgba(7,27,57,.74), rgba(4,15,34,.88));
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.035),
+        inset 0 0 26px rgba(38,159,255,.035);
+      text-align: left;
+    }
+
+    .combined-story::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 18px;
+      right: 18px;
+      height: 1px;
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(47,171,255,.65),
+          rgba(242,101,34,.50),
+          transparent
+        );
+    }
+
+    .combined-story-lead,
+    .combined-story-copy,
+    .combined-story-ending {
+      margin: 0;
+      color: #c4d6e8;
+      font-size: 14px;
+      line-height: 1.72;
+    }
+
+    .combined-story-copy {
+      margin-top: 12px;
+    }
+
+    .combined-story-copy strong {
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    .combined-story-ending {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,.065);
+    }
+
+    .combined-story-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .combined-story-item {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      min-height: 64px;
+      padding: 12px 13px;
+      border: 1px solid rgba(59,170,255,.16);
+      border-radius: 14px;
+      background:
+        linear-gradient(145deg, rgba(10,47,89,.56), rgba(19,24,45,.72));
+      color: #eaf5ff;
+      font-size: 12px;
+      line-height: 1.45;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.025);
+    }
+
+    .combined-story-index {
+      width: 30px;
+      height: 30px;
+      flex: 0 0 30px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255,134,61,.52);
+      border-radius: 9px;
+      color: #ff9c57;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      box-shadow: 0 0 12px rgba(242,101,34,.09);
+    }
+
+    @media (max-width: 560px) {
+      .combined-story {
+        padding: 17px;
+      }
+
+      .combined-story-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .combined-story-item {
+        min-height: 58px;
+      }
+
+      .combined-story-lead,
+      .combined-story-copy,
+      .combined-story-ending {
+        font-size: 13px;
+      }
+    }
+
+  
+    /* STORY ICON UPDATE */
+    .combined-story-icon {
+      width: 34px !important;
+      height: 34px !important;
+      flex: 0 0 34px !important;
+      padding: 7px;
+      color: #ff9a4f;
+      border-color: rgba(255,138,66,.58) !important;
+      background:
+        linear-gradient(145deg, rgba(73,31,15,.28), rgba(8,25,48,.62));
+      box-shadow:
+        0 0 14px rgba(242,101,34,.12),
+        inset 0 0 10px rgba(255,255,255,.025);
+    }
+
+    .combined-story-icon svg {
+      width: 100%;
+      height: 100%;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.7;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
   </style>
 </head>
 
@@ -3825,6 +3968,73 @@
             <span class="theme-separator">–</span>
             <span class="theme-blue">BỨT PHÁ</span>
           </div>
+
+
+          <section class="combined-story">
+            <p class="combined-story-lead">
+              Từ những chuyến giao hàng đầu tiên đến hành trình không ngừng mở rộng về dịch vụ,
+              công nghệ và con người, mỗi dấu mốc của Ahamove đều được tạo nên từ tinh thần
+              sẵn sàng thay đổi để tiến về phía trước.
+            </p>
+
+            <p class="combined-story-copy">
+              Bước sang tuổi 11, <strong>“Chuyển mình”</strong> không chỉ là nhìn lại chặng đường đã qua,
+              mà còn là lời khẳng định cho một hành trình mới:
+            </p>
+
+            <div class="combined-story-grid">
+              <div class="combined-story-item">
+                <span class="combined-story-index combined-story-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M9 18h6"></path>
+                    <path d="M10 22h4"></path>
+                    <path d="M8.4 14.5A7 7 0 1 1 15.6 14.5C14.5 15.4 14 16.2 14 17h-4c0-.8-.5-1.6-1.6-2.5z"></path>
+                  </svg>
+                </span>
+                <span>Chuyển mình trong tư duy</span>
+              </div>
+
+              <div class="combined-story-item">
+                <span class="combined-story-index combined-story-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <rect x="3" y="7" width="18" height="13" rx="2"></rect>
+                    <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    <path d="M3 12h18"></path>
+                    <path d="M10 12v2h4v-2"></path>
+                  </svg>
+                </span>
+                <span>Chuyển mình trong cách làm việc</span>
+              </div>
+
+              <div class="combined-story-item">
+                <span class="combined-story-index combined-story-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <rect x="7" y="7" width="10" height="10" rx="2"></rect>
+                    <path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"></path>
+                    <path d="M9.5 13.5h5M10.5 10.5h3"></path>
+                  </svg>
+                </span>
+                <span>Chuyển mình cùng công nghệ và AI</span>
+              </div>
+
+              <div class="combined-story-item">
+                <span class="combined-story-index combined-story-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M14 4c3.5-2 6-1 6-1s1 2.5-1 6l-5 5-4-4 4-6z"></path>
+                    <path d="M9 11l-4 1-2 3 6 1"></path>
+                    <path d="M13 15l-1 4-3 2-1-6"></path>
+                    <circle cx="16" cy="7" r="1.5"></circle>
+                  </svg>
+                </span>
+                <span>Chuyển mình để tạo nên những bước tiến bứt phá</span>
+              </div>
+            </div>
+
+            <p class="combined-story-ending">
+              Sinh nhật Ahamove 11 tuổi là dịp để chúng ta cùng nhìn lại hành trình đã qua,
+              ghi nhận những con người đã tạo nên từng dấu ấn và sẵn sàng bước vào chặng đường tiếp theo.
+            </p>
+          </section>
 
           <section class="combined-details">
             <div class="combined-detail-row combined-detail-row-top">
