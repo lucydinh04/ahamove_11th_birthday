@@ -1,783 +1,4 @@
-const express = require('express');
-const path = require('path');
 const { JWT } = require('google-auth-library');
-
-const app = express();
-app.use(express.json({ limit: '100kb' }));
-
-const ROOT_DIR = __dirname;
-const INDEX_FILE = path.join(ROOT_DIR, 'index.html');
-
-// Serve root-level assets such as background.png and ahamove-logo.svg.
-app.use(express.static(ROOT_DIR, {
-  index: false,
-  etag: true,
-  maxAge: '1h'
-}));
-
-const HTML = `<!DOCTYPE html>
-<html lang="vi">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#020813">
-  <title>Thư mời Sinh nhật Ahamove 11 tuổi</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <style>
-    :root {
-      --bg: #020813;
-      --surface: #071321;
-      --surface-2: #0b2449;
-      --surface-3: rgba(255,255,255,.055);
-      --line: rgba(255,255,255,.11);
-      --text: #ffffff;
-      --muted: #c3cfdd;
-      --muted-2: #8fa3b9;
-      --blue: #269fff;
-      --blue-soft: #9fd4ff;
-      --orange: #f26522;
-      --orange-2: #ff8738;
-      --success: #10b981;
-      --danger: #ff9d9d;
-    }
-
-    * { box-sizing: border-box; }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Lexend', Arial, sans-serif;
-      overflow: hidden;
-      -webkit-font-smoothing: antialiased;
-      text-rendering: optimizeLegibility;
-    }
-
-    button { font: inherit; }
-
-    /* TECH OPENING */
-    .tech-intro {
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      cursor: pointer;
-      background:
-        radial-gradient(circle at 50% 42%, rgba(34,145,255,.42), transparent 25%),
-        radial-gradient(circle at 78% 24%, rgba(242,101,34,.22), transparent 23%),
-        linear-gradient(160deg, #020813 0%, #061d44 55%, #020813 100%);
-      transition: opacity .75s ease, visibility .75s ease;
-      touch-action: manipulation;
-    }
-
-    .tech-intro::before,
-    .tech-intro::after {
-      content: '';
-      position: absolute;
-      inset: auto;
-      width: 68vw;
-      height: 68vw;
-      max-width: 520px;
-      max-height: 520px;
-      border-radius: 50%;
-      filter: blur(70px);
-      opacity: .18;
-      pointer-events: none;
-    }
-
-    .tech-intro::before { background: var(--blue); left: -22vw; top: -16vw; }
-    .tech-intro::after { background: var(--orange); right: -24vw; bottom: -18vw; }
-
-    .tech-intro.opened {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-    }
-
-    .tech-grid {
-      position: absolute;
-      inset: -65%;
-      opacity: .72;
-      background-image:
-        linear-gradient(rgba(80,175,255,.09) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(80,175,255,.09) 1px, transparent 1px);
-      background-size: 38px 38px;
-      transform: perspective(600px) rotateX(65deg);
-      animation: gridMove 5s linear infinite;
-    }
-
-    .scan-line {
-      position: absolute;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, rgba(105,205,255,.95), transparent);
-      box-shadow: 0 0 18px rgba(38,159,255,.85);
-      animation: scan 3.4s ease-in-out infinite;
-      opacity: .72;
-    }
-
-    .energy-core {
-      position: relative;
-      display: flex;
-      width: 218px;
-      height: 218px;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .energy-ring {
-      position: absolute;
-      border-radius: 50%;
-      border: 1px solid rgba(105,196,255,.72);
-      box-shadow: 0 0 22px rgba(45,162,255,.36), inset 0 0 18px rgba(45,162,255,.18);
-    }
-
-    .ring-1 { width: 120px; height: 120px; animation: rotateRing 4s linear infinite; }
-    .ring-2 { width: 166px; height: 166px; border-style: dashed; border-color: rgba(255,107,0,.86); animation: rotateRingReverse 7s linear infinite; }
-    .ring-3 { width: 210px; height: 210px; animation: energyPulse 1.8s ease-in-out infinite; }
-
-    .hologram-number {
-      position: relative;
-      z-index: 3;
-      font-size: 84px;
-      font-weight: 700;
-      letter-spacing: -.08em;
-      color: #fff;
-      text-shadow: 0 0 12px #fff, 0 0 30px #269fff, 0 0 52px #ff6b00;
-      animation: hologramFloat 2.4s ease-in-out infinite;
-    }
-
-    .intro-copy {
-      position: absolute;
-      bottom: calc(11% + env(safe-area-inset-bottom));
-      width: 100%;
-      padding: 0 24px;
-      text-align: center;
-    }
-
-    .intro-eyebrow {
-      margin: 0 0 10px;
-      color: #94d2ff;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: .28em;
-    }
-
-    .intro-title {
-      margin: 0;
-      font-size: 18px;
-      font-weight: 600;
-      letter-spacing: .04em;
-      animation: copyPulse 1.8s ease-in-out infinite;
-    }
-
-    .intro-hint { margin: 10px 0 0; color: #91a4ba; font-size: 12px; }
-
-    .tech-intro.launch .energy-core { animation: coreLaunch 1.1s cubic-bezier(.2,.8,.2,1) forwards; }
-    .tech-intro.launch .energy-ring { animation: ringBurst 1.1s cubic-bezier(.12,.8,.2,1) forwards; }
-    .tech-intro.launch .hologram-number { animation: numberBurst 1.1s ease forwards; }
-    .tech-intro.launch .intro-copy { animation: fadeCopy .45s ease forwards; }
-
-    /* PAGE */
-    .invitation-content {
-      width: 100%;
-      min-height: 100vh;
-      opacity: 0;
-      transform: translateY(24px) scale(.985);
-      transition: opacity .8s ease, transform .8s cubic-bezier(.2,.8,.2,1);
-    }
-
-    .invitation-content.visible { opacity: 1; transform: translateY(0) scale(1); }
-
-    .invite-shell {
-      width: min(100%, 680px);
-      min-height: 100vh;
-      margin: 0 auto;
-      overflow: hidden;
-      background:
-        radial-gradient(circle at 12% 4%, rgba(30,144,255,.28), transparent 28%),
-        radial-gradient(circle at 92% 18%, rgba(255,102,0,.26), transparent 26%),
-        linear-gradient(160deg, #020b18 0%, #061a38 48%, #031126 100%);
-    }
-
-    .hero { padding: 30px 18px 34px; text-align: center; }
-
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 28px;
-      padding: 9px 14px;
-      border: 1px solid rgba(255,255,255,.14);
-      border-radius: 999px;
-      background: rgba(255,255,255,.075);
-      backdrop-filter: blur(14px);
-    }
-
-    .brand-mark {
-      display: flex;
-      width: 34px;
-      height: 34px;
-      align-items: center;
-      justify-content: center;
-      border-radius: 11px;
-      background: var(--orange);
-      color: #fff;
-      font-size: 18px;
-      font-weight: 700;
-      box-shadow: 0 0 22px rgba(242,101,34,.34);
-    }
-
-    .brand-text { text-align: left; }
-    .brand-name { margin: 0; color: #fff; font-size: 15px; font-weight: 700; letter-spacing: -.03em; }
-    .brand-tagline { margin: 2px 0 0; color: #abd8ff; font-size: 9px; letter-spacing: .08em; text-transform: uppercase; }
-
-    .hero-number-wrap { position: relative; width: 184px; height: 184px; margin: 0 auto 26px; }
-    .hero-number-wrap .orbit { position: absolute; inset: 0; border: 1px dashed rgba(255,255,255,.22); border-radius: 50%; animation: rotateRing 13s linear infinite; }
-    .hero-number-wrap .orbit-inner { position: absolute; inset: 22px; border: 1px solid rgba(157,215,255,.2); border-radius: 50%; }
-
-    .hero-number-card {
-      position: absolute;
-      inset: 31px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid rgba(255,255,255,.22);
-      border-radius: 36px;
-      background: rgba(255,255,255,.09);
-      backdrop-filter: blur(12px);
-      box-shadow: 14px 18px 0 rgba(255,102,0,.14), 0 24px 60px rgba(0,0,0,.45);
-      animation: cardFloat 4s ease-in-out infinite;
-    }
-
-    .hero-number-card span {
-      font-size: 76px;
-      font-weight: 700;
-      letter-spacing: -.08em;
-      background: linear-gradient(145deg, #fff 12%, #b8e3ff 48%, #ffad73 90%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .hero-label { margin: 0; color: #a7d8ff; font-size: 11px; font-weight: 600; letter-spacing: .23em; text-transform: uppercase; }
-    .hero h1 { margin: 14px 0 0; font-size: clamp(30px, 8.5vw, 52px); line-height: 1.1; letter-spacing: -.045em; }
-    .hero h1 span { color: #ff8738; }
-    .hero-subtitle { margin: 16px 0 0; color: #acd9ff; font-size: 15px; font-weight: 500; }
-
-    .content {
-      position: relative;
-      padding: 30px 18px calc(42px + env(safe-area-inset-bottom));
-      border-top: 1px solid rgba(255,255,255,.1);
-      border-radius: 28px 28px 0 0;
-      background: var(--surface);
-    }
-
-    .content::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 50%;
-      width: 78px;
-      height: 4px;
-      border-radius: 999px;
-      background: var(--orange);
-      transform: translateX(-50%);
-    }
-
-    .greeting { margin: 0; color: #fff; font-size: 17px; font-weight: 600; }
-    .employee-name { color: var(--orange-2); }
-    .paragraph { margin: 16px 0 0; color: var(--muted); font-size: 15px; line-height: 1.75; }
-
-    .value-list { display: grid; gap: 11px; margin-top: 20px; }
-    .value-item { display: flex; align-items: flex-start; gap: 11px; padding: 14px; border: 1px solid rgba(255,135,56,.15); border-radius: 16px; background: rgba(255,135,56,.08); color: #edf4fb; font-size: 14px; line-height: 1.55; }
-    .value-item span:first-child { flex: 0 0 auto; }
-
-    .event-card {
-      margin-top: 26px;
-      padding: 20px;
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      background: radial-gradient(circle at top right, rgba(255,107,0,.24), transparent 36%), var(--surface-2);
-    }
-
-    .event-label { margin: 0; color: var(--blue-soft); font-size: 11px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; }
-    .event-card h2 { margin: 10px 0 4px; font-size: 23px; }
-    .event-place { margin: 0; color: #d2eaff; }
-    .event-address { margin: 8px 0 0; color: var(--muted-2); font-size: 13px; line-height: 1.55; }
-    .map-link { display: inline-flex; margin-top: 12px; color: var(--blue-soft); font-size: 13px; font-weight: 600; text-decoration: none; }
-    .map-link:hover { text-decoration: underline; }
-
-    .date-box { margin-top: 18px; padding: 16px; border: 1px solid rgba(255,255,255,.12); border-radius: 18px; background: rgba(255,255,255,.06); }
-    .date-row { display: grid; grid-template-columns: auto 1fr; gap: 15px; align-items: center; }
-    .date-number { margin: 0; color: var(--orange-2); font-size: 38px; font-weight: 700; }
-    .date-meta { margin: 0; color: #d9edff; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
-    .date-time { margin: 5px 0 0; color: #fff; font-size: 14px; font-weight: 600; }
-
-    .dresscode { margin-top: 14px; padding: 18px; border: 1px solid var(--line); border-radius: 22px; background: var(--surface-3); }
-    .dresscode-label { margin: 0; color: #8fa3b9; font-size: 11px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; }
-    .dresscode-title { margin: 7px 0 0; font-size: 17px; font-weight: 600; }
-    .dresscode-note { margin: 6px 0 0; color: #aab9c9; font-size: 13px; line-height: 1.55; }
-    .swatches { display: flex; gap: 8px; margin-top: 13px; }
-    .swatch { width: 34px; height: 34px; border: 1px solid rgba(255,255,255,.2); border-radius: 11px; }
-    .swatch.white { background: #fff; }
-    .swatch.silver { background: linear-gradient(145deg, #fff, #c5ccd4 52%, #697585); }
-    .swatch.blue { background: linear-gradient(145deg, #70c5ff, #1459a8); }
-
-    .deadline { margin-top: 18px; padding: 14px; border: 1px solid rgba(255,135,56,.2); border-radius: 16px; background: rgba(255,135,56,.1); color: #ffd1b1; text-align: center; font-size: 14px; line-height: 1.6; }
-
-    .button-group { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 22px; }
-    .rsvp-button { min-height: 56px; padding: 14px 18px; border-radius: 16px; font-size: 14px; font-weight: 600; cursor: pointer; transition: transform .2s ease, opacity .2s ease, background .2s ease, border-color .2s ease; touch-action: manipulation; }
-    .rsvp-button:active { transform: scale(.985); }
-    .rsvp-button:disabled { cursor: not-allowed; opacity: .66; }
-    .confirm-button { border: 0; background: var(--orange); color: #fff; box-shadow: 0 10px 28px rgba(242,101,34,.22); }
-    .decline-button { border: 1px solid rgba(255,255,255,.16); background: rgba(255,255,255,.05); color: #e5edf6; }
-
-    .response-status { min-height: 22px; margin: 15px 0 0; color: var(--muted-2); text-align: center; font-size: 13px; line-height: 1.6; }
-    .footer-note { margin: 24px 0 0; color: #91a2b5; text-align: center; font-size: 13px; line-height: 1.7; }
-    .footer-note strong { color: #dce7f3; }
-
-    /* RESULT MODALS */
-    .overlay { position: fixed; inset: 0; z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 18px; background: rgba(2,8,19,.9); backdrop-filter: blur(10px); opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .28s ease, visibility .28s ease; }
-    .overlay.active { opacity: 1; visibility: visible; pointer-events: auto; }
-    .popup { position: relative; width: min(100%, 430px); overflow: hidden; padding: 28px 22px 22px; border: 1px solid rgba(255,255,255,.1); border-radius: 26px; background: #0a1728; text-align: center; opacity: 0; transform: translateY(18px) scale(.95); }
-    .overlay.active .popup { animation: popupIn .58s cubic-bezier(.2,1.28,.3,1) forwards; }
-    .popup::before { content: ''; position: absolute; inset: 0 0 auto; height: 5px; background: linear-gradient(90deg, var(--blue), var(--orange), var(--blue)); }
-    .popup-icon { display: flex; width: 78px; height: 78px; margin: 0 auto 18px; align-items: center; justify-content: center; border-radius: 50%; font-size: 34px; }
-    .popup-icon.success { background: var(--success); color: #fff; box-shadow: 0 0 36px rgba(16,185,129,.3); }
-    .popup-icon.decline { border: 1px solid rgba(38,159,255,.24); background: rgba(38,159,255,.1); }
-    .popup-label { margin: 0; color: var(--orange-2); font-size: 11px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; }
-    .popup h3 { margin: 9px 0 0; font-size: 25px; line-height: 1.25; }
-    .popup-text { margin: 12px 0 0; color: #c1cedc; font-size: 14px; line-height: 1.65; }
-    .popup-detail { margin-top: 17px; padding: 13px; border: 1px solid rgba(255,255,255,.09); border-radius: 15px; background: rgba(255,255,255,.045); color: #bdd0e3; font-size: 13px; line-height: 1.65; }
-    .popup-detail strong { color: #fff; }
-    .close-button { width: 100%; min-height: 50px; margin-top: 18px; border: 0; border-radius: 15px; background: var(--orange); color: #fff; font-weight: 600; cursor: pointer; }
-
-    @media (min-width: 560px) {
-      .hero { padding: 34px 34px 42px; }
-      .content { padding: 34px 36px 48px; }
-      .button-group { grid-template-columns: 1fr 1fr; }
-      .event-card { display: grid; grid-template-columns: 1fr 158px; gap: 20px; align-items: center; }
-      .date-box { margin-top: 0; text-align: center; }
-      .date-row { display: block; }
-    }
-
-    @keyframes gridMove { from { transform: perspective(600px) rotateX(65deg) translateY(0); } to { transform: perspective(600px) rotateX(65deg) translateY(38px); } }
-    @keyframes scan { 0%,100% { top: 18%; opacity: 0; } 15% { opacity: .72; } 70% { opacity: .72; } 100% { top: 82%; opacity: 0; } }
-    @keyframes rotateRing { to { transform: rotate(360deg); } }
-    @keyframes rotateRingReverse { to { transform: rotate(-360deg); } }
-    @keyframes energyPulse { 0%,100% { opacity: .35; transform: scale(.94); } 50% { opacity: 1; transform: scale(1.05); } }
-    @keyframes hologramFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-    @keyframes copyPulse { 0%,100% { opacity: .65; } 50% { opacity: 1; } }
-    @keyframes fadeCopy { to { opacity: 0; transform: translateY(14px); } }
-    @keyframes coreLaunch { 0% { transform: scale(1); filter: brightness(1); } 50% { transform: scale(1.25); filter: brightness(2); } 100% { transform: scale(5); filter: brightness(3); opacity: 0; } }
-    @keyframes ringBurst { to { width: 115vw; height: 115vw; opacity: 0; border-width: 3px; } }
-    @keyframes numberBurst { 0% { opacity: 1; transform: scale(1); } 45% { opacity: 1; transform: scale(1.18); } 100% { opacity: 0; transform: scale(2.5); filter: blur(8px); } }
-    @keyframes cardFloat { 0%,100% { transform: perspective(700px) rotateX(7deg) rotateY(-8deg) rotateZ(-2deg) translateY(0); } 50% { transform: perspective(700px) rotateX(3deg) rotateY(-4deg) rotateZ(-1deg) translateY(-8px); } }
-    @keyframes popupIn { to { opacity: 1; transform: translateY(0) scale(1); } }
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .15s !important; }
-    }
-  
-    .brand-logo-wrap {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 0 auto 18px;
-    }
-
-    .brand-logo {
-      width: min(190px, 52vw);
-      height: auto;
-      display: block;
-      object-fit: contain;
-      filter: drop-shadow(0 8px 22px rgba(0, 0, 0, .28));
-    }
-
-    @media (max-width: 640px) {
-      .brand-logo {
-        width: min(155px, 48vw);
-      }
-    }
-  </style>
-</head>
-
-<body>
-  <div id="techIntro" class="tech-intro" role="button" tabindex="0" aria-label="Mở thư mời">
-    <div class="tech-grid"></div>
-    <div class="scan-line"></div>
-
-    <div class="energy-core">
-      <span class="energy-ring ring-1"></span>
-      <span class="energy-ring ring-2"></span>
-      <span class="energy-ring ring-3"></span>
-      <div class="hologram-number">11</div>
-    </div>
-
-    <div class="brand-logo-wrap intro-brand-logo">
-          <img class="brand-logo" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iTGF5ZXJfMiIgZGF0YS1uYW1lPSJMYXllciAyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MjAgODkuNzgiPgogIDxkZWZzPgogICAgPHN0eWxlPgogICAgICAuY2xzLTEgewogICAgICAgIGZpbGw6ICNmZmY7CiAgICAgIH0KCiAgICAgIC5jbHMtMiB7CiAgICAgICAgZmlsbDogI2ZmN2YzMjsKICAgICAgfQoKICAgICAgLmNscy0zIHsKICAgICAgICBmaWxsOiAjMGQ0MDczOwogICAgICB9CiAgICA8L3N0eWxlPgogIDwvZGVmcz4KICA8ZyBpZD0iTGF5ZXJfMS0yIiBkYXRhLW5hbWU9IkxheWVyIDEiPgogICAgPGc+CiAgICAgIDxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTE3MC41NSw0OS43MWgxNi41M2wtOC4yNi0yMi43My04LjI2LDIyLjczWk0xOTcuMTgsNzcuNzdsLTUuNzItMTYuMDVoLTI1LjE2bC01Ljg3LDE2LjA1aC0xMi45M2wyMy45OS02NC4xMmgxNC43NGwyMy45NCw2NC4xMmgtMTIuOTlaIi8+CiAgICAgIDxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTIxNS41NCwxMy42NWgxMi4wMnYyM2MyLjgxLTIuMzIsNS45OC0zLjQ3LDkuNDgtMy40NywyLjk0LDAsNS43My43NCw4LjM2LDIuMjEsMi42MywxLjQ3LDQuNjMsMy40Niw2LjAxLDUuOTYsMS43NSwzLjA3LDIuNjMsNy4yMywyLjYzLDEyLjQ5djIzLjkzaC0xMi4wMnYtMjIuMzFjMC04LjQtMy4wMS0xMS4zOC02Ljc2LTExLjM4LTEuODUsMC03LjcuNDEtNy43LDExLjkydjIxLjc4aC0xMi4wMlYxMy42NVoiLz4KICAgICAgPHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMzA4Ljg5LDM0LjA2aDExLjkydjIuNTZjMi44Mi0yLjMyLDUuODUtMy40Nyw5LjExLTMuNDcsMy44OCwwLDcuNDgsMS41MywxMC44LDQuNiwzLjU3LTMuMDcsNy42LTQuNiwxMi4xMS00LjYsNy4yLDAsMTIuNCwyLjg4LDE1LjU5LDguNjQsMS42OSwyLjg4LDIuNTMsNi45NSwyLjUzLDEyLjJ2MjMuNzVoLTEyLjAydi0yMy4wOWMwLTcuMy0zLjQ4LTEwLjEtNi4yNy0xMC4xLTEuOTksMC02LjY4Ljg2LTYuNjgsMTAuMjN2MjIuOTZoLTEyLjAydi0yMy4wOWMwLTguMzItNC4yOC05Ljk5LTYuMzMtOS45OS0xLjI0LDAtNi43Mi41NC02LjcyLDEwLjEydjIyLjk2aC0xMi4wMnYtNDMuNjhaIi8+CiAgICAgIDxwb2x5Z29uIGNsYXNzPSJjbHMtMSIgcG9pbnRzPSI0MjAuMDQgMzQuMDQgNDMzLjQxIDM0LjA0IDQ0My41NSA1OS45MSA0NTMuODIgMzQuMDQgNDY3LjA2IDM0LjA0IDQ0OC44OCA3Ny43NyA0MzguMjcgNzcuNzcgNDIwLjA0IDM0LjA0Ii8+CiAgICAgIDxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTQ3OC4zNCw1MS4zaDE4LjAzYy0xLjYzLTUuMDctNC42NC03LjYtOS4wMS03LjZzLTcuNTgsMi41My05LjAyLDcuNk00OTcuMTIsNjEuODJsMTAuNTEsNC4xM2MtNC44Miw3Ljg5LTExLjM5LDExLjgzLTE5LjcyLDExLjgzLTYuMjYsMC0xMS40Ny0yLjEzLTE1LjYzLTYuMzgtNC4xNi00LjI2LTYuMjQtOS41NC02LjI0LTE1Ljg3czIuMDctMTEuNTUsNi4yLTE1Ljg3YzQuMTMtNC4zMiw5LjE3LTYuNDgsMTUuMTItNi40OHMxMS4wOCwyLjE5LDE1LjAyLDYuNTdjMy45NCw0LjM4LDUuOTIsOS45Miw1LjkyLDE2LjYyLDAsMS0uMDMsMi4xLS4xLDMuMjloLTI5Ljg2YzEuNTYsNS4wMSw0LjczLDcuNTEsOS40OSw3LjUxLDMuOTQsMCw3LjA0LTEuNzgsOS4yOS01LjM1Ii8+CiAgICAgIDxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTM5OC43OSw2Ni45OWMtNi4zMSwwLTExLjQyLTUuMTEtMTEuNDItMTEuNDJzNS4xMS0xMS40MiwxMS40Mi0xMS40MiwxMS40Miw1LjExLDExLjQyLDExLjQyLTUuMTEsMTEuNDItMTEuNDIsMTEuNDJNMzk4Ljc3LDMyLjk5Yy0xMi4zNCwwLTIyLjM1LDEwLjAxLTIyLjM1LDIyLjM1czEwLjAxLDIyLjM1LDIyLjM1LDIyLjM1LDIyLjM1LTEwLjAxLDIyLjM1LTIyLjM1LTEwLjAxLTIyLjM1LTIyLjM1LTIyLjM1Ii8+CiAgICAgIDxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTI4MS42LDY3LjI3Yy01LjksMC0xMC42OC01LjI5LTEwLjY4LTExLjgyczQuNzgtMTEuODMsMTAuNjgtMTEuODMsMTAuNjgsNS4yOSwxMC42OCwxMS44My00Ljc4LDExLjgyLTEwLjY4LDExLjgyTTI5MS41NSwzNC4xOHYyLjg1Yy0zLjQ0LTIuNTYtNy4wNC0zLjg1LTEwLjgtMy44NS01Ljk1LDAtMTEsMi4xNy0xNS4xNyw2LjUyLTQuMTYsNC4zNS02LjI0LDkuNTktNi4yNCwxNS43M3MyLjA4LDExLjQ3LDYuMjQsMTUuODJjNC4xNiw0LjM1LDkuMjIsNi41MiwxNS4xNyw2LjUyLDMuNzUsMCw3LjM1LTEuMjgsMTAuOC0zLjg1djMuMDloMTIuMDJ2LTQyLjg0aC0xMi4wMloiLz4KICAgICAgPHBhdGggY2xhc3M9ImNscy0xIiBkPSJNNTExLjA4LDI4LjQ4aC42OWMxLDAsMS4yLjMxLDEuMi44MSwwLC4yMywwLC45Mi0xLjIuOTJoLS42OXYtMS43M1pNNTE0LjcsMjkuMjljMC0xLjA1LS40OS0yLjMtMi44LTIuM2gtMi41NnY3LjRoMS43NXYtMi42OWguNjFsMS40OCwyLjY5aDEuOTdsLTEuNzItM2MuODItLjM5LDEuMjctMS4xMywxLjI3LTIuMSIvPgogICAgICA8cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik01MTEuODcsMzcuNTFjLTMuNzMsMC02Ljc3LTMuMDQtNi43Ny02Ljc3czMuMDQtNi43Nyw2Ljc3LTYuNzcsNi43NywzLjA0LDYuNzcsNi43Ny0zLjA0LDYuNzctNi43Nyw2Ljc3TTUxMS44NywyMi42MWMtNC40OCwwLTguMTMsMy42NS04LjEzLDguMTNzMy42NSw4LjEzLDguMTMsOC4xMyw4LjEzLTMuNjUsOC4xMy04LjEzLTMuNjUtOC4xMy04LjEzLTguMTMiLz4KICAgICAgPHBhdGggY2xhc3M9ImNscy0yIiBkPSJNNTcuNjEsMzAuODJoLTIzLjk1Yy0yLjYyLDAtNC43NS0yLjEyLTQuNzUtNC43NXMyLjEzLTQuNzUsNC43NS00Ljc1aDIzLjk1YzIuNjIsMCw0Ljc1LDIuMTMsNC43NSw0Ljc1cy0yLjEyLDQuNzUtNC43NSw0Ljc1Ii8+CiAgICAgIDxwYXRoIGNsYXNzPSJjbHMtMiIgZD0iTTUzLjMxLDUwLjVINC43NWMtMi42MiwwLTQuNzUtMi4xMi00Ljc1LTQuNzVzMi4xMy00Ljc1LDQuNzUtNC43NWg0OC41NmMyLjYyLDAsNC43NSwyLjEzLDQuNzUsNC43NXMtMi4xMyw0Ljc1LTQuNzUsNC43NSIvPgogICAgICA8cGF0aCBjbGFzcz0iY2xzLTIiIGQ9Ik00NC43NCw3MC4yNUgxNS43OGMtMi42MiwwLTQuNzUtMi4xMy00Ljc1LTQuNzVzMi4xMy00Ljc1LDQuNzUtNC43NWgyOC45NmMyLjYyLDAsNC43NSwyLjEzLDQuNzUsNC43NXMtMi4xMyw0Ljc1LTQuNzUsNC43NSIvPgogICAgICA8cGF0aCBjbGFzcz0iY2xzLTIiIGQ9Ik0xMzAuMTYsODMuMDdsLTIzLjY0LTY0Ljk4QzEwMi41OCw3LjI4LDkyLjMyLS4yNCw4MC44MiwwYy05Ljg5LjIxLTE4Ljk4LDUuNDgtMjQuMSwxMy45NmwtMy40OCw1Ljk5aC0uMDFzLTYuMywxMC44OC02LjMsMTAuODhoMi4wMWMyLjgxLDAsNS4wOCwyLjI3LDUuMDgsNS4wOHMtMi4yNyw1LjA4LTUuMDgsNS4wOGgtNy45bC01LjE1LDguODloLjA2bC01Ljc2LDkuOTZoLS4wOGwtNS43OSw5Ljk5aC4xbC03LjIsMTIuNDdjLTEuOTIsMy4zMi40OSw3LjQ4LDQuMzIsNy40OGgyNS41M2MzLjU2LDAsNi44NS0xLjksOC42NC00Ljk4bDguNjMtMTQuOTdoMzEuMDlsNS42MiwxNC45N2MxLjA5LDIuOSwzLjg1LDQuODMsNi45NSw0Ljg1bDE3LjQ0LjEzYzMuNDguMDMsNS45MS0zLjQzLDQuNzItNi42OSIvPgogICAgICA8cGF0aCBjbGFzcz0iY2xzLTMiIGQ9Ik03NS4zNCw1MC43NWMtMi42OSwwLTQuODgtMi4xOC00Ljg4LTQuODhzMi4xOC00Ljg3LDQuODgtNC44Nyw0Ljg4LDIuMTgsNC44OCw0Ljg3LTIuMTgsNC44OC00Ljg4LDQuODgiLz4KICAgICAgPHBhdGggY2xhc3M9ImNscy0zIiBkPSJNOTMuNjIsNTAuNzRjLTIuNywwLTQuODgtMi4xOC00Ljg4LTQuODdzMi4xOC00Ljg5LDQuODgtNC44OSw0Ljg4LDIuMTksNC44OCw0Ljg5LTIuMTgsNC44Ny00Ljg4LDQuODciLz4KICAgIDwvZz4KICA8L2c+Cjwvc3ZnPg==" alt="Ahamove">
-        </div>
-        <div class="intro-copy">
-      <p class="intro-eyebrow">AHAMOVE 11 YEARS</p>
-      <h2 class="intro-title">CHẠM ĐỂ MỞ THƯ MỜI</h2>
-      <p class="intro-hint">Một hành trình chuyển mình đang chờ bạn</p>
-    </div>
-  </div>
-
-  <div id="invitationContent" class="invitation-content">
-    <div class="invite-shell">
-      <header class="hero">
-        <div class="brand" aria-label="Ahamove">
-          <div class="brand-mark">A</div>
-          <div class="brand-text">
-            <p class="brand-name">Ahamove</p>
-            <p class="brand-tagline">Always Moving Together</p>
-          </div>
-        </div>
-
-        <div class="hero-number-wrap" aria-hidden="true">
-          <div class="orbit"></div>
-          <div class="orbit-inner"></div>
-          <div class="hero-number-card"><span>11</span></div>
-        </div>
-
-        <p class="hero-label">Thư mời sinh nhật</p>
-        <h1>11 NĂM CHUYỂN MÌNH<br><span>CHUYỂN MÌNH BỨT PHÁ</span></h1>
-        <p class="hero-subtitle">Always Moving Together</p>
-      </header>
-
-      <main class="content">
-        <p class="greeting">Thân gửi <span class="employee-name">Ahamover</span>,</p>
-
-        <p class="paragraph">Từ những chuyến giao hàng đầu tiên đến hành trình không ngừng mở rộng về dịch vụ, công nghệ và con người, mỗi dấu mốc của Ahamove đều được tạo nên từ tinh thần sẵn sàng thay đổi để tiến về phía trước.</p>
-
-        <p class="paragraph">Bước sang tuổi 11, <strong style="color:#fff">“Chuyển mình”</strong> không chỉ là nhìn lại chặng đường chúng ta đã đi qua, mà còn là lời khẳng định cho một hành trình mới:</p>
-
-        <div class="value-list">
-          <div class="value-item"><span>🧡</span><span>Chuyển mình trong tư duy</span></div>
-          <div class="value-item"><span>🧡</span><span>Chuyển mình trong cách làm việc</span></div>
-          <div class="value-item"><span>🧡</span><span>Chuyển mình cùng công nghệ và AI</span></div>
-          <div class="value-item"><span>🧡</span><span>Chuyển mình để tạo nên những bước tiến bứt phá</span></div>
-        </div>
-
-        <p class="paragraph">Sinh nhật Ahamove 11 tuổi sẽ là dịp để chúng ta cùng nhìn lại hành trình đã qua, ghi nhận những con người đã góp phần tạo nên từng dấu ấn và cùng sẵn sàng bước vào chặng đường tiếp theo.</p>
-
-        <section class="event-card">
-          <div>
-            <p id="eventLabel" class="event-label">Ahamove Celebration Night</p>
-            <h2 id="venueName">Đang tải địa điểm...</h2>
-            <p id="venueDetail" class="event-place"></p>
-            <p id="venueAddress" class="event-address"></p>
-            <a id="mapLink" class="map-link" href="#" target="_blank" rel="noopener" hidden>📍 Xem bản đồ</a>
-          </div>
-
-          <div class="date-box">
-            <div class="date-row">
-              <p id="dateNumber" class="date-number">--</p>
-              <div>
-                <p id="dateMeta" class="date-meta">Đang tải...</p>
-                <p id="dateTime" class="date-time">--:--</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section class="dresscode">
-          <p class="dresscode-label">Dresscode</p>
-          <p class="dresscode-title">Trắng • Bạc • Xanh dương</p>
-          <p class="dresscode-note">Tỏa sáng theo phiên bản chuyển mình của bạn</p>
-          <div class="swatches" aria-hidden="true">
-            <span class="swatch white"></span>
-            <span class="swatch silver"></span>
-            <span class="swatch blue"></span>
-          </div>
-        </section>
-
-        <div class="deadline">Xác nhận trước <strong>12:00 • 29/07/2026</strong></div>
-
-        <div class="button-group">
-          <button id="confirmButton" class="rsvp-button confirm-button" type="button">XÁC NHẬN THAM DỰ</button>
-          <button id="declineButton" class="rsvp-button decline-button" type="button">KHÔNG THAM GIA ĐƯỢC</button>
-        </div>
-
-        <p id="responseStatus" class="response-status" aria-live="polite">Vui lòng chọn tình trạng tham dự của bạn.</p>
-
-        <p class="footer-note">Hẹn gặp bạn tại hành trình tiếp theo của Ahamove.<br><strong>Always Moving Together.</strong></p>
-      </main>
-    </div>
-  </div>
-
-  <div id="successOverlay" class="overlay" aria-live="polite">
-    <div class="popup">
-      <div class="popup-icon success">✓</div>
-      <p class="popup-label">Congratulations</p>
-      <h3>Xác nhận thành công!</h3>
-      <p class="popup-text">BTC đã ghi nhận bạn sẽ tham dự Sinh nhật Ahamove 11 tuổi.</p>
-      <div id="successEventDetail" class="popup-detail">Đang tải thông tin sự kiện...</div>
-      <button id="closeSuccess" class="close-button" type="button">HOÀN TẤT</button>
-    </div>
-  </div>
-
-  <div id="declineOverlay" class="overlay" aria-live="polite">
-    <div class="popup">
-      <div class="popup-icon decline">💙</div>
-      <p class="popup-label" style="color:#8ecbff">Đã ghi nhận phản hồi</p>
-      <h3>Hẹn gặp bạn vào dịp tiếp theo!</h3>
-      <p class="popup-text">BTC rất tiếc khi bạn chưa thể tham dự và đã ghi nhận phản hồi của bạn.</p>
-      <button id="closeDecline" class="close-button" type="button">HOÀN TẤT</button>
-    </div>
-  </div>
-
-
-  <script>
-    function getTokenFromUrl() {
-      const pathMatch = window.location.pathname.match(/^\\/i\\/([^/?#]+)/i);
-      const params = new URLSearchParams(window.location.search);
-      return String(pathMatch?.[1] || params.get('token') || '').trim();
-    }
-
-    const invitationToken = getTokenFromUrl();
-    let currentStatus = '';
-    let currentEvent = null;
-
-    const techIntro = document.getElementById('techIntro');
-    const invitationContent = document.getElementById('invitationContent');
-    const confirmButton = document.getElementById('confirmButton');
-    const declineButton = document.getElementById('declineButton');
-    const responseStatus = document.getElementById('responseStatus');
-    const successOverlay = document.getElementById('successOverlay');
-    const declineOverlay = document.getElementById('declineOverlay');
-
-    function openInvitation() {
-      if (techIntro.classList.contains('launch')) return;
-      techIntro.classList.add('launch');
-      setTimeout(() => {
-        techIntro.classList.add('opened');
-        invitationContent.classList.add('visible');
-        document.body.style.overflow = 'auto';
-      }, 950);
-    }
-
-    techIntro.addEventListener('click', openInvitation);
-    techIntro.addEventListener('keydown', event => {
-      if (event.key === 'Enter' || event.key === ' ') {
-        event.preventDefault();
-        openInvitation();
-      }
-    });
-
-    function setLoadingState() {
-      confirmButton.disabled = true;
-      declineButton.disabled = true;
-      responseStatus.textContent = 'Đang ghi nhận phản hồi...';
-      responseStatus.style.color = '#9fd4ff';
-    }
-
-    function restoreButtons() {
-      confirmButton.disabled = false;
-      declineButton.disabled = false;
-    }
-
-    function showExistingStatus(status) {
-      if (status === 'THAM DỰ') {
-        confirmButton.textContent = 'ĐÃ XÁC NHẬN';
-        confirmButton.style.background = '#059669';
-        responseStatus.textContent = 'Bạn đã xác nhận tham dự chương trình.';
-        responseStatus.style.color = '#6ee7b7';
-      } else if (status === 'KHÔNG THAM GIA ĐƯỢC') {
-        declineButton.textContent = 'ĐÃ GHI NHẬN';
-        declineButton.style.background = 'rgba(255,255,255,.12)';
-        responseStatus.textContent = 'BTC đã ghi nhận bạn không thể tham dự.';
-        responseStatus.style.color = '#93c5fd';
-      }
-    }
-
-    function formatEvent(event) {
-      document.getElementById('eventLabel').textContent =
-        \`\${event.site} Celebration Night\`;
-
-      document.getElementById('venueName').textContent =
-        event.venueName || 'Địa điểm sẽ được cập nhật';
-
-      document.getElementById('venueDetail').textContent =
-        event.venueDetail || '';
-
-      document.getElementById('venueAddress').textContent =
-        event.address || '';
-
-      const mapLink = document.getElementById('mapLink');
-      if (event.mapUrl) {
-        mapLink.href = event.mapUrl;
-        mapLink.hidden = false;
-      } else {
-        mapLink.hidden = true;
-      }
-
-      const dateParts = String(event.eventDate || '').split('/');
-      const [day = '--', month = '--', year = '----'] = dateParts;
-      document.getElementById('dateNumber').textContent = day;
-      document.getElementById('dateMeta').textContent =
-        \`Tháng \${month} • \${year}\`;
-      document.getElementById('dateTime').textContent =
-        event.eventTime || '--:--';
-
-      const venueLine = [event.venueName, event.venueDetail]
-        .filter(Boolean)
-        .join(' • ');
-
-      document.getElementById('successEventDetail').innerHTML =
-        \`\${escapeHtml(venueLine || 'Địa điểm sẽ được cập nhật')}<br>\` +
-        \`<strong>\${escapeHtml(event.eventTime || '--:--')} • \` +
-        \`\${escapeHtml(event.eventDate || '--/--/----')}</strong>\`;
-    }
-
-    function escapeHtml(value) {
-      return String(value || '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-    }
-
-    async function loadInvitation() {
-      const nameElement = document.querySelector('.employee-name');
-
-      if (!invitationToken) {
-        nameElement.textContent = 'Ahamover';
-        responseStatus.textContent = 'Đường dẫn thư mời không hợp lệ hoặc thiếu token.';
-        responseStatus.style.color = '#ff9d9d';
-        confirmButton.disabled = true;
-        declineButton.disabled = true;
-        return;
-      }
-
-      try {
-        const response = await fetch(
-          '/api/invitation?token=' + encodeURIComponent(invitationToken),
-          {
-            method: 'GET',
-            headers: { 'Accept': 'application/json' },
-            cache: 'no-store'
-          }
-        );
-
-        const result = await response.json();
-
-        if (!response.ok || !result.success) {
-          throw new Error(result.message || 'Không tìm thấy thông tin thư mời.');
-        }
-
-        nameElement.textContent = result.invitation.name || 'Ahamover';
-        currentStatus = result.invitation.status || '';
-        currentEvent = result.invitation.event;
-        formatEvent(currentEvent);
-        showExistingStatus(currentStatus);
-      } catch (error) {
-        nameElement.textContent = 'Ahamover';
-        responseStatus.textContent =
-          error.message || 'Không thể tải thông tin thư mời.';
-        responseStatus.style.color = '#ff9d9d';
-        confirmButton.disabled = true;
-        declineButton.disabled = true;
-      }
-    }
-
-    async function submitResponse(status) {
-      if (!invitationToken) {
-        responseStatus.textContent = 'Không tìm thấy token thư mời.';
-        responseStatus.style.color = '#ff9d9d';
-        return;
-      }
-
-      setLoadingState();
-
-      try {
-        const response = await fetch('/api/rsvp', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({
-            token: invitationToken,
-            status,
-            note: ''
-          })
-        });
-
-        const result = await response.json();
-
-        if (!response.ok || !result.success) {
-          throw new Error(
-            result.message || 'Có lỗi xảy ra khi ghi nhận phản hồi.'
-          );
-        }
-
-        currentStatus = result.status;
-
-        if (result.status === 'THAM DỰ') {
-          confirmButton.textContent = 'ĐÃ XÁC NHẬN';
-          confirmButton.style.background = '#059669';
-          responseStatus.textContent =
-            result.message || 'Đã xác nhận tham dự thành công.';
-          responseStatus.style.color = '#6ee7b7';
-          successOverlay.classList.add('active');
-        } else {
-          declineButton.textContent = 'ĐÃ GHI NHẬN';
-          declineButton.style.background = 'rgba(255,255,255,.12)';
-          responseStatus.textContent =
-            result.message || 'BTC đã ghi nhận bạn không thể tham dự.';
-          responseStatus.style.color = '#93c5fd';
-          declineOverlay.classList.add('active');
-        }
-
-        restoreButtons();
-      } catch (error) {
-        restoreButtons();
-        responseStatus.textContent =
-          error.message || 'Có lỗi xảy ra. Vui lòng thử lại.';
-        responseStatus.style.color = '#ff9d9d';
-      }
-    }
-
-    confirmButton.addEventListener(
-      'click',
-      () => submitResponse('THAM DỰ')
-    );
-
-    declineButton.addEventListener(
-      'click',
-      () => submitResponse('KHÔNG THAM GIA ĐƯỢC')
-    );
-
-    document.getElementById('closeSuccess').addEventListener(
-      'click',
-      () => successOverlay.classList.remove('active')
-    );
-
-    document.getElementById('closeDecline').addEventListener(
-      'click',
-      () => declineOverlay.classList.remove('active')
-    );
-
-    loadInvitation();
-  </script>
-</body>
-</html>
-`;
 
 const ALLOWED_STATUSES = new Set([
   'THAM DỰ',
@@ -823,6 +44,7 @@ function getConfig() {
 
 async function getAccessToken() {
   const { clientEmail, privateKey } = getConfig();
+
   const auth = new JWT({
     email: clientEmail,
     key: privateKey,
@@ -830,14 +52,17 @@ async function getAccessToken() {
   });
 
   const credentials = await auth.authorize();
+
   if (!credentials.access_token) {
     throw new Error('Không thể xác thực Google Sheets API.');
   }
+
   return credentials.access_token;
 }
 
 async function sheetsRequest(path, options = {}) {
   const token = await getAccessToken();
+
   const response = await fetch(
     `https://sheets.googleapis.com/v4/spreadsheets/${path}`,
     {
@@ -851,21 +76,25 @@ async function sheetsRequest(path, options = {}) {
   );
 
   const data = await response.json().catch(() => ({}));
+
   if (!response.ok) {
     throw new Error(
       data?.error?.message ||
       `Google Sheets API trả về lỗi ${response.status}.`
     );
   }
+
   return data;
 }
 
 async function readRows(sheetName, rangeColumns) {
   const { spreadsheetId } = getConfig();
   const range = encodeURIComponent(`${sheetName}!${rangeColumns}`);
+
   const data = await sheetsRequest(
     `${spreadsheetId}/values/${range}?majorDimension=ROWS`
   );
+
   return Array.isArray(data.values) ? data.values : [];
 }
 
@@ -944,125 +173,139 @@ async function updateRsvp(rowNumber, status, note) {
   return now;
 }
 
-function noStore(res) {
-  res.set('Cache-Control', 'no-store, max-age=0');
-  res.set('X-Content-Type-Options', 'nosniff');
-  res.set('Referrer-Policy', 'no-referrer');
+function sendJson(res, statusCode, payload) {
+  res.statusCode = statusCode;
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  res.setHeader('Cache-Control', 'no-store, max-age=0');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.end(JSON.stringify(payload));
 }
 
-app.get(['/', '/i/:token'], (req, res) => {
-  noStore(res);
-  res.sendFile(INDEX_FILE, error => {
-    if (error) {
-      console.error('Không thể mở index.html:', error);
-      if (!res.headersSent) {
-        res.status(500).send('Không thể tải giao diện thư mời.');
-      }
+function getBody(req) {
+  if (req.body && typeof req.body === 'object') {
+    return req.body;
+  }
+
+  if (typeof req.body === 'string' && req.body.trim()) {
+    try {
+      return JSON.parse(req.body);
+    } catch {
+      return {};
     }
-  });
-});
+  }
 
-app.get('/api/invitation', async (req, res) => {
-  noStore(res);
+  return {};
+}
 
+module.exports = async function handler(req, res) {
   try {
-    const token = normalizeToken(req.query.token);
-    if (!token) {
-      return res.status(400).json({
-        success: false,
-        message: 'Đường dẫn thư mời không hợp lệ.'
-      });
-    }
+    const pathname = new URL(
+      req.url,
+      `https://${req.headers.host || 'localhost'}`
+    ).pathname;
 
-    const invitation = await findInvitationByToken(token);
-    if (!invitation) {
-      return res.status(404).json({
-        success: false,
-        message: 'Không tìm thấy thư mời hoặc token đã không còn hợp lệ.'
-      });
-    }
+    if (pathname === '/api/invitation' && req.method === 'GET') {
+      const url = new URL(
+        req.url,
+        `https://${req.headers.host || 'localhost'}`
+      );
 
-    const event = await getEventBySite(invitation.site);
-    if (!event) {
-      return res.status(500).json({
-        success: false,
-        message: `Chưa cấu hình địa điểm cho site ${invitation.site || 'không xác định'}.`
-      });
-    }
+      const token = normalizeToken(url.searchParams.get('token'));
 
-    return res.json({
-      success: true,
-      invitation: {
-        name: invitation.name,
-        site: invitation.site,
-        status: invitation.status,
-        event
+      if (!token) {
+        return sendJson(res, 400, {
+          success: false,
+          message: 'Đường dẫn thư mời không hợp lệ.'
+        });
       }
+
+      const invitation = await findInvitationByToken(token);
+
+      if (!invitation) {
+        return sendJson(res, 404, {
+          success: false,
+          message: 'Không tìm thấy thư mời hoặc token đã không còn hợp lệ.'
+        });
+      }
+
+      const event = await getEventBySite(invitation.site);
+
+      if (!event) {
+        return sendJson(res, 500, {
+          success: false,
+          message: `Chưa cấu hình địa điểm cho site ${invitation.site || 'không xác định'}.`
+        });
+      }
+
+      return sendJson(res, 200, {
+        success: true,
+        invitation: {
+          name: invitation.name,
+          site: invitation.site,
+          status: invitation.status,
+          event
+        }
+      });
+    }
+
+    if (pathname === '/api/rsvp' && req.method === 'POST') {
+      const body = getBody(req);
+      const token = normalizeToken(body.token);
+      const status = cleanText(body.status, 100);
+      const note = cleanText(body.note || '', 1000);
+
+      if (!token) {
+        return sendJson(res, 400, {
+          success: false,
+          message: 'Token thư mời không hợp lệ.'
+        });
+      }
+
+      if (!ALLOWED_STATUSES.has(status)) {
+        return sendJson(res, 400, {
+          success: false,
+          message: 'Trạng thái phản hồi không hợp lệ.'
+        });
+      }
+
+      const invitation = await findInvitationByToken(token);
+
+      if (!invitation) {
+        return sendJson(res, 404, {
+          success: false,
+          message: 'Không tìm thấy thư mời hoặc token đã không còn hợp lệ.'
+        });
+      }
+
+      const responseTime = await updateRsvp(
+        invitation.rowNumber,
+        status,
+        note
+      );
+
+      const message =
+        status === 'THAM DỰ'
+          ? 'Đã xác nhận tham dự thành công. Hẹn gặp bạn tại chương trình!'
+          : 'BTC đã ghi nhận bạn không thể tham dự. Hẹn gặp bạn vào dịp tiếp theo!';
+
+      return sendJson(res, 200, {
+        success: true,
+        status,
+        responseTime,
+        message
+      });
+    }
+
+    return sendJson(res, 404, {
+      success: false,
+      message: 'API không tồn tại.'
     });
   } catch (error) {
-    console.error('GET /api/invitation failed:', error);
-    return res.status(500).json({
+    console.error('Serverless API failed:', error);
+
+    return sendJson(res, 500, {
       success: false,
-      message: 'Không thể tải thông tin thư mời. Vui lòng liên hệ BTC.'
+      message: 'Hệ thống chưa thể xử lý yêu cầu. Vui lòng kiểm tra cấu hình Vercel.'
     });
   }
-});
-
-app.post('/api/rsvp', async (req, res) => {
-  noStore(res);
-
-  try {
-    const token = normalizeToken(req.body?.token);
-    const status = cleanText(req.body?.status, 100);
-    const note = cleanText(req.body?.note || '', 1000);
-
-    if (!token) {
-      return res.status(400).json({
-        success: false,
-        message: 'Token thư mời không hợp lệ.'
-      });
-    }
-
-    if (!ALLOWED_STATUSES.has(status)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Trạng thái phản hồi không hợp lệ.'
-      });
-    }
-
-    const invitation = await findInvitationByToken(token);
-    if (!invitation) {
-      return res.status(404).json({
-        success: false,
-        message: 'Không tìm thấy thư mời hoặc token đã không còn hợp lệ.'
-      });
-    }
-
-    const responseTime = await updateRsvp(
-      invitation.rowNumber,
-      status,
-      note
-    );
-
-    const message =
-      status === 'THAM DỰ'
-        ? 'Đã xác nhận tham dự thành công. Hẹn gặp bạn tại chương trình!'
-        : 'BTC đã ghi nhận bạn không thể tham dự. Hẹn gặp bạn vào dịp tiếp theo!';
-
-    return res.json({
-      success: true,
-      status,
-      responseTime,
-      message
-    });
-  } catch (error) {
-    console.error('POST /api/rsvp failed:', error);
-    return res.status(500).json({
-      success: false,
-      message: 'Không thể ghi nhận phản hồi. Vui lòng thử lại hoặc liên hệ BTC.'
-    });
-  }
-});
-
-
-module.exports = app;
+};
