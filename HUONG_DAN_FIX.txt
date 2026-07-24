@@ -1,19 +1,20 @@
-NGUYÊN NHÂN LỖI
-server.js cũ chứa nguyên HTML bên trong biến `HTML`, nên Vercel hiển thị bản giao diện cũ.
-Việc sửa index.html không tác động đến trang live.
+NGUYÊN NHÂN LỖI 500
+Bản trước dùng process.cwd() và app.listen(), đồng thời Vercel chưa đóng gói
+index.html/background.png/logo vào Serverless Function.
 
-CÁCH FIX
-Upload ghi đè 6 file ở thư mục gốc repository:
-- server.js
-- index.html
-- vercel.json
-- background.png
-- ahamove-logo.svg
-- package.json
+BẢN NÀY ĐÃ SỬA
+- Dùng __dirname để tìm file trong function bundle.
+- Bỏ app.listen(); chỉ export Express app.
+- vercel.json dùng includeFiles để đóng gói:
+  index.html, background.png, ahamove-logo.svg.
+- Express phục vụ các file ở thư mục gốc.
 
-Sau khi commit:
-1. Chờ Vercel deploy.
-2. Kiểm tra /background.png.
-3. Mở trang bằng cửa sổ ẩn danh hoặc hard refresh.
-
-server.js mới đọc trực tiếp index.html và phục vụ background.png/logo ở thư mục gốc.
+CÁCH CẬP NHẬT
+1. Giải nén file ZIP.
+2. Upload ghi đè toàn bộ file trong ZIP lên thư mục gốc GitHub.
+3. Commit.
+4. Vào Vercel > Deployments và chờ deployment mới hoàn tất.
+5. Kiểm tra:
+   /background.png
+   /ahamove-logo.svg
+6. Mở trang bằng cửa sổ ẩn danh.
