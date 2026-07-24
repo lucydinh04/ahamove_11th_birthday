@@ -2832,6 +2832,72 @@
       }
     }
 
+  
+    /* FINAL 11 IMAGE + HEADLINE FIX */
+    .hero-number-stage {
+      justify-content: center !important;
+    }
+
+    .hero-number-visual {
+      min-height: 220px;
+      margin-bottom: -8px;
+    }
+
+    .hero-number-image {
+      width: min(100%, 310px) !important;
+      max-height: 250px;
+      object-fit: contain;
+    }
+
+    .campaign-title-orange::before,
+    .campaign-title-blue::before,
+    .campaign-title-orange::after,
+    .campaign-title-blue::after {
+      content: none !important;
+      display: none !important;
+    }
+
+    .campaign-title-orange,
+    .campaign-title-blue {
+      filter: none !important;
+      text-shadow: none !important;
+    }
+
+    .campaign-title-orange {
+      background: linear-gradient(
+        180deg,
+        #ffd09d 0%,
+        #ff9950 42%,
+        #f26522 100%
+      ) !important;
+      -webkit-background-clip: text !important;
+      background-clip: text !important;
+      color: transparent !important;
+    }
+
+    .campaign-title-blue {
+      background: linear-gradient(
+        180deg,
+        #eaf8ff 0%,
+        #8bd3ff 44%,
+        #2d9cec 100%
+      ) !important;
+      -webkit-background-clip: text !important;
+      background-clip: text !important;
+      color: transparent !important;
+    }
+
+    @media (max-width: 620px) {
+      .hero-number-visual {
+        min-height: 165px;
+      }
+
+      .hero-number-image {
+        width: 205px !important;
+        max-height: 170px;
+      }
+    }
+
   </style>
 </head>
 
