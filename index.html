@@ -991,6 +991,601 @@
       }
     }
 
+  
+    /* CENTER-FOCUS HERO LAYOUT */
+    .hero {
+      min-height: 900px !important;
+      padding: 34px 20px 70px !important;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .brand {
+      margin-bottom: 34px !important;
+      transform: scale(.96);
+      transform-origin: center top;
+    }
+
+    .hero-number-wrap {
+      width: 220px !important;
+      height: 220px !important;
+      margin: 4px auto 28px !important;
+      flex: 0 0 auto;
+    }
+
+    .hero-label {
+      position: relative;
+      z-index: 6;
+      width: 100%;
+      margin: 0 0 14px !important;
+      color: #b9ddff !important;
+      font-size: 11px !important;
+      font-weight: 600;
+      letter-spacing: .24em !important;
+      line-height: 1.35;
+      text-align: center;
+      text-transform: uppercase;
+      text-shadow: 0 0 16px rgba(38,159,255,.35);
+    }
+
+    .hero h1 {
+      position: relative;
+      z-index: 7;
+      width: min(100%, 560px) !important;
+      margin: 0 auto !important;
+      padding: 0 10px;
+      font-size: clamp(36px, 7.2vw, 58px) !important;
+      line-height: .98 !important;
+      letter-spacing: -.035em !important;
+      text-align: center;
+      text-wrap: balance;
+      isolation: isolate;
+    }
+
+    .hero h1 .headline-orange,
+    .hero h1 .headline-blue {
+      display: block;
+      width: 100%;
+      white-space: nowrap;
+    }
+
+    .hero h1 .headline-orange {
+      margin-bottom: 8px;
+    }
+
+    .hero-subtitle {
+      position: relative;
+      z-index: 7;
+      width: min(100%, 480px);
+      margin: 18px auto 0 !important;
+      padding: 0 14px;
+      color: #c8e8ff !important;
+      font-size: 11px !important;
+      line-height: 1.55;
+      letter-spacing: .16em !important;
+      text-align: center;
+      text-transform: uppercase;
+      text-shadow: 0 0 14px rgba(38,159,255,.22);
+    }
+
+    .ai-feature-grid {
+      inset: 176px 18px auto !important;
+      align-items: flex-start;
+    }
+
+    .ai-feature-grid-bottom {
+      inset: 648px 18px auto !important;
+      align-items: flex-start;
+    }
+
+    .ai-chip {
+      width: 110px !important;
+      min-height: 92px !important;
+      opacity: .88;
+      transform: scale(.94);
+    }
+
+    .ai-chip-left {
+      margin-left: 0;
+    }
+
+    .ai-chip-right {
+      margin-right: 0;
+    }
+
+    .hero::before {
+      bottom: 6px !important;
+      width: 480px !important;
+      opacity: .72 !important;
+    }
+
+    @media (max-width: 560px) {
+      .hero {
+        min-height: 860px !important;
+        padding: 26px 14px 58px !important;
+      }
+
+      .brand {
+        margin-bottom: 28px !important;
+        transform: scale(.9);
+      }
+
+      .hero-number-wrap {
+        width: 196px !important;
+        height: 196px !important;
+        margin-bottom: 24px !important;
+      }
+
+      .hero-label {
+        margin-bottom: 12px !important;
+        font-size: 10px !important;
+        letter-spacing: .2em !important;
+      }
+
+      .hero h1 {
+        width: min(100%, 390px) !important;
+        padding: 0 6px;
+        font-size: clamp(34px, 10.2vw, 46px) !important;
+        line-height: 1 !important;
+      }
+
+      .hero h1 .headline-orange,
+      .hero h1 .headline-blue {
+        white-space: normal;
+      }
+
+      .hero-subtitle {
+        width: min(100%, 360px);
+        margin-top: 16px !important;
+        font-size: 9px !important;
+        letter-spacing: .13em !important;
+      }
+
+      .ai-feature-grid {
+        inset: 150px 8px auto !important;
+      }
+
+      .ai-feature-grid-bottom {
+        inset: 624px 8px auto !important;
+      }
+
+      .ai-chip {
+        width: 86px !important;
+        min-height: 78px !important;
+        padding: 9px 7px !important;
+        transform: scale(.9);
+      }
+
+      .ai-chip-label {
+        font-size: 7px !important;
+        letter-spacing: .1em !important;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .hero {
+        min-height: 880px !important;
+      }
+
+      .hero h1 {
+        width: 100% !important;
+        font-size: 34px !important;
+      }
+
+      .ai-feature-grid-bottom {
+        inset: 636px 4px auto !important;
+      }
+
+      .ai-chip {
+        width: 80px !important;
+      }
+    }
+
+  
+    /* 3D + AI ENHANCEMENT */
+    .hero {
+      perspective: 1200px;
+      transform-style: preserve-3d;
+    }
+
+    .ai-scene {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      overflow: hidden;
+      pointer-events: none;
+      transform-style: preserve-3d;
+    }
+
+    .holo-beam {
+      position: absolute;
+      left: 50%;
+      top: 118px;
+      width: 280px;
+      height: 560px;
+      transform: translateX(-50%) perspective(800px) rotateX(8deg);
+      background:
+        linear-gradient(
+          180deg,
+          rgba(49,178,255,.02),
+          rgba(49,178,255,.14) 36%,
+          rgba(49,178,255,.04) 82%,
+          transparent
+        );
+      clip-path: polygon(38% 0, 62% 0, 100% 100%, 0 100%);
+      filter: blur(3px);
+      opacity: .56;
+      animation: beamPulse 3.4s ease-in-out infinite;
+    }
+
+    .data-stream {
+      position: absolute;
+      top: -20%;
+      width: 1px;
+      height: 42%;
+      background:
+        linear-gradient(
+          180deg,
+          transparent,
+          rgba(88,198,255,.85),
+          transparent
+        );
+      box-shadow: 0 0 12px rgba(38,159,255,.7);
+      opacity: .6;
+      animation: streamDrop 4.8s linear infinite;
+    }
+
+    .data-stream::before,
+    .data-stream::after {
+      content: "";
+      position: absolute;
+      left: -2px;
+      width: 5px;
+      height: 5px;
+      border: 1px solid rgba(100,205,255,.8);
+      transform: rotate(45deg);
+      box-shadow: 0 0 10px rgba(38,159,255,.55);
+    }
+
+    .data-stream::before { top: 24%; }
+    .data-stream::after { top: 72%; }
+
+    .data-stream-1 { left: 22%; animation-delay: .2s; }
+    .data-stream-2 { left: 50%; animation-delay: 1.5s; }
+    .data-stream-3 { left: 78%; animation-delay: 2.7s; }
+
+    .ai-neural-network {
+      position: absolute;
+      inset: 86px 48px auto;
+      height: 260px;
+      opacity: .72;
+      transform: translateZ(-80px);
+      animation: neuralDrift 8s ease-in-out infinite;
+    }
+
+    .neural-node {
+      position: absolute;
+      width: 9px;
+      height: 9px;
+      border: 1px solid rgba(98,199,255,.9);
+      border-radius: 50%;
+      background: rgba(8,37,76,.9);
+      box-shadow:
+        0 0 12px rgba(38,159,255,.72),
+        inset 0 0 6px rgba(255,255,255,.18);
+      animation: nodePulse 2.6s ease-in-out infinite;
+    }
+
+    .node-1 { left: 3%; top: 28%; }
+    .node-2 { left: 17%; top: 10%; animation-delay: .4s; }
+    .node-3 { right: 17%; top: 12%; animation-delay: .8s; }
+    .node-4 { right: 3%; top: 32%; animation-delay: 1.2s; }
+    .node-5 { left: 8%; bottom: 4%; animation-delay: 1.6s; }
+    .node-6 { right: 8%; bottom: 6%; animation-delay: 2s; }
+
+    .neural-line {
+      position: absolute;
+      height: 1px;
+      transform-origin: left center;
+      background:
+        linear-gradient(
+          90deg,
+          rgba(38,159,255,.05),
+          rgba(61,180,255,.55),
+          rgba(242,101,34,.18)
+        );
+      box-shadow: 0 0 8px rgba(38,159,255,.24);
+    }
+
+    .line-1 {
+      left: 4%;
+      top: 30%;
+      width: 26%;
+      transform: rotate(-18deg);
+    }
+
+    .line-2 {
+      right: 4%;
+      top: 34%;
+      width: 27%;
+      transform: rotate(198deg);
+    }
+
+    .line-3 {
+      left: 8%;
+      bottom: 8%;
+      width: 30%;
+      transform: rotate(-24deg);
+    }
+
+    .line-4 {
+      right: 8%;
+      bottom: 10%;
+      width: 30%;
+      transform: rotate(204deg);
+    }
+
+    .floating-cube {
+      position: absolute;
+      width: 34px;
+      height: 34px;
+      transform-style: preserve-3d;
+      opacity: .48;
+      animation: cubeFloat 7s ease-in-out infinite;
+    }
+
+    .floating-cube span,
+    .floating-cube::before,
+    .floating-cube::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border: 1px solid rgba(81,191,255,.62);
+      background: rgba(14,62,112,.08);
+      box-shadow: 0 0 15px rgba(38,159,255,.12);
+    }
+
+    .floating-cube span {
+      transform: translateZ(10px);
+    }
+
+    .floating-cube::before {
+      transform: rotateY(90deg) translateZ(10px);
+    }
+
+    .floating-cube::after {
+      transform: rotateX(90deg) translateZ(10px);
+    }
+
+    .cube-1 {
+      left: 10%;
+      top: 42%;
+      animation-delay: .5s;
+    }
+
+    .cube-2 {
+      right: 11%;
+      top: 48%;
+      animation-delay: 2s;
+      transform: scale(.72);
+    }
+
+    .cube-3 {
+      right: 21%;
+      top: 16%;
+      animation-delay: 3.5s;
+      transform: scale(.5);
+    }
+
+    .campaign-ai-badge {
+      position: relative;
+      z-index: 8;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 auto 12px;
+      padding: 7px 12px;
+      border: 1px solid rgba(84,193,255,.26);
+      border-radius: 999px;
+      background:
+        linear-gradient(
+          135deg,
+          rgba(11,54,102,.52),
+          rgba(9,23,53,.6)
+        );
+      color: #b8e4ff;
+      font-size: 8px;
+      font-weight: 600;
+      letter-spacing: .17em;
+      text-transform: uppercase;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.07),
+        0 0 24px rgba(38,159,255,.08);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .campaign-ai-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #71ccff;
+      box-shadow:
+        0 0 0 4px rgba(38,159,255,.10),
+        0 0 12px rgba(38,159,255,.75);
+      animation: aiDotPulse 1.8s ease-in-out infinite;
+    }
+
+    .hero-number-wrap {
+      transform-style: preserve-3d;
+      transition: transform .18s ease-out;
+    }
+
+    .hero-number-card {
+      transform-style: preserve-3d;
+      box-shadow:
+        0 0 0 1px rgba(84,190,255,.12) inset,
+        0 0 38px rgba(38,159,255,.18),
+        15px 22px 0 rgba(242,101,34,.10),
+        0 28px 70px rgba(0,0,0,.48) !important;
+    }
+
+    .hero-number-card::after {
+      content: "";
+      position: absolute;
+      inset: 18px;
+      border-radius: 22px;
+      border: 1px solid rgba(88,201,255,.16);
+      background:
+        radial-gradient(circle at 50% 44%, rgba(67,184,255,.18), transparent 48%);
+      transform: translateZ(24px);
+      pointer-events: none;
+    }
+
+    .hero-number-card span {
+      transform: translateZ(48px);
+    }
+
+    .ai-chip {
+      transform-style: preserve-3d;
+      transition:
+        transform .22s ease,
+        border-color .22s ease,
+        box-shadow .22s ease;
+    }
+
+    .ai-chip::after {
+      content: "";
+      position: absolute;
+      inset: 6px;
+      border: 1px solid rgba(120,211,255,.08);
+      clip-path: inherit;
+      pointer-events: none;
+    }
+
+    .ai-chip:hover {
+      transform:
+        perspective(700px)
+        rotateX(5deg)
+        rotateY(-6deg)
+        translateY(-5px)
+        translateZ(18px);
+      border-color: rgba(106,211,255,.72);
+      box-shadow:
+        0 0 30px rgba(38,159,255,.20),
+        inset 0 0 26px rgba(38,159,255,.09);
+    }
+
+    .hero h1 {
+      transform: translateZ(46px);
+      text-shadow:
+        0 0 18px rgba(38,159,255,.10),
+        0 18px 30px rgba(0,0,0,.34);
+    }
+
+    .hero h1 .headline-orange,
+    .hero h1 .headline-blue {
+      position: relative;
+    }
+
+    .hero h1 .headline-orange::after,
+    .hero h1 .headline-blue::after {
+      content: attr(data-text);
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(255,255,255,.04);
+      transform: translate(4px, 6px);
+      filter: blur(.3px);
+    }
+
+    @keyframes beamPulse {
+      0%, 100% {
+        opacity: .28;
+        transform: translateX(-50%) perspective(800px) rotateX(8deg) scaleX(.88);
+      }
+      50% {
+        opacity: .62;
+        transform: translateX(-50%) perspective(800px) rotateX(8deg) scaleX(1.08);
+      }
+    }
+
+    @keyframes streamDrop {
+      0% {
+        transform: translateY(-35%);
+        opacity: 0;
+      }
+      15%, 75% {
+        opacity: .6;
+      }
+      100% {
+        transform: translateY(360%);
+        opacity: 0;
+      }
+    }
+
+    @keyframes neuralDrift {
+      0%, 100% { transform: translate3d(0,0,-80px) rotateZ(0); }
+      50% { transform: translate3d(0,-8px,-80px) rotateZ(.8deg); }
+    }
+
+    @keyframes nodePulse {
+      0%, 100% { transform: scale(.85); opacity: .52; }
+      50% { transform: scale(1.28); opacity: 1; }
+    }
+
+    @keyframes cubeFloat {
+      0%, 100% {
+        transform: translateY(0) rotateX(12deg) rotateY(20deg);
+      }
+      50% {
+        transform: translateY(-18px) rotateX(190deg) rotateY(155deg);
+      }
+    }
+
+    @keyframes aiDotPulse {
+      0%, 100% { opacity: .45; transform: scale(.85); }
+      50% { opacity: 1; transform: scale(1.15); }
+    }
+
+    @media (max-width: 560px) {
+      .ai-neural-network {
+        inset: 92px 16px auto;
+        opacity: .48;
+      }
+
+      .floating-cube {
+        width: 25px;
+        height: 25px;
+      }
+
+      .campaign-ai-badge {
+        margin-bottom: 10px;
+        font-size: 7px;
+        letter-spacing: .14em;
+      }
+
+      .holo-beam {
+        width: 210px;
+        height: 500px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .data-stream,
+      .holo-beam,
+      .ai-neural-network,
+      .floating-cube,
+      .campaign-ai-dot {
+        animation: none !important;
+      }
+    }
+
   </style>
 </head>
 
@@ -1016,6 +1611,31 @@
   <div id="invitationContent" class="invitation-content">
     <div class="invite-shell">
       <header class="hero">
+
+        <div class="ai-scene" aria-hidden="true">
+          <div class="ai-neural-network">
+            <span class="neural-node node-1"></span>
+            <span class="neural-node node-2"></span>
+            <span class="neural-node node-3"></span>
+            <span class="neural-node node-4"></span>
+            <span class="neural-node node-5"></span>
+            <span class="neural-node node-6"></span>
+            <span class="neural-line line-1"></span>
+            <span class="neural-line line-2"></span>
+            <span class="neural-line line-3"></span>
+            <span class="neural-line line-4"></span>
+          </div>
+
+          <div class="holo-beam"></div>
+          <div class="data-stream data-stream-1"></div>
+          <div class="data-stream data-stream-2"></div>
+          <div class="data-stream data-stream-3"></div>
+
+          <div class="floating-cube cube-1"><span></span></div>
+          <div class="floating-cube cube-2"><span></span></div>
+          <div class="floating-cube cube-3"><span></span></div>
+        </div>
+
         <div class="brand brand-full-logo" aria-label="Ahamove">
           <img
             src="/ahamove-logo.svg"
@@ -1053,8 +1673,14 @@
           </div>
         </div>
 
+        
+        <div class="campaign-ai-badge" aria-label="AI Driven Experience">
+          <span class="campaign-ai-dot"></span>
+          <span>AI DRIVEN EXPERIENCE</span>
+        </div>
+
         <p class="hero-label">Ahamove 11 năm</p>
-        <h1><span class="headline-orange">CHUYỂN MÌNH</span><br><span class="headline-blue">BỨT PHÁ</span></h1>
+        <h1><span class="headline-orange" data-text="CHUYỂN MÌNH">CHUYỂN MÌNH</span><br><span class="headline-blue" data-text="BỨT PHÁ">BỨT PHÁ</span></h1>
         <p class="hero-subtitle">Một hành trình chuyển mình đang chờ bạn</p>
       </header>
 
@@ -1372,6 +1998,55 @@
       'click',
       () => declineOverlay.classList.remove('active')
     );
+
+
+    const hero = document.querySelector('.hero');
+    const heroNumber = document.querySelector('.hero-number-wrap');
+    const aiScene = document.querySelector('.ai-scene');
+    const aiChips = document.querySelectorAll('.ai-chip');
+
+    function applyHeroParallax(clientX, clientY) {
+      if (!hero || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        return;
+      }
+
+      const rect = hero.getBoundingClientRect();
+      const x = (clientX - rect.left) / rect.width - 0.5;
+      const y = (clientY - rect.top) / rect.height - 0.5;
+
+      if (heroNumber) {
+        heroNumber.style.transform =
+          `rotateY(${x * 8}deg) rotateX(${-y * 6}deg) translateZ(14px)`;
+      }
+
+      if (aiScene) {
+        aiScene.style.transform =
+          `translate3d(${x * -12}px, ${y * -8}px, 0)`;
+      }
+
+      aiChips.forEach((chip, index) => {
+        const direction = index % 2 === 0 ? 1 : -1;
+        chip.style.transform =
+          `translate3d(${x * 7 * direction}px, ${y * 5}px, 0)`;
+      });
+    }
+
+    function resetHeroParallax() {
+      if (heroNumber) heroNumber.style.transform = '';
+      if (aiScene) aiScene.style.transform = '';
+      aiChips.forEach(chip => {
+        chip.style.transform = '';
+      });
+    }
+
+    if (hero) {
+      hero.addEventListener('pointermove', event => {
+        applyHeroParallax(event.clientX, event.clientY);
+      });
+
+      hero.addEventListener('pointerleave', resetHeroParallax);
+    }
+
 
     loadInvitation();
   </script>
