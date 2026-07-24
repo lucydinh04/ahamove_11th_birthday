@@ -1,492 +1,1239 @@
 /**
- * Ahamove 11 - Apps Script gửi email Vercel bằng token.
+ * ============================================================
+ * AHAMOVE 11TH BIRTHDAY — FULL GOOGLE APPS SCRIPT AUTOMATION
+ * ============================================================
  *
- * INVITATION:
- * A ID | B Name | C Email | D Site | E RSVP | F Response Time
- * G Note | H Token | I Invitation Link | J Email Status
- * K Sent Time | L Error
+ * Chức năng:
+ * 1) Tự tạo/cập nhật cấu trúc Google Sheet.
+ * 2) Tự tạo token bảo mật và Invitation Link cho dòng mới.
+ * 3) Tự xác định sự kiện SGN/HAN từ cột Location/Event.
+ * 4) Gửi email cá nhân hóa cho các dòng chưa gửi.
+ * 5) Ghi Email Status, Sent Time, Error Message.
+ * 6) Nhận RSVP từ website:
+ *    - THAM DỰ
+ *    - KHÔNG THAM GIA ĐƯỢC + lý do
+ * 7) Ghi RSVP, Note, Response Time.
+ * 8) Tạo trigger tự động quét dữ liệu theo thời gian.
+ * 9) Có menu thao tác ngay trên Google Sheet.
  *
- * EVENT_CONFIG:
- * A Site | B Event Date | C Event Time | D Venue Name
- * E Venue Detail | F Address | G Map URL
+ * ------------------------------------------------------------
+ * CÀI ĐẶT NHANH
+ * ------------------------------------------------------------
+ * A. Sửa CONFIG:
+ *    - SPREADSHEET_ID
+ *    - SHEET_NAME
+ *    - FRONTEND_BASE_URL
+ *    - SENDER_NAME
+ *
+ * B. Chạy setupProject() một lần.
+ *
+ * C. Deploy Web App:
+ *    Deploy > New deployment > Web app
+ *    Execute as: Me
+ *    Who has access: Anyone
+ *
+ * D. Copy URL /exec để frontend gọi API.
+ *
+ * ------------------------------------------------------------
+ * CẤU TRÚC SHEET
+ * ------------------------------------------------------------
+ * Employee ID | Name | Email | Location | Event | Token |
+ * Invitation Link | Email Status | Sent Time | RSVP |
+ * Note | Response Time | Error Message | Last Updated
  */
 
 const CONFIG = {
-  INVITATION_SHEET: 'INVITATION',
-  EVENT_CONFIG_SHEET: 'EVENT_CONFIG',
+  SPREADSHEET_ID: '10pPJeyJS6qlC0BZwB9YyAZlf-NTPYBLK5GinpZL5erg',
+  SHEET_NAME: 'Invitations',
 
-  // Thay bằng Production Domain sau khi deploy.
-  VERCEL_BASE_URL: 'https://YOUR-PROJECT.vercel.app',
+  // Link website Vercel, KHÔNG thêm dấu / ở cuối.
+  FRONTEND_BASE_URL: 'https://ahamove11th.vercel.app',
 
-  SUBJECT: '🔥 Thư mời Sinh nhật Ahamove 11 tuổi',
-  SENDER_NAME: 'Ahamove Birthday 11',
+  SENDER_NAME: 'Ahamove',
 
-  TEST_EMAIL: 'YOUR_EMAIL@AHAMOVE.COM',
-  TEST_EMPLOYEE_ID: '257988',
+  // Có thể để trống để test gửi mail. Khi có File ID logo trên Drive, dán vào đây.
+  LOGO_FILE_ID: '1RPA5ZDDKIlnrjMni2o6DIa3cDaofesks',
+  EMAIL_SUBJECT: 'THƯ MỜI | AHAMOVE 11 NĂM – CHUYỂN MÌNH BỨT PHÁ',
 
-  BATCH_LIMIT: 80,
-  TIME_ZONE: 'Asia/Ho_Chi_Minh'
+  // Giới hạn gửi trong mỗi lượt để tránh timeout.
+  MAX_EMAILS_PER_RUN: 40,
+
+  // Trigger tự động xử lý dữ liệu mỗi 10 phút.
+  TRIGGER_EVERY_MINUTES: 10,
+
+  HEADERS: {
+    employeeId: 'Employee ID',
+    name: 'Name',
+    email: 'Email',
+    location: 'Location',
+    event: 'Event',
+    eventDate: 'Event Date',
+    eventTime: 'Event Time',
+    venue: 'Venue',
+    city: 'City',
+    token: 'Token',
+    invitationLink: 'Invitation Link',
+    emailStatus: 'Email Status',
+    sentTime: 'Sent Time',
+    rsvp: 'RSVP',
+    note: 'Note',
+    responseTime: 'Response Time',
+    errorMessage: 'Error Message',
+    lastUpdated: 'Last Updated'
+  },
+
+  EMAIL_STATUS: {
+    PENDING: 'PENDING',
+    SENT: 'SENT',
+    FAILED: 'FAILED',
+    SKIPPED: 'SKIPPED'
+  },
+
+  RSVP_STATUS: {
+    ATTENDING: 'THAM DỰ',
+    DECLINED: 'KHÔNG THAM GIA ĐƯỢC'
+  },
+
+  EVENTS: {
+    SGN: {
+      code: 'SGN',
+      city: 'TP. Hồ Chí Minh',
+      date: '07/08/2026',
+      time: '18:00',
+      venue: 'Riverside Palace – Sảnh Nile',
+      address: '',
+      dresscode: 'Trắng / Bạc / Xanh dương'
+    },
+    HAN: {
+      code: 'HAN',
+      city: 'Hà Nội',
+      date: '14/08/2026',
+      time: '18:00',
+      venue: 'Novotel Hanoi Thai Ha',
+      address: '',
+      dresscode: 'Trắng / Bạc / Xanh dương'
+    }
+  }
 };
 
-function setupBirthdaySheets() {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
 
-  let invitation = ss.getSheetByName(CONFIG.INVITATION_SHEET);
-  if (!invitation) {
-    invitation = ss.insertSheet(CONFIG.INVITATION_SHEET);
-  }
+/* ============================================================
+ * MENU
+ * ============================================================ */
 
-  invitation.getRange(1, 1, 1, 12).setValues([[
-    'ID',
-    'Name',
-    'Email',
-    'Site',
-    'RSVP',
-    'Response Time',
-    'Note',
-    'Token',
-    'Invitation Link',
-    'Email Status',
-    'Sent Time',
-    'Error'
-  ]]);
-
-  invitation.setFrozenRows(1);
-  invitation.getRange('A:A').setNumberFormat('@');
-  invitation.getRange('H:H').setNumberFormat('@');
-
-  let config = ss.getSheetByName(CONFIG.EVENT_CONFIG_SHEET);
-  if (!config) {
-    config = ss.insertSheet(CONFIG.EVENT_CONFIG_SHEET);
-  }
-
-  config.getRange(1, 1, 1, 7).setValues([[
-    'Site',
-    'Event Date',
-    'Event Time',
-    'Venue Name',
-    'Venue Detail',
-    'Address',
-    'Map URL'
-  ]]);
-
-  if (config.getLastRow() < 2) {
-    config.getRange(2, 1, 2, 7).setValues([
-      [
-        'SGN',
-        '07/08/2026',
-        '18:00',
-        'ĐIỀN TÊN ĐỊA ĐIỂM SGN',
-        'ĐIỀN TÊN SẢNH / KHU VỰC',
-        'ĐIỀN ĐỊA CHỈ SGN',
-        'ĐIỀN LINK GOOGLE MAPS SGN'
-      ],
-      [
-        'HAN',
-        '14/08/2026',
-        '18:00',
-        'ĐIỀN TÊN ĐỊA ĐIỂM HAN',
-        'ĐIỀN TÊN SẢNH / KHU VỰC',
-        'ĐIỀN ĐỊA CHỈ HAN',
-        'ĐIỀN LINK GOOGLE MAPS HAN'
-      ]
-    ]);
-  }
-
-  config.setFrozenRows(1);
-  SpreadsheetApp.flush();
-
-  return {
-    success: true,
-    message:
-      'Đã tạo/cập nhật tab INVITATION và EVENT_CONFIG.'
-  };
+function onOpen() {
+  SpreadsheetApp.getUi()
+    .createMenu('Ahamove RSVP')
+    .addItem('1. Setup toàn bộ hệ thống', 'setupProject')
+    .addSeparator()
+    .addItem('Xử lý dữ liệu ngay', 'processInvitationData')
+    .addItem('Tạo token & link còn thiếu', 'generateMissingTokens')
+    .addItem('Gửi email chưa gửi', 'sendPendingInvitations')
+    .addSeparator()
+    .addItem('Tạo trigger tự động', 'setupAutomation')
+    .addItem('Xóa trigger tự động', 'removeAutomation')
+    .addSeparator()
+    .addItem('Reset dòng đang chọn để test', 'resetSelectedRowsForTesting')
+    .addToUi();
 }
 
-function generateTokensAndInvitationLinks() {
-  const sheet = getSheet_(CONFIG.INVITATION_SHEET);
+
+/* ============================================================
+ * WEB APP API
+ * ============================================================ */
+
+function doGet(e) {
+  try {
+    const params = (e && e.parameter) || {};
+    const action = normalize_(params.action || 'invitation').toLowerCase();
+
+    if (action === 'health') {
+      return jsonResponse_({
+        ok: true,
+        service: 'Ahamove 11 RSVP Automation',
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    if (action === 'invitation') {
+      return getInvitation_(params.token);
+    }
+
+    return jsonResponse_({
+      ok: false,
+      message: 'Action không hợp lệ.'
+    });
+
+  } catch (error) {
+    console.error(error);
+    return errorResponse_(error);
+  }
+}
+
+
+function doPost(e) {
+  try {
+    const payload = parseRequestBody_(e);
+    const action = normalize_(payload.action || 'rsvp').toLowerCase();
+
+    if (action !== 'rsvp') {
+      return jsonResponse_({
+        ok: false,
+        message: 'Action không hợp lệ.'
+      });
+    }
+
+    return saveRsvp_(payload);
+
+  } catch (error) {
+    console.error(error);
+    return errorResponse_(error);
+  }
+}
+
+
+/* ============================================================
+ * SETUP
+ * ============================================================ */
+
+function setupProject() {
+  validateConfig_();
+  setupSheet();
+  setupAutomation();
+  processInvitationData();
+
+  SpreadsheetApp.getUi().alert(
+    'Setup hoàn tất',
+    'Đã tạo cấu trúc Sheet, trigger tự động và xử lý dữ liệu hiện có.',
+    SpreadsheetApp.getUi().ButtonSet.OK
+  );
+}
+
+
+function setupSheet() {
+  validateConfig_();
+
+  const spreadsheet = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID);
+  let sheet = spreadsheet.getSheetByName(CONFIG.SHEET_NAME);
+
+  if (!sheet) {
+    sheet = spreadsheet.insertSheet(CONFIG.SHEET_NAME);
+  }
+
+  const requiredHeaders = Object.keys(CONFIG.HEADERS).map(function (key) {
+    return CONFIG.HEADERS[key];
+  });
+
+  let existingHeaders = [];
+
+  if (sheet.getLastColumn() > 0) {
+    existingHeaders = sheet
+      .getRange(1, 1, 1, sheet.getLastColumn())
+      .getDisplayValues()[0]
+      .map(function (value) {
+        return normalize_(value);
+      });
+  }
+
+  requiredHeaders.forEach(function (header) {
+    if (!existingHeaders.includes(header)) {
+      existingHeaders.push(header);
+    }
+  });
+
+  sheet
+    .getRange(1, 1, 1, existingHeaders.length)
+    .setValues([existingHeaders]);
+
+  const headerRange = sheet.getRange(1, 1, 1, existingHeaders.length);
+  headerRange
+    .setFontWeight('bold')
+    .setBackground('#0B1F3A')
+    .setFontColor('#FFFFFF');
+
+  sheet.setFrozenRows(1);
+  sheet.autoResizeColumns(1, existingHeaders.length);
+
+  return 'Đã setup sheet "' + CONFIG.SHEET_NAME + '".';
+}
+
+
+/* ============================================================
+ * AUTOMATION TRIGGERS
+ * ============================================================ */
+
+function setupAutomation() {
+  removeAutomation();
+
+  ScriptApp.newTrigger('processInvitationData')
+    .timeBased()
+    .everyMinutes(CONFIG.TRIGGER_EVERY_MINUTES)
+    .create();
+
+  return 'Đã tạo trigger mỗi ' + CONFIG.TRIGGER_EVERY_MINUTES + ' phút.';
+}
+
+
+function removeAutomation() {
+  ScriptApp.getProjectTriggers().forEach(function (trigger) {
+    if (trigger.getHandlerFunction() === 'processInvitationData') {
+      ScriptApp.deleteTrigger(trigger);
+    }
+  });
+
+  return 'Đã xóa trigger processInvitationData.';
+}
+
+
+/* ============================================================
+ * MASTER AUTOMATION
+ * ============================================================ */
+
+function processInvitationData() {
+  validateConfig_();
+
+  const lock = LockService.getScriptLock();
+
+  try {
+    lock.waitLock(15000);
+
+    setupSheet();
+    generateMissingTokens();
+    normalizePendingStatuses_();
+    sendPendingInvitations();
+
+  } catch (error) {
+    console.error('processInvitationData error:', error);
+    throw error;
+
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+
+/* ============================================================
+ * TOKEN & LINK AUTOMATION
+ * ============================================================ */
+
+function generateMissingTokens() {
+  const sheet = getSheet_();
+  const headerMap = getHeaderMap_(sheet);
   const lastRow = sheet.getLastRow();
 
   if (lastRow < 2) {
-    throw new Error('Tab INVITATION chưa có dữ liệu.');
+    return 'Không có dữ liệu.';
   }
 
-  const baseUrl = normalizeBaseUrl_(CONFIG.VERCEL_BASE_URL);
-  const rows = sheet.getRange(2, 1, lastRow - 1, 12).getDisplayValues();
-  const existingTokens = new Set(
-    rows.map(row => normalizeToken_(row[7])).filter(Boolean)
-  );
+  const allValues = sheet
+    .getRange(2, 1, lastRow - 1, sheet.getLastColumn())
+    .getValues();
 
-  const tokenValues = [];
-  const linkValues = [];
+  const updates = [];
 
-  rows.forEach(row => {
-    const id = normalizeId_(row[0]);
-    let token = normalizeToken_(row[7]);
+  allValues.forEach(function (rowValues, index) {
+    const rowNumber = index + 2;
+    const rowObject = rowToObject_(rowValues, headerMap);
 
-    if (!id) {
-      tokenValues.push(['']);
-      linkValues.push(['']);
+    const email = normalize_(rowObject[CONFIG.HEADERS.email]);
+    const name = normalize_(rowObject[CONFIG.HEADERS.name]);
+
+    // Bỏ qua dòng trống.
+    if (!email && !name) {
       return;
     }
+
+    let changed = false;
+    let token = normalize_(rowObject[CONFIG.HEADERS.token]);
+    let eventCode = normalizeEventCode_(
+      rowObject[CONFIG.HEADERS.event] ||
+      rowObject[CONFIG.HEADERS.location]
+    );
 
     if (!token) {
-      do {
-        token = createSecureToken_();
-      } while (existingTokens.has(token));
-
-      existingTokens.add(token);
+      token = createSecureToken_();
+      rowValues[headerMap[CONFIG.HEADERS.token] - 1] = token;
+      changed = true;
     }
 
-    tokenValues.push([token]);
-    linkValues.push([
-      `${baseUrl}/i/${encodeURIComponent(token)}`
-    ]);
+    const expectedLink =
+      CONFIG.FRONTEND_BASE_URL.replace(/\/+$/, '') +
+      '/i/' +
+      encodeURIComponent(token);
+
+    if (
+      normalize_(rowObject[CONFIG.HEADERS.invitationLink]) !== expectedLink
+    ) {
+      rowValues[headerMap[CONFIG.HEADERS.invitationLink] - 1] = expectedLink;
+      changed = true;
+    }
+
+    if (!normalize_(rowObject[CONFIG.HEADERS.event])) {
+      rowValues[headerMap[CONFIG.HEADERS.event] - 1] = eventCode;
+      changed = true;
+    }
+
+    if (changed) {
+      rowValues[headerMap[CONFIG.HEADERS.lastUpdated] - 1] = new Date();
+      updates.push({
+        rowNumber: rowNumber,
+        values: rowValues
+      });
+    }
   });
 
-  sheet.getRange(2, 8, tokenValues.length, 1).setValues(tokenValues);
-  sheet.getRange(2, 9, linkValues.length, 1).setValues(linkValues);
+  updates.forEach(function (update) {
+    sheet
+      .getRange(update.rowNumber, 1, 1, update.values.length)
+      .setValues([update.values]);
+  });
+
   SpreadsheetApp.flush();
 
-  return {
-    success: true,
-    totalLinks: linkValues.filter(([link]) => Boolean(link)).length
-  };
+  return 'Đã cập nhật ' + updates.length + ' dòng.';
 }
 
-function validateBirthdayData() {
-  const invitation = getSheet_(CONFIG.INVITATION_SHEET);
-  const eventConfig = getSheet_(CONFIG.EVENT_CONFIG_SHEET);
 
-  const configRows = eventConfig
-    .getRange(2, 1, Math.max(eventConfig.getLastRow() - 1, 1), 7)
-    .getDisplayValues();
-
-  const validSites = new Set(
-    configRows
-      .map(row => normalizeSite_(row[0]))
-      .filter(Boolean)
-  );
-
-  const rows = invitation
-    .getRange(2, 1, Math.max(invitation.getLastRow() - 1, 1), 12)
-    .getDisplayValues();
-
-  const issues = [];
-
-  rows.forEach((row, index) => {
-    const rowNumber = index + 2;
-    const id = normalizeId_(row[0]);
-    const email = String(row[2] || '').trim();
-    const site = normalizeSite_(row[3]);
-
-    if (!id && !email && !site) return;
-
-    if (!id) issues.push(`Dòng ${rowNumber}: thiếu ID.`);
-    if (!isValidEmail_(email)) {
-      issues.push(`Dòng ${rowNumber}: email không hợp lệ.`);
-    }
-    if (!validSites.has(site)) {
-      issues.push(
-        `Dòng ${rowNumber}: site "${site}" chưa có trong EVENT_CONFIG.`
-      );
-    }
-  });
-
-  if (issues.length) {
-    throw new Error(issues.slice(0, 30).join('\n'));
-  }
-
-  return {
-    success: true,
-    message: 'Dữ liệu hợp lệ.',
-    totalEmployees: rows.filter(row => normalizeId_(row[0])).length
-  };
-}
-
-function sendTestInvitationVercel() {
-  const sheet = getSheet_(CONFIG.INVITATION_SHEET);
-  const testId = normalizeId_(CONFIG.TEST_EMPLOYEE_ID);
-  const rowNumber = findRowById_(sheet, testId);
-
-  if (rowNumber === -1) {
-    throw new Error(`Không tìm thấy ID ${testId} trong cột A.`);
-  }
-
-  ensureTokenAndLinkForRow_(sheet, rowNumber);
-
-  const row = sheet.getRange(rowNumber, 1, 1, 12).getDisplayValues()[0];
-  const name = String(row[1] || 'Ahamover').trim();
-  const site = normalizeSite_(row[3]);
-  const link = String(row[8] || '').trim();
-  const event = getEventConfigBySite_(site);
-
-  sendOneEmail_(
-    CONFIG.TEST_EMAIL,
-    name,
-    site,
-    event,
-    link,
-    true
-  );
-
-  return {
-    success: true,
-    email: CONFIG.TEST_EMAIL,
-    link,
-    site
-  };
-}
-
-function sendAllInvitationsVercel() {
-  const sheet = getSheet_(CONFIG.INVITATION_SHEET);
+function normalizePendingStatuses_() {
+  const sheet = getSheet_();
+  const headerMap = getHeaderMap_(sheet);
   const lastRow = sheet.getLastRow();
 
   if (lastRow < 2) {
-    throw new Error('Tab INVITATION chưa có dữ liệu.');
+    return;
   }
 
-  generateTokensAndInvitationLinks();
-  validateBirthdayData();
+  const emailStatusColumn = headerMap[CONFIG.HEADERS.emailStatus];
+  const emailColumn = headerMap[CONFIG.HEADERS.email];
+  const tokenColumn = headerMap[CONFIG.HEADERS.token];
 
-  const data = sheet
-    .getRange(2, 1, lastRow - 1, 12)
-    .getDisplayValues();
+  for (let row = 2; row <= lastRow; row++) {
+    const email = normalize_(sheet.getRange(row, emailColumn).getValue());
+    const token = normalize_(sheet.getRange(row, tokenColumn).getValue());
+    const currentStatus = normalize_(
+      sheet.getRange(row, emailStatusColumn).getValue()
+    ).toUpperCase();
 
-  const eventMap = getEventConfigMap_();
-  const quota = MailApp.getRemainingDailyQuota();
-  const limit = Math.min(CONFIG.BATCH_LIMIT, quota);
+    if (
+      email &&
+      token &&
+      !currentStatus
+    ) {
+      sheet
+        .getRange(row, emailStatusColumn)
+        .setValue(CONFIG.EMAIL_STATUS.PENDING);
+    }
+  }
+}
 
-  let sent = 0;
-  let skipped = 0;
-  let errors = 0;
 
-  data.forEach((row, index) => {
-    if (sent >= limit) return;
+/* ============================================================
+ * EMAIL AUTOMATION
+ * ============================================================ */
 
-    const rowNumber = index + 2;
-    const id = normalizeId_(row[0]);
-    const name = String(row[1] || 'Ahamover').trim();
-    const email = String(row[2] || '').trim();
-    const site = normalizeSite_(row[3]);
-    const link = String(row[8] || '').trim();
-    const emailStatus = String(row[9] || '').trim().toUpperCase();
+function sendPendingInvitations() {
+  const sheet = getSheet_();
+  const headerMap = getHeaderMap_(sheet);
+  const lastRow = sheet.getLastRow();
 
-    if (emailStatus === 'SENT') {
-      skipped++;
-      return;
+  if (lastRow < 2) {
+    return 'Không có dữ liệu gửi.';
+  }
+
+  let sentCount = 0;
+  let failedCount = 0;
+
+  for (
+    let row = 2;
+    row <= lastRow && sentCount < CONFIG.MAX_EMAILS_PER_RUN;
+    row++
+  ) {
+    const record = getRowRecord_(sheet, headerMap, row);
+
+    const email = normalize_(record[CONFIG.HEADERS.email]);
+    const name = normalize_(record[CONFIG.HEADERS.name]);
+    const link = normalize_(record[CONFIG.HEADERS.invitationLink]);
+    const token = normalize_(record[CONFIG.HEADERS.token]);
+    const status = normalize_(
+      record[CONFIG.HEADERS.emailStatus]
+    ).toUpperCase();
+
+    if (!email && !name) {
+      continue;
     }
 
-    if (!id || !isValidEmail_(email) || !link || !eventMap[site]) {
-      sheet.getRange(rowNumber, 10).setValue('ERROR');
-      sheet.getRange(rowNumber, 12).setValue(
-        'Thiếu ID, email, link hoặc cấu hình địa điểm.'
+    if (!email || !isValidEmail_(email)) {
+      updateEmailResult_(
+        sheet,
+        row,
+        headerMap,
+        CONFIG.EMAIL_STATUS.SKIPPED,
+        '',
+        'Email không hợp lệ.'
       );
-      errors++;
-      return;
+      continue;
+    }
+
+    if (!token || !link) {
+      updateEmailResult_(
+        sheet,
+        row,
+        headerMap,
+        CONFIG.EMAIL_STATUS.FAILED,
+        '',
+        'Thiếu token hoặc invitation link.'
+      );
+      failedCount++;
+      continue;
+    }
+
+    if (
+      status === CONFIG.EMAIL_STATUS.SENT ||
+      status === CONFIG.EMAIL_STATUS.SKIPPED
+    ) {
+      continue;
     }
 
     try {
-      sendOneEmail_(
+      const eventInfo = resolveEventInfo_(record);
+
+      const htmlBody = renderEmailTemplate_({
+        name: name || 'Ahamover',
+        invitationLink: link,
+        event: eventInfo
+      });
+
+      const mailOptions = {
+        htmlBody: htmlBody,
+        name: CONFIG.SENDER_NAME
+      };
+
+      // Logo là tùy chọn: nếu chưa cấu hình đúng, email vẫn được gửi.
+      const logoBlob = getLogoBlobSafe_();
+      if (logoBlob) {
+        mailOptions.inlineImages = {
+          ahamoveLogo: logoBlob
+        };
+      }
+
+      GmailApp.sendEmail(
         email,
-        name,
-        site,
-        eventMap[site],
-        link,
-        false
+        CONFIG.EMAIL_SUBJECT,
+        'Vui lòng mở email bằng chế độ HTML để xem thư mời.',
+        mailOptions
       );
 
-      sheet.getRange(rowNumber, 10).setValue('SENT');
-      sheet.getRange(rowNumber, 11).setValue(new Date());
-      sheet.getRange(rowNumber, 12).clearContent();
+      updateEmailResult_(
+        sheet,
+        row,
+        headerMap,
+        CONFIG.EMAIL_STATUS.SENT,
+        new Date(),
+        ''
+      );
 
-      sent++;
-      Utilities.sleep(300);
+      sentCount++;
+
+      // Giảm nguy cơ chạm quota.
+      Utilities.sleep(250);
+
     } catch (error) {
-      sheet.getRange(rowNumber, 10).setValue('ERROR');
-      sheet.getRange(rowNumber, 12).setValue(
-        error.message || 'Không thể gửi email.'
+      failedCount++;
+
+      updateEmailResult_(
+        sheet,
+        row,
+        headerMap,
+        CONFIG.EMAIL_STATUS.FAILED,
+        '',
+        error && error.message ? error.message : String(error)
       );
-      errors++;
     }
+  }
+
+  SpreadsheetApp.flush();
+
+  return (
+    'Đã gửi: ' +
+    sentCount +
+    ' | Lỗi: ' +
+    failedCount
+  );
+}
+
+
+function renderEmailTemplate_(data) {
+  const template = HtmlService.createTemplateFromFile('EmailTemplate');
+
+  template.name = data.name;
+  template.invitationLink = data.invitationLink;
+  template.event = data.event;
+  template.hasInlineLogo = Boolean(getLogoBlobSafe_());
+
+  return template.evaluate().getContent();
+}
+
+
+function updateEmailResult_(
+  sheet,
+  row,
+  headerMap,
+  status,
+  sentTime,
+  errorMessage
+) {
+  setCellByHeader_(
+    sheet,
+    row,
+    headerMap,
+    CONFIG.HEADERS.emailStatus,
+    status
+  );
+
+  if (sentTime) {
+    setCellByHeader_(
+      sheet,
+      row,
+      headerMap,
+      CONFIG.HEADERS.sentTime,
+      sentTime
+    );
+  }
+
+  setCellByHeader_(
+    sheet,
+    row,
+    headerMap,
+    CONFIG.HEADERS.errorMessage,
+    errorMessage || ''
+  );
+
+  setCellByHeader_(
+    sheet,
+    row,
+    headerMap,
+    CONFIG.HEADERS.lastUpdated,
+    new Date()
+  );
+}
+
+
+/**
+ * Lấy logo nhưng không làm hỏng toàn bộ quy trình gửi mail nếu File ID sai.
+ */
+function getLogoBlobSafe_() {
+  try {
+    return getLogoBlob_();
+  } catch (error) {
+    console.warn('Không tải được logo:', error);
+    return null;
+  }
+}
+
+
+/**
+ * GỬI EMAIL TEST TRỰC TIẾP
+ * Chỉ cần sửa TEST_EMAIL rồi chạy sendTestEmail().
+ */
+function sendTestEmail() {
+  const TEST_EMAIL = 'DÁN_EMAIL_TEST_VÀO_ĐÂY';
+  const TEST_NAME = 'Ahamover Test';
+  const TEST_LOCATION = 'SGN'; // SGN hoặc HAN
+
+  if (
+    !TEST_EMAIL ||
+    TEST_EMAIL === 'DÁN_EMAIL_TEST_VÀO_ĐÂY' ||
+    !isValidEmail_(TEST_EMAIL)
+  ) {
+    throw new Error('Vui lòng điền email hợp lệ vào TEST_EMAIL.');
+  }
+
+  validateConfig_();
+
+  const eventInfo =
+    CONFIG.EVENTS[normalizeEventCode_(TEST_LOCATION)] ||
+    CONFIG.EVENTS.SGN;
+
+  const testToken = createSecureToken_();
+  const testLink =
+    CONFIG.FRONTEND_BASE_URL.replace(/\/+$/, '') +
+    '/i/' +
+    encodeURIComponent(testToken);
+
+  const htmlBody = renderEmailTemplate_({
+    name: TEST_NAME,
+    invitationLink: testLink,
+    event: eventInfo
   });
 
-  SpreadsheetApp.flush();
-
-  return {
-    success: true,
-    sent,
-    skipped,
-    errors,
-    remainingQuota: MailApp.getRemainingDailyQuota()
+  const options = {
+    htmlBody: htmlBody,
+    name: CONFIG.SENDER_NAME
   };
-}
 
-function ensureTokenAndLinkForRow_(sheet, rowNumber) {
-  const baseUrl = normalizeBaseUrl_(CONFIG.VERCEL_BASE_URL);
-  const id = normalizeId_(sheet.getRange(rowNumber, 1).getDisplayValue());
-
-  if (!id) {
-    throw new Error(`Dòng ${rowNumber} chưa có ID.`);
+  const logoBlob = getLogoBlobSafe_();
+  if (logoBlob) {
+    options.inlineImages = {
+      ahamoveLogo: logoBlob
+    };
   }
-
-  let token = normalizeToken_(
-    sheet.getRange(rowNumber, 8).getDisplayValue()
-  );
-
-  if (!token) {
-    token = createSecureToken_();
-    sheet.getRange(rowNumber, 8).setValue(token);
-  }
-
-  const link = `${baseUrl}/i/${encodeURIComponent(token)}`;
-  sheet.getRange(rowNumber, 9).setValue(link);
-  SpreadsheetApp.flush();
-}
-
-function sendOneEmail_(email, name, site, event, link, isTest) {
-  const subject = `${isTest ? '[TEST] ' : ''}${CONFIG.SUBJECT}`;
-  const safeName = escapeHtml_(name);
-  const safeLink = escapeHtml_(link);
-  const safeSite = escapeHtml_(site);
-  const safeVenue = escapeHtml_(event.venueName);
-  const safeDetail = escapeHtml_(event.venueDetail);
-  const safeAddress = escapeHtml_(event.address);
-  const safeDate = escapeHtml_(event.eventDate);
-  const safeTime = escapeHtml_(event.eventTime);
-
-  const htmlBody = `
-  <div style="margin:0;padding:24px 12px;background:#eef2f7;font-family:Arial,sans-serif">
-    <div style="max-width:600px;margin:auto;overflow:hidden;border-radius:24px;background:#061a38;text-align:center">
-      <a href="${safeLink}" target="_blank" style="display:block;padding:52px 24px;background:#061a38;color:#fff;text-decoration:none">
-        <div style="font-size:64px;font-weight:700;color:#ff7a1a">11</div>
-        <div style="margin-top:14px;font-size:20px;font-weight:700">11 NĂM CHUYỂN MÌNH</div>
-        <div style="margin-top:6px;font-size:17px;font-weight:700;color:#8dccff">CHUYỂN MÌNH BỨT PHÁ</div>
-      </a>
-
-      <div style="padding:30px 26px 34px">
-        <p style="margin:0 0 16px;color:#fff;font-size:18px;font-weight:700">Thân gửi ${safeName},</p>
-
-        <p style="margin:0;color:#c7d6e8;font-size:15px;line-height:1.7">
-          Một lời mời đặc biệt đang chờ bạn khám phá.
-          Hãy chạm vào nút bên dưới để mở thư mời Sinh nhật Ahamove 11 tuổi.
-        </p>
-
-        <div style="margin:24px 0 0;padding:18px;border:1px solid rgba(255,255,255,.16);border-radius:16px;background:#0b2449;color:#fff;text-align:left">
-          <div style="font-size:12px;color:#8dccff;font-weight:700">${safeSite} CELEBRATION NIGHT</div>
-          <div style="margin-top:8px;font-size:18px;font-weight:700">${safeVenue}</div>
-          ${safeDetail ? `<div style="margin-top:4px;color:#d7e6f5;font-size:14px">${safeDetail}</div>` : ''}
-          ${safeAddress ? `<div style="margin-top:8px;color:#91a6bd;font-size:13px;line-height:1.5">${safeAddress}</div>` : ''}
-          <div style="margin-top:12px;color:#ff8738;font-size:14px;font-weight:700">${safeTime} • ${safeDate}</div>
-        </div>
-
-        <a href="${safeLink}" target="_blank" style="display:inline-block;margin-top:26px;padding:16px 30px;border-radius:14px;background:#f26522;color:#fff;font-size:15px;font-weight:700;text-decoration:none">
-          CHẠM ĐỂ MỞ THƯ MỜI
-        </a>
-
-        <p style="margin:22px 0 0;color:#7890ab;font-size:12px;line-height:1.6">
-          Nếu nút không hoạt động, mở đường dẫn:<br>
-          <a href="${safeLink}" style="color:#8dccff;word-break:break-all">${safeLink}</a>
-        </p>
-      </div>
-    </div>
-  </div>`;
 
   GmailApp.sendEmail(
-    email,
-    subject,
-    `Thân gửi ${name},
+    TEST_EMAIL,
+    '[TEST] ' + CONFIG.EMAIL_SUBJECT,
+    'Vui lòng mở email bằng chế độ HTML để xem thư mời.',
+    options
+  );
 
-${site} Celebration Night
-${event.venueName}${event.venueDetail ? ' - ' + event.venueDetail : ''}
-${event.address}
-${event.eventTime} - ${event.eventDate}
-
-Mở thư mời tại:
-${link}`,
-    {
-      htmlBody,
-      name: CONFIG.SENDER_NAME
-    }
+  Logger.log(
+    'Đã gửi email test đến ' +
+    TEST_EMAIL +
+    ' | Sự kiện: ' +
+    eventInfo.code +
+    ' | ' +
+    eventInfo.time +
+    ' - ' +
+    eventInfo.date +
+    ' | ' +
+    eventInfo.venue
   );
 }
 
-function getEventConfigMap_() {
-  const sheet = getSheet_(CONFIG.EVENT_CONFIG_SHEET);
-  const lastRow = sheet.getLastRow();
-
-  if (lastRow < 2) {
-    throw new Error('EVENT_CONFIG chưa có dữ liệu.');
+function getLogoBlob_() {
+  if (
+    !CONFIG.LOGO_FILE_ID ||
+    CONFIG.LOGO_FILE_ID === 'DÁN_FILE_ID_LOGO_PNG_VÀO_ĐÂY'
+  ) {
+    throw new Error('Bạn chưa cấu hình CONFIG.LOGO_FILE_ID.');
   }
 
-  const rows = sheet
-    .getRange(2, 1, lastRow - 1, 7)
-    .getDisplayValues();
-
-  return rows.reduce((map, row) => {
-    const site = normalizeSite_(row[0]);
-    if (!site) return map;
-
-    map[site] = {
-      site,
-      eventDate: String(row[1] || '').trim(),
-      eventTime: String(row[2] || '').trim(),
-      venueName: String(row[3] || '').trim(),
-      venueDetail: String(row[4] || '').trim(),
-      address: String(row[5] || '').trim(),
-      mapUrl: String(row[6] || '').trim()
-    };
-
-    return map;
-  }, {});
+  return DriveApp
+    .getFileById(CONFIG.LOGO_FILE_ID)
+    .getBlob()
+    .setName('ahamove-dark.png');
 }
 
-function getEventConfigBySite_(site) {
-  const event = getEventConfigMap_()[normalizeSite_(site)];
 
-  if (!event) {
-    throw new Error(`Chưa cấu hình địa điểm cho site ${site}.`);
+/* ============================================================
+ * RSVP API LOGIC
+ * ============================================================ */
+
+function getInvitation_(rawToken) {
+  const token = normalize_(rawToken);
+
+  if (!token) {
+    return jsonResponse_({
+      ok: false,
+      message: 'Thiếu token thư mời.'
+    });
   }
 
-  return event;
+  const record = findRecordByToken_(token);
+
+  if (!record) {
+    return jsonResponse_({
+      ok: false,
+      message: 'Không tìm thấy thư mời hoặc token không hợp lệ.'
+    });
+  }
+
+  const eventInfo = resolveEventInfo_(record.values);
+  const eventCode = eventInfo.code;
+
+  return jsonResponse_({
+    ok: true,
+    invitation: {
+      employeeId: safeString_(
+        record.values[CONFIG.HEADERS.employeeId]
+      ),
+      name: safeString_(record.values[CONFIG.HEADERS.name]),
+      email: safeString_(record.values[CONFIG.HEADERS.email]),
+      location: normalizeLocation_(
+        record.values[CONFIG.HEADERS.location]
+      ),
+      eventCode: eventCode,
+      event: eventInfo,
+      status: safeString_(record.values[CONFIG.HEADERS.rsvp]),
+      note: safeString_(record.values[CONFIG.HEADERS.note]),
+      responseTime: formatDateValue_(
+        record.values[CONFIG.HEADERS.responseTime]
+      )
+    }
+  });
 }
 
-function getSheet_(name) {
-  const sheet = SpreadsheetApp
-    .getActiveSpreadsheet()
-    .getSheetByName(name);
+
+function saveRsvp_(payload) {
+  const token = normalize_(payload.token);
+  const status = normalize_(payload.status).toUpperCase();
+  const note = safeString_(payload.note).trim();
+
+  if (!token) {
+    return jsonResponse_({
+      ok: false,
+      message: 'Thiếu token thư mời.'
+    });
+  }
+
+  if (
+    status !== CONFIG.RSVP_STATUS.ATTENDING &&
+    status !== CONFIG.RSVP_STATUS.DECLINED
+  ) {
+    return jsonResponse_({
+      ok: false,
+      message: 'Trạng thái RSVP không hợp lệ.'
+    });
+  }
+
+  if (
+    status === CONFIG.RSVP_STATUS.DECLINED &&
+    !note
+  ) {
+    return jsonResponse_({
+      ok: false,
+      message: 'Vui lòng nhập lý do không thể tham gia.'
+    });
+  }
+
+  const lock = LockService.getScriptLock();
+
+  try {
+    lock.waitLock(10000);
+
+    const record = findRecordByToken_(token);
+
+    if (!record) {
+      return jsonResponse_({
+        ok: false,
+        message: 'Không tìm thấy thư mời hoặc token không hợp lệ.'
+      });
+    }
+
+    setCellByHeader_(
+      record.sheet,
+      record.row,
+      record.headerMap,
+      CONFIG.HEADERS.rsvp,
+      status
+    );
+
+    setCellByHeader_(
+      record.sheet,
+      record.row,
+      record.headerMap,
+      CONFIG.HEADERS.note,
+      note
+    );
+
+    setCellByHeader_(
+      record.sheet,
+      record.row,
+      record.headerMap,
+      CONFIG.HEADERS.responseTime,
+      new Date()
+    );
+
+    setCellByHeader_(
+      record.sheet,
+      record.row,
+      record.headerMap,
+      CONFIG.HEADERS.lastUpdated,
+      new Date()
+    );
+
+    SpreadsheetApp.flush();
+
+    return jsonResponse_({
+      ok: true,
+      status: status,
+      note: note,
+      message:
+        status === CONFIG.RSVP_STATUS.ATTENDING
+          ? 'BTC đã ghi nhận bạn sẽ tham dự.'
+          : 'BTC đã ghi nhận bạn không thể tham dự.',
+      responseTime: new Date().toISOString()
+    });
+
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+
+/* ============================================================
+ * TEST / RESET
+ * ============================================================ */
+
+function resetSelectedRowsForTesting() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+
+  if (sheet.getName() !== CONFIG.SHEET_NAME) {
+    SpreadsheetApp.getUi().alert(
+      'Vui lòng mở sheet "' + CONFIG.SHEET_NAME + '".'
+    );
+    return;
+  }
+
+  const range = sheet.getActiveRange();
+  const headerMap = getHeaderMap_(sheet);
+  const startRow = Math.max(2, range.getRow());
+  const endRow = range.getLastRow();
+
+  for (let row = startRow; row <= endRow; row++) {
+    setCellByHeader_(
+      sheet,
+      row,
+      headerMap,
+      CONFIG.HEADERS.emailStatus,
+      CONFIG.EMAIL_STATUS.PENDING
+    );
+    setCellByHeader_(
+      sheet,
+      row,
+      headerMap,
+      CONFIG.HEADERS.sentTime,
+      ''
+    );
+    setCellByHeader_(
+      sheet,
+      row,
+      headerMap,
+      CONFIG.HEADERS.rsvp,
+      ''
+    );
+    setCellByHeader_(
+      sheet,
+      row,
+      headerMap,
+      CONFIG.HEADERS.note,
+      ''
+    );
+    setCellByHeader_(
+      sheet,
+      row,
+      headerMap,
+      CONFIG.HEADERS.responseTime,
+      ''
+    );
+    setCellByHeader_(
+      sheet,
+      row,
+      headerMap,
+      CONFIG.HEADERS.errorMessage,
+      ''
+    );
+    setCellByHeader_(
+      sheet,
+      row,
+      headerMap,
+      CONFIG.HEADERS.lastUpdated,
+      new Date()
+    );
+  }
+
+  SpreadsheetApp.flush();
+
+  SpreadsheetApp.getUi().alert(
+    'Đã reset ' + (endRow - startRow + 1) + ' dòng để test.'
+  );
+}
+
+
+function testGetInvitation() {
+  const TEST_TOKEN = 'DÁN_TOKEN_TEST_VÀO_ĐÂY';
+  Logger.log(getInvitation_(TEST_TOKEN).getContent());
+}
+
+
+function testConfirmAttendance() {
+  const TEST_TOKEN = 'DÁN_TOKEN_TEST_VÀO_ĐÂY';
+
+  Logger.log(
+    saveRsvp_({
+      token: TEST_TOKEN,
+      status: CONFIG.RSVP_STATUS.ATTENDING,
+      note: ''
+    }).getContent()
+  );
+}
+
+
+function testDeclineAttendance() {
+  const TEST_TOKEN = 'DÁN_TOKEN_TEST_VÀO_ĐÂY';
+
+  Logger.log(
+    saveRsvp_({
+      token: TEST_TOKEN,
+      status: CONFIG.RSVP_STATUS.DECLINED,
+      note: 'Trùng lịch công việc'
+    }).getContent()
+  );
+}
+
+
+/* ============================================================
+ * SHEET HELPERS
+ * ============================================================ */
+
+function getSheet_() {
+  validateConfig_();
+
+  const spreadsheet = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID);
+  const sheet = spreadsheet.getSheetByName(CONFIG.SHEET_NAME);
 
   if (!sheet) {
-    throw new Error(`Không tìm thấy tab ${name}.`);
+    throw new Error(
+      'Không tìm thấy sheet "' + CONFIG.SHEET_NAME + '".'
+    );
   }
 
   return sheet;
 }
 
-function findRowById_(sheet, id) {
-  const lastRow = sheet.getLastRow();
-  if (lastRow < 2) return -1;
 
-  const values = sheet
-    .getRange(2, 1, lastRow - 1, 1)
-    .getDisplayValues();
+function getHeaderMap_(sheet) {
+  const lastColumn = sheet.getLastColumn();
 
-  for (let index = 0; index < values.length; index++) {
-    if (normalizeId_(values[index][0]) === id) {
-      return index + 2;
-    }
+  if (lastColumn < 1) {
+    throw new Error('Sheet chưa có header.');
   }
 
-  return -1;
+  const headers = sheet
+    .getRange(1, 1, 1, lastColumn)
+    .getDisplayValues()[0]
+    .map(function (value) {
+      return normalize_(value);
+    });
+
+  const map = {};
+
+  headers.forEach(function (header, index) {
+    if (header) {
+      map[header] = index + 1;
+    }
+  });
+
+  Object.keys(CONFIG.HEADERS).forEach(function (key) {
+    const expectedHeader = CONFIG.HEADERS[key];
+
+    if (!map[expectedHeader]) {
+      throw new Error(
+        'Thiếu cột "' + expectedHeader + '". Hãy chạy setupSheet().'
+      );
+    }
+  });
+
+  return map;
 }
 
+
+function getRowRecord_(sheet, headerMap, row) {
+  const values = sheet
+    .getRange(row, 1, 1, sheet.getLastColumn())
+    .getValues()[0];
+
+  return rowToObject_(values, headerMap);
+}
+
+
+function rowToObject_(rowValues, headerMap) {
+  const result = {};
+
+  Object.keys(headerMap).forEach(function (header) {
+    result[header] = rowValues[headerMap[header] - 1];
+  });
+
+  return result;
+}
+
+
+function findRecordByToken_(token) {
+  const sheet = getSheet_();
+  const headerMap = getHeaderMap_(sheet);
+  const tokenColumn = headerMap[CONFIG.HEADERS.token];
+  const lastRow = sheet.getLastRow();
+
+  if (lastRow < 2) {
+    return null;
+  }
+
+  const match = sheet
+    .getRange(2, tokenColumn, lastRow - 1, 1)
+    .createTextFinder(token)
+    .matchEntireCell(true)
+    .matchCase(false)
+    .findNext();
+
+  if (!match) {
+    return null;
+  }
+
+  const row = match.getRow();
+
+  return {
+    sheet: sheet,
+    headerMap: headerMap,
+    row: row,
+    values: getRowRecord_(sheet, headerMap, row)
+  };
+}
+
+
+function setCellByHeader_(
+  sheet,
+  row,
+  headerMap,
+  header,
+  value
+) {
+  const column = headerMap[header];
+
+  if (!column) {
+    throw new Error('Không tìm thấy cột "' + header + '".');
+  }
+
+  sheet.getRange(row, column).setValue(value);
+}
+
+
+
+/**
+ * Xác định chính xác thông tin sự kiện theo từng dòng.
+ * Ưu tiên dữ liệu trong Sheet; nếu trống thì dùng CONFIG.EVENTS.
+ */
+function resolveEventInfo_(record) {
+  const rawEvent = [
+    record[CONFIG.HEADERS.event],
+    record[CONFIG.HEADERS.location],
+    record['Office'],
+    record['Work Location'],
+    record['Branch']
+  ].filter(Boolean).join(' ');
+
+  const eventCode = normalizeEventCode_(rawEvent);
+  const fallback = CONFIG.EVENTS[eventCode] || CONFIG.EVENTS.SGN;
+
+  return {
+    code: eventCode,
+    date: formatEventDate_(
+      record[CONFIG.HEADERS.eventDate] || fallback.date
+    ),
+    time: formatEventTime_(
+      record[CONFIG.HEADERS.eventTime] || fallback.time
+    ),
+    venue: normalize_(
+      record[CONFIG.HEADERS.venue] || fallback.venue
+    ),
+    city: normalize_(
+      record[CONFIG.HEADERS.city] || fallback.city
+    ),
+    address: fallback.address || '',
+    dresscode: fallback.dresscode || ''
+  };
+}
+
+
+function formatEventDate_(value) {
+  if (!value) return '';
+
+  if (value instanceof Date) {
+    return Utilities.formatDate(
+      value,
+      Session.getScriptTimeZone(),
+      'dd/MM/yyyy'
+    );
+  }
+
+  return normalize_(value);
+}
+
+
+function formatEventTime_(value) {
+  if (!value) return '';
+
+  if (value instanceof Date) {
+    return Utilities.formatDate(
+      value,
+      Session.getScriptTimeZone(),
+      'HH:mm'
+    );
+  }
+
+  const text = normalize_(value);
+  const numeric = Number(text);
+
+  if (!isNaN(numeric) && numeric >= 0 && numeric < 1) {
+    const totalMinutes = Math.round(numeric * 24 * 60);
+    const hours = Math.floor(totalMinutes / 60) % 24;
+    const minutes = totalMinutes % 60;
+    return ('0' + hours).slice(-2) + ':' + ('0' + minutes).slice(-2);
+  }
+
+  return text;
+}
+
+
+/* ============================================================
+ * UTILITIES
+ * ============================================================ */
+
+function validateConfig_() {
+  if (
+    !CONFIG.SPREADSHEET_ID ||
+    CONFIG.SPREADSHEET_ID === 'DÁN_ID_GOOGLE_SHEET_VÀO_ĐÂY'
+  ) {
+    throw new Error('Bạn chưa cấu hình CONFIG.SPREADSHEET_ID.');
+  }
+
+  if (
+    !CONFIG.FRONTEND_BASE_URL ||
+    CONFIG.FRONTEND_BASE_URL.includes('TEN-DU-AN-VERCEL')
+  ) {
+    throw new Error('Bạn chưa cấu hình CONFIG.FRONTEND_BASE_URL.');
+  }
+}
+
+
+function parseRequestBody_(e) {
+  if (!e || !e.postData || !e.postData.contents) {
+    return {};
+  }
+
+  const raw = normalize_(e.postData.contents);
+
+  if (!raw) {
+    return {};
+  }
+
+  try {
+    return JSON.parse(raw);
+  } catch (error) {
+    const result = {};
+
+    raw.split('&').forEach(function (pair) {
+      const parts = pair.split('=');
+      const key = decodeURIComponent(parts[0] || '');
+      const value = decodeURIComponent(
+        String(parts.slice(1).join('=') || '').replace(/\+/g, ' ')
+      );
+
+      if (key) {
+        result[key] = value;
+      }
+    });
+
+    return result;
+  }
+}
+
+
 function createSecureToken_() {
-  const raw = [
-    Utilities.getUuid(),
-    Utilities.getUuid(),
-    new Date().getTime(),
-    Math.random()
-  ].join('|');
+  const raw =
+    Utilities.getUuid() +
+    '|' +
+    new Date().getTime() +
+    '|' +
+    Math.random();
 
   const digest = Utilities.computeDigest(
     Utilities.DigestAlgorithm.SHA_256,
@@ -494,54 +1241,115 @@ function createSecureToken_() {
     Utilities.Charset.UTF_8
   );
 
-  return Utilities.base64EncodeWebSafe(digest)
-    .replace(/=+$/g, '')
-    .slice(0, 32);
+  return digest
+    .map(function (byte) {
+      const value = byte < 0 ? byte + 256 : byte;
+      return ('0' + value.toString(16)).slice(-2);
+    })
+    .join('');
 }
 
-function normalizeBaseUrl_(value) {
-  const url = String(value || '').trim().replace(/\/+$/, '');
 
-  if (!/^https:\/\/.+/.test(url) || url.includes('YOUR-PROJECT')) {
-    throw new Error(
-      'Hãy điền Production Domain Vercel vào CONFIG.VERCEL_BASE_URL.'
+function normalizeEventCode_(value) {
+  const text = removeVietnameseAccents_(
+    normalize_(value)
+  ).toUpperCase();
+
+  if (
+    text.includes('HAN') ||
+    text.includes('HA NOI') ||
+    text.includes('HANOI') ||
+    text.includes('HN') ||
+    text.includes('NORTH')
+  ) {
+    return 'HAN';
+  }
+
+  if (
+    text.includes('SGN') ||
+    text.includes('HO CHI MINH') ||
+    text.includes('HCM') ||
+    text.includes('SAI GON') ||
+    text.includes('SOUTH')
+  ) {
+    return 'SGN';
+  }
+
+  return 'SGN';
+}
+
+
+function removeVietnameseAccents_(value) {
+  return String(value || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/g, 'd')
+    .replace(/Đ/g, 'D');
+}
+
+
+function normalizeLocation_(value) {
+  return normalizeEventCode_(value);
+}
+
+
+function isValidEmail_(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+
+function normalize_(value) {
+  return String(value == null ? '' : value).trim();
+}
+
+
+function safeString_(value) {
+  if (value == null) {
+    return '';
+  }
+
+  if (value instanceof Date) {
+    return Utilities.formatDate(
+      value,
+      Session.getScriptTimeZone(),
+      'yyyy-MM-dd HH:mm:ss'
     );
   }
 
-  return url;
+  return String(value);
 }
 
-function normalizeId_(value) {
-  return String(value || '')
-    .trim()
-    .replace(/^["']+|["']+$/g, '')
-    .replace(/\s+/g, '')
-    .replace(/\.0+$/, '')
-    .toLowerCase();
+
+function formatDateValue_(value) {
+  if (!value) {
+    return '';
+  }
+
+  if (value instanceof Date) {
+    return Utilities.formatDate(
+      value,
+      Session.getScriptTimeZone(),
+      'yyyy-MM-dd HH:mm:ss'
+    );
+  }
+
+  return String(value);
 }
 
-function normalizeToken_(value) {
-  return String(value || '')
-    .trim()
-    .replace(/[^a-zA-Z0-9_-]/g, '')
-    .slice(0, 120);
+
+function jsonResponse_(data) {
+  return ContentService
+    .createTextOutput(JSON.stringify(data))
+    .setMimeType(ContentService.MimeType.JSON);
 }
 
-function normalizeSite_(value) {
-  return String(value || '').trim().toUpperCase();
-}
 
-function isValidEmail_(email) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-    String(email || '').trim()
-  );
-}
-
-function escapeHtml_(value) {
-  return String(value || '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
+function errorResponse_(error) {
+  return jsonResponse_({
+    ok: false,
+    message:
+      error && error.message
+        ? error.message
+        : 'Đã xảy ra lỗi không xác định.'
+  });
 }
