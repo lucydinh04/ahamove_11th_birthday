@@ -2,9 +2,13 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#020813">
   <title>Thư mời Sinh nhật Ahamove 11 tuổi</title>
+
+  <link rel="preload" href="/background.png" as="image" fetchpriority="high">
+  <link rel="preload" href="/ahamove-logo.svg" as="image">
+  <link rel="preload" href="/11_3D.png" as="image">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -5276,7 +5280,208 @@
       70% { opacity: .72; }
       100% { top: 18%; opacity: 0; }
     }
-</style>
+
+    /* FINAL MOBILE UX + TRANSITION OPTIMIZATION */
+    :root { --mobile-pad: clamp(14px,4vw,22px); --mobile-radius:20px; --ease-premium:cubic-bezier(.22,.82,.22,1); }
+    html { min-height:100%; background:var(--bg); overscroll-behavior-y:none; -webkit-text-size-adjust:100%; }
+    body { min-height:100dvh; overscroll-behavior-y:none; -webkit-tap-highlight-color:transparent; }
+    .invitation-content,.invite-shell,.tech-intro,.success-overlay,.decline-overlay { min-height:100dvh; }
+    button,[role="button"],.tech-intro { touch-action:manipulation; }
+    img { max-width:100%; height:auto; }
+    .invitation-content { will-change:opacity,transform,filter; backface-visibility:hidden; transform:translate3d(0,38px,0) scale(.988); transition:opacity .72s var(--ease-premium),transform .88s var(--ease-premium),filter .72s ease; filter:blur(8px); }
+    .invitation-content.visible { transform:translate3d(0,0,0) scale(1); filter:blur(0); }
+    .tech-intro,.tech-intro * { backface-visibility:hidden; transform-style:preserve-3d; }
+    .tech-intro.launch { pointer-events:none; }
+    @media (hover:none),(pointer:coarse) {
+      .tech-intro,.hero,.hero-number-card,.feature-card,.story-card,.info-card,.rsvp-card { transform-style:flat!important; }
+      .hero-number-card,.feature-card,.story-card,.info-card { animation-name:none!important; transform:none!important; }
+    }
+    @media (max-width:720px) {
+      body { overflow-x:hidden; }
+      .invite-shell { width:100%; max-width:none; background-attachment:scroll!important; background-position:center top; }
+      .hero { padding:max(20px,env(safe-area-inset-top)) var(--mobile-pad) 24px; }
+      .brand { margin-bottom:18px; padding:9px 16px; }
+      .brand-horizontal-logo { width:min(188px,52vw); }
+      .hero-number-wrap { width:min(42vw,164px)!important; height:min(42vw,164px)!important; margin-bottom:18px!important; }
+      .hero-number-card { inset:27px!important; }
+      .tech-intro { align-items:center; padding:max(18px,env(safe-area-inset-top)) var(--mobile-pad) max(22px,env(safe-area-inset-bottom)); }
+      .energy-core { width:min(52vw,196px); height:min(52vw,196px); }
+      .ring-1{width:104px;height:104px}.ring-2{width:142px;height:142px}.ring-3{width:184px;height:184px}
+      .hologram-number { font-size:clamp(64px,20vw,80px); }
+      .intro-copy { bottom:max(7.5%,calc(20px + env(safe-area-inset-bottom))); padding-inline:var(--mobile-pad); }
+      .intro-title { font-size:clamp(16px,4.5vw,19px); line-height:1.35; }
+      .intro-eyebrow { font-size:9px; letter-spacing:.22em; }
+      .intro-hint { font-size:11px; }
+      .tech-grid { inset:-78%; background-size:34px 34px; opacity:.48; }
+      .scan-line { opacity:.58; }
+      section,.section,.content-section,.event-section,.story-section,.rsvp-section { padding-left:var(--mobile-pad)!important; padding-right:var(--mobile-pad)!important; }
+      .feature-grid,.story-grid,.info-grid,.event-grid,.cards-grid { grid-template-columns:1fr!important; gap:12px!important; }
+      .feature-card,.story-card,.info-card,.event-card,.rsvp-card,.glass-card { border-radius:var(--mobile-radius)!important; }
+      .rsvp-actions,.button-row,.cta-row { display:grid!important; grid-template-columns:1fr!important; gap:12px!important; }
+      .rsvp-actions button,.button-row button,.cta-row button,.confirm-button,.decline-button { width:100%!important; min-height:52px; padding:14px 18px!important; border-radius:16px!important; }
+      .modal,.popup-card,.overlay-card,.success-card,.decline-card { width:calc(100vw - 28px)!important; max-height:calc(100dvh - 28px)!important; overflow-y:auto; border-radius:22px!important; }
+      input,textarea,select { font-size:16px!important; }
+      .tech-intro.launch .energy-core,.tech-intro.launch .energy-ring,.tech-intro.launch .hologram-number { animation-duration:.92s!important; }
+      .portal-transition,.portal-layer,.transition-layer { will-change:opacity,transform; }
+    }
+    @media (max-width:430px) {
+      :root{--mobile-pad:14px}.hero{padding-top:max(16px,env(safe-area-inset-top))}.brand-horizontal-logo{width:min(174px,56vw)}
+      .hero-number-wrap{width:142px!important;height:142px!important}.intro-copy{bottom:max(6%,calc(14px + env(safe-area-inset-bottom)))}
+    }
+    @media (max-height:700px) and (orientation:portrait) {
+      .energy-core{transform:scale(.84)}.ai-orbit-label{top:max(5%,env(safe-area-inset-top))!important}.intro-copy{bottom:max(3.5%,calc(10px + env(safe-area-inset-bottom)))}
+    }
+    @media (orientation:landscape) and (max-height:560px) {
+      .tech-intro{align-items:center}.energy-core{transform:scale(.68)}.ai-orbit-label{top:10px!important}.intro-copy{bottom:8px}
+    }
+    @media (prefers-reduced-motion:reduce) {
+      html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.18s!important;scroll-behavior:auto!important}
+      .invitation-content{filter:none;transform:none}
+    }
+
+
+    /* MOBILE OPEN-STATE SAFETY: invitation must remain visible after intro */
+    body.invitation-opened { overflow-x: hidden !important; overflow-y: auto !important; }
+    body.invitation-opened #invitationContent,
+    #invitationContent.visible {
+      display: block !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      pointer-events: auto !important;
+      transform: translate3d(0,0,0) scale(1) !important;
+      filter: none !important;
+    }
+
+
+    /* FINAL SCROLL FIX — restore native vertical scrolling after opening */
+    html.invitation-opened,
+    body.invitation-opened {
+      height: auto !important;
+      min-height: 100% !important;
+      overflow-x: hidden !important;
+      overflow-y: auto !important;
+      overscroll-behavior-y: auto !important;
+      touch-action: pan-y !important;
+      -webkit-overflow-scrolling: touch !important;
+    }
+
+    body.invitation-opened #invitationContent {
+      position: relative !important;
+      height: auto !important;
+      min-height: 100dvh !important;
+      max-height: none !important;
+      overflow: visible !important;
+      touch-action: pan-y !important;
+    }
+
+    body.invitation-opened .invite-shell {
+      height: auto !important;
+      max-height: none !important;
+      overflow: visible !important;
+    }
+
+
+
+    /* FINAL PERFORMANCE PASS — smoothest possible intro opening */
+    html, body { -webkit-overflow-scrolling: touch; }
+    .tech-intro,
+    .invitation-content,
+    .transition-portal {
+      transform: translateZ(0);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+
+    body.opening-invitation .tech-grid,
+    body.opening-invitation .scan-line,
+    body.opening-invitation .intro-space::before,
+    body.opening-invitation .intro-space::after,
+    body.opening-invitation .data-stream,
+    body.opening-invitation .energy-ring {
+      animation-play-state: paused !important;
+    }
+
+    body.opening-invitation .invite-shell {
+      contain: layout paint;
+    }
+
+    /* Keep the transition on compositor-friendly opacity/transform only. */
+    .tech-intro.transitioning {
+      animation: smoothIntroExit .72s cubic-bezier(.22,.78,.18,1) forwards !important;
+    }
+
+    .invitation-content.preparing {
+      opacity: 0 !important;
+      visibility: visible !important;
+      transform: translate3d(0,34px,0) scale(.992) !important;
+      filter: none !important;
+      clip-path: none !important;
+    }
+
+    .invitation-content.visible {
+      animation: smoothInvitationEnter .78s cubic-bezier(.16,.84,.2,1) forwards !important;
+      filter: none !important;
+      clip-path: none !important;
+    }
+
+    @keyframes smoothIntroExit {
+      0% { opacity:1; transform:translate3d(0,0,0) scale(1); }
+      58% { opacity:.72; transform:translate3d(0,-8px,0) scale(1.012); }
+      100% { opacity:0; transform:translate3d(0,-24px,0) scale(1.025); visibility:hidden; }
+    }
+
+    @keyframes smoothInvitationEnter {
+      0% { opacity:0; transform:translate3d(0,34px,0) scale(.992); }
+      55% { opacity:.78; }
+      100% { opacity:1; transform:translate3d(0,0,0) scale(1); }
+    }
+
+    @media (max-width: 720px), (hover:none), (pointer:coarse) {
+      /* Filters, clip-path and large blur layers are the main source of mobile jank. */
+      .tech-intro,
+      .tech-intro.transitioning,
+      .invitation-content,
+      .invitation-content.preparing,
+      .invitation-content.visible,
+      .transition-portal,
+      .portal-core,
+      .portal-ring,
+      .portal-scan {
+        filter: none !important;
+        clip-path: none !important;
+      }
+
+      .transition-portal.active {
+        opacity: 1;
+      }
+
+      .transition-portal.active .portal-ring {
+        animation-duration: .72s !important;
+      }
+
+      .transition-portal.active .portal-core,
+      .transition-portal.active .portal-scan {
+        animation-duration: .64s !important;
+      }
+
+      .tech-intro::before,
+      .tech-intro::after {
+        filter: blur(44px) !important;
+        opacity: .12 !important;
+      }
+
+      .tech-grid { opacity:.36 !important; }
+      .scan-line { opacity:.42 !important; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .tech-intro.transitioning,
+      .invitation-content.visible {
+        animation-duration: .22s !important;
+      }
+    }
+
+  </style>
 </head>
 
 <body>
@@ -5624,7 +5829,6 @@
         </div>
 
         <p class="footer-note">
-          Hẹn gặp bạn tại hành trình tiếp theo của Ahamove.<br>
           <strong>Always Moving Together.</strong>
         </p>
       </main>
@@ -5729,53 +5933,102 @@
     let introIsOpening = false;
     const transitionPortal = document.getElementById('transitionPortal');
 
+    function unlockInvitationScroll() {
+      const root = document.documentElement;
+      const body = document.body;
+
+      root.classList.add('invitation-opened');
+      body.classList.add('invitation-opened');
+
+      [root, body].forEach(element => {
+        element.style.overflowX = 'hidden';
+        element.style.overflowY = 'auto';
+        element.style.height = 'auto';
+        element.style.maxHeight = 'none';
+        element.style.touchAction = 'pan-y';
+        element.style.overscrollBehaviorY = 'auto';
+      });
+
+      if (invitationContent) {
+        invitationContent.style.position = 'relative';
+        invitationContent.style.height = 'auto';
+        invitationContent.style.maxHeight = 'none';
+        invitationContent.style.overflow = 'visible';
+        invitationContent.style.touchAction = 'pan-y';
+      }
+
+      // iOS Safari occasionally keeps the previous fixed-screen scroll state
+      // until a new layout frame is committed.
+      requestAnimationFrame(() => {
+        window.scrollTo(0, 0);
+        requestAnimationFrame(() => {
+          root.style.overflowY = 'auto';
+          body.style.overflowY = 'auto';
+        });
+      });
+    }
+
     function openInvitationSmoothly() {
       if (!techIntro || !invitationContent || introIsOpening) return;
 
       introIsOpening = true;
-      document.body.classList.add('opening-invitation');
+      const root = document.documentElement;
+      const body = document.body;
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const mobileLike = window.matchMedia('(max-width: 720px), (hover: none), (pointer: coarse)').matches;
+      const duration = reducedMotion ? 240 : (mobileLike ? 720 : 820);
+      const revealDelay = reducedMotion ? 20 : (mobileLike ? 110 : 150);
 
-      invitationContent.classList.add('preparing');
+      root.classList.remove('invitation-opened');
+      body.classList.remove('invitation-opened');
+      body.classList.add('opening-invitation');
+
+      invitationContent.hidden = false;
       invitationContent.setAttribute('aria-hidden', 'false');
+      invitationContent.classList.remove('visible');
+      invitationContent.classList.add('preparing');
+
       transitionPortal?.classList.add('active');
       transitionPortal?.setAttribute('aria-hidden', 'false');
 
-      // Pre-render the destination frame before the portal starts.
-      void invitationContent.offsetHeight;
-
+      // Two frames guarantee the browser has painted the initial state before animating.
       requestAnimationFrame(() => {
-        techIntro.classList.add('transitioning');
+        requestAnimationFrame(() => {
+          techIntro.classList.add('transitioning');
 
-        // Invitation begins to materialize after the portal flash peaks.
-        window.setTimeout(() => {
-          invitationContent.classList.remove('preparing');
-          invitationContent.classList.add('visible');
-        }, 360);
+          window.setTimeout(() => {
+            invitationContent.classList.remove('preparing');
+            invitationContent.classList.add('visible');
+          }, revealDelay);
+        });
       });
 
-      let completed = false;
-
-      const finishTransition = () => {
-        if (completed) return;
-        completed = true;
-
+      window.setTimeout(() => {
         techIntro.classList.add('opened');
         techIntro.style.display = 'none';
         techIntro.setAttribute('aria-hidden', 'true');
 
-        invitationContent.classList.remove('visible', 'preparing');
+        invitationContent.classList.remove('preparing');
+        invitationContent.classList.add('visible');
+        invitationContent.style.opacity = '1';
+        invitationContent.style.visibility = 'visible';
+        invitationContent.style.pointerEvents = 'auto';
+        invitationContent.style.transform = 'translate3d(0,0,0) scale(1)';
+        invitationContent.style.filter = 'none';
+
         transitionPortal?.classList.remove('active');
         transitionPortal?.setAttribute('aria-hidden', 'true');
 
-        document.body.classList.remove('opening-invitation');
-        document.body.classList.add('invitation-opened');
-
+        body.classList.remove('opening-invitation');
+        body.classList.add('invitation-opened');
         unlockInvitationScroll();
         window.scrollTo(0, 0);
-      };
 
-      techIntro.addEventListener('animationend', finishTransition, { once: true });
-      window.setTimeout(finishTransition, 1120);
+        // Release compositor memory after the motion is complete.
+        invitationContent.style.willChange = 'auto';
+        techIntro.style.willChange = 'auto';
+        introIsOpening = false;
+      }, duration);
     }
 
     // Decode trước hình ảnh chính để lần mở đầu tiên không bị giật.
@@ -5790,10 +6043,6 @@
 
     techIntro?.addEventListener('click', openInvitationSmoothly);
 
-    techIntro?.addEventListener('touchend', event => {
-      event.preventDefault();
-      openInvitationSmoothly();
-    }, { passive: false });
 
     techIntro?.addEventListener('keydown', event => {
       if (event.key === 'Enter' || event.key === ' ') {
@@ -5855,11 +6104,12 @@
       });
     }
 
-    techIntro.addEventListener('pointermove', event => {
-      applyIntroParallax(event.clientX, event.clientY);
-    });
-
-    techIntro.addEventListener('pointerleave', resetIntroParallax);
+    if (techIntro && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      techIntro.addEventListener('pointermove', event => {
+        applyIntroParallax(event.clientX, event.clientY);
+      }, { passive: true });
+      techIntro.addEventListener('pointerleave', resetIntroParallax, { passive: true });
+    }
 function setLoadingState() {
       confirmButton.disabled = true;
       declineButton.disabled = true;
@@ -6174,5 +6424,9 @@ loadInvitation();
   
 
   </script>
+
+<script>
+(()=>{const t=matchMedia('(hover: none), (pointer: coarse)').matches,n=matchMedia('(max-width: 720px)').matches;document.documentElement.classList.toggle('is-touch-device',t);document.documentElement.classList.toggle('is-mobile-layout',n);const s=()=>document.documentElement.style.setProperty('--app-vh',`${innerHeight*.01}px`);s();addEventListener('resize',s,{passive:true});addEventListener('orientationchange',s,{passive:true});if(t)document.querySelectorAll('[data-parallax],.parallax-layer').forEach(e=>e.style.transform='')})();
+</script>
 </body>
 </html>
