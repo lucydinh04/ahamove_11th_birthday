@@ -4303,20 +4303,18 @@
       pointer-events: none;
       will-change: opacity, transform;
       backface-visibility: hidden;
-      background: #020813;
     }
 
     .invitation-content.preparing {
-      opacity: 0 !important;
-      transform: translate3d(0, 20px, 0) scale(.992) !important;
-      visibility: visible !important;
-      pointer-events: none !important;
+      opacity: 0;
+      transform: translate3d(0, 20px, 0) scale(.992);
+      visibility: visible;
     }
 
     .invitation-content.visible {
-      visibility: visible !important;
-      pointer-events: auto !important;
-      animation: invitationCrossfadeIn .72s cubic-bezier(.22,.78,.2,1) forwards !important;
+      visibility: visible;
+      pointer-events: auto;
+      animation: invitationCrossfadeIn .72s cubic-bezier(.22,.78,.2,1) forwards;
     }
 
     body.opening-invitation {
@@ -4324,10 +4322,10 @@
     }
 
     body.invitation-opened .invitation-content {
-      opacity: 1 !important;
-      transform: none !important;
-      visibility: visible !important;
-      pointer-events: auto !important;
+      opacity: 1;
+      transform: none;
+      visibility: visible;
+      pointer-events: auto;
       will-change: auto;
     }
 
@@ -4651,6 +4649,67 @@
     }
 
   
+    /* BLACK SCREEN TRANSITION FIX */
+    .invitation-content {
+      display: block !important;
+      visibility: visible !important;
+      background: #020813;
+    }
+
+    .invitation-content.preparing {
+      opacity: 0 !important;
+      transform: translateY(18px) scale(.992) !important;
+      filter: blur(5px) !important;
+    }
+
+    .invitation-content.visible {
+      opacity: 1 !important;
+      visibility: visible !important;
+      transform: translateY(0) scale(1) !important;
+      filter: blur(0) !important;
+      animation: invitationRevealFixed .72s cubic-bezier(.22,.78,.2,1) both !important;
+    }
+
+    .tech-intro.transitioning {
+      pointer-events: none !important;
+      animation: introExitFixed .82s cubic-bezier(.22,.72,.18,1) both !important;
+    }
+
+    @keyframes introExitFixed {
+      0% {
+        opacity: 1;
+        transform: translateZ(0) scale(1);
+        filter: blur(0);
+      }
+      100% {
+        opacity: 0;
+        transform: translateZ(0) scale(1.08);
+        filter: blur(8px);
+        visibility: hidden;
+      }
+    }
+
+    @keyframes invitationRevealFixed {
+      0% {
+        opacity: 0;
+        transform: translateY(18px) scale(.992);
+        filter: blur(5px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .tech-intro.transitioning,
+      .invitation-content.visible {
+        animation-duration: .01ms !important;
+      }
+    }
+
+  
     /* RSVP CLICK / HIT AREA FIX */
     .combined-invite-card,
     .combined-rsvp,
@@ -4758,6 +4817,425 @@
         overscroll-behavior-y: auto;
         -webkit-overflow-scrolling: touch;
       }
+    }
+
+  
+
+    /* HIGH-TECH PORTAL TRANSITION — INTRO → INVITATION */
+    .transition-portal {
+      position: fixed;
+      inset: 0;
+      z-index: 10050;
+      display: grid;
+      place-items: center;
+      pointer-events: none;
+      opacity: 0;
+      visibility: hidden;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(13, 114, 255, .12), transparent 34%),
+        rgba(1, 6, 18, .02);
+      will-change: opacity, backdrop-filter;
+    }
+
+    .transition-portal.active {
+      visibility: visible;
+      animation: portalLayerIn 1.18s cubic-bezier(.2,.72,.12,1) both;
+    }
+
+    .transition-portal::before {
+      content: '';
+      position: absolute;
+      inset: -18%;
+      background:
+        repeating-linear-gradient(90deg, transparent 0 48px, rgba(71,169,255,.08) 49px 50px),
+        repeating-linear-gradient(0deg, transparent 0 48px, rgba(255,126,38,.055) 49px 50px);
+      transform: perspective(700px) rotateX(64deg) translateY(28%) scale(1.35);
+      opacity: 0;
+    }
+
+    .transition-portal.active::before {
+      animation: portalGrid 1.08s cubic-bezier(.18,.76,.18,1) both;
+    }
+
+    .portal-ring,
+    .portal-ring::before,
+    .portal-ring::after {
+      position: absolute;
+      width: min(68vw, 760px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      border: 1px solid rgba(111, 194, 255, .48);
+      box-shadow:
+        0 0 22px rgba(29,129,255,.34),
+        inset 0 0 28px rgba(29,129,255,.16);
+      content: '';
+    }
+
+    .portal-ring {
+      opacity: 0;
+      transform: scale(.18) rotate(-16deg);
+      border-color: rgba(255,139,47,.58);
+      filter: drop-shadow(0 0 22px rgba(255,117,24,.28));
+    }
+
+    .portal-ring::before { inset: 7%; width: auto; }
+    .portal-ring::after {
+      inset: 18%;
+      width: auto;
+      border-style: dashed;
+      border-color: rgba(126,211,255,.65);
+    }
+
+    .transition-portal.active .portal-ring {
+      animation: portalRingBurst 1.05s cubic-bezier(.12,.78,.12,1) both;
+    }
+
+    .portal-core {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow:
+        0 0 20px 8px rgba(255,255,255,.95),
+        0 0 70px 28px rgba(36,145,255,.76),
+        0 0 120px 52px rgba(255,113,26,.42);
+      opacity: 0;
+      transform: scale(.2);
+    }
+
+    .transition-portal.active .portal-core {
+      animation: portalCoreFlash 1.08s cubic-bezier(.15,.8,.12,1) both;
+    }
+
+    .portal-scan {
+      position: absolute;
+      left: -10%;
+      width: 120%;
+      height: 2px;
+      top: 50%;
+      opacity: 0;
+      background: linear-gradient(90deg, transparent, rgba(75,177,255,.15), #fff, rgba(255,124,36,.38), transparent);
+      box-shadow: 0 0 18px rgba(61,170,255,.82), 0 0 42px rgba(255,119,26,.45);
+    }
+
+    .transition-portal.active .portal-scan {
+      animation: portalScan 1.02s cubic-bezier(.2,.74,.18,1) both;
+    }
+
+    .portal-status {
+      position: absolute;
+      bottom: 12vh;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: rgba(219,239,255,.86);
+      font: 700 10px/1.2 'Lexend', sans-serif;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      opacity: 0;
+    }
+
+    .portal-status::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #62dcff;
+      box-shadow: 0 0 14px #62dcff;
+    }
+
+    .transition-portal.active .portal-status {
+      animation: portalStatus .92s ease both;
+    }
+
+    .tech-intro.transitioning {
+      animation: highTechIntroOut 1.04s cubic-bezier(.16,.72,.12,1) forwards !important;
+    }
+
+    .tech-intro.transitioning .hologram-number {
+      animation: introNumberWarp .82s cubic-bezier(.16,.74,.18,1) forwards !important;
+    }
+
+    .tech-intro.transitioning .intro-copy {
+      animation: introCopyDataOut .42s cubic-bezier(.24,.7,.2,1) forwards !important;
+    }
+
+    .invitation-content.preparing {
+      opacity: 0;
+      visibility: visible;
+      transform: translate3d(0, 34px, 0) scale(.965);
+      filter: blur(10px) saturate(1.25);
+      clip-path: inset(48% 0 48% 0 round 22px);
+    }
+
+    .invitation-content.visible {
+      animation: invitationMaterialize .92s cubic-bezier(.18,.78,.14,1) forwards !important;
+    }
+
+    @keyframes portalLayerIn {
+      0% { opacity: 0; backdrop-filter: blur(0); }
+      18% { opacity: 1; }
+      68% { opacity: 1; backdrop-filter: blur(7px); }
+      100% { opacity: 0; backdrop-filter: blur(0); visibility: hidden; }
+    }
+
+    @keyframes portalGrid {
+      0% { opacity: 0; transform: perspective(700px) rotateX(64deg) translateY(42%) scale(1.55); }
+      35% { opacity: .78; }
+      100% { opacity: 0; transform: perspective(700px) rotateX(64deg) translateY(-8%) scale(1.12); }
+    }
+
+    @keyframes portalRingBurst {
+      0% { opacity: 0; transform: scale(.14) rotate(-24deg); }
+      24% { opacity: 1; }
+      72% { opacity: .88; transform: scale(.92) rotate(22deg); }
+      100% { opacity: 0; transform: scale(1.45) rotate(36deg); }
+    }
+
+    @keyframes portalCoreFlash {
+      0% { opacity: 0; transform: scale(.1); }
+      30% { opacity: 1; transform: scale(.65); }
+      58% { opacity: .98; transform: scale(7); }
+      100% { opacity: 0; transform: scale(25); }
+    }
+
+    @keyframes portalScan {
+      0% { opacity: 0; transform: translateY(-42vh) scaleX(.55); }
+      22% { opacity: 1; }
+      70% { opacity: .95; transform: translateY(10vh) scaleX(1); }
+      100% { opacity: 0; transform: translateY(46vh) scaleX(.7); }
+    }
+
+    @keyframes portalStatus {
+      0%, 12% { opacity: 0; transform: translateY(8px); }
+      32%, 66% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-5px); }
+    }
+
+    @keyframes highTechIntroOut {
+      0% { opacity: 1; transform: translate3d(0,0,0) scale(1); filter: blur(0) saturate(1); }
+      45% { opacity: .96; transform: translate3d(0,-3px,0) scale(1.018); filter: blur(0) saturate(1.18); }
+      72% { opacity: .48; transform: translate3d(0,-10px,0) scale(1.055); filter: blur(3px) saturate(1.4); }
+      100% { opacity: 0; transform: translate3d(0,-18px,0) scale(1.11); filter: blur(12px) saturate(1.55); visibility: hidden; }
+    }
+
+    @keyframes introNumberWarp {
+      0% { opacity: 1; transform: translateZ(0) scale(1); filter: blur(0) brightness(1); }
+      55% { opacity: 1; transform: translateZ(0) scale(1.08); filter: blur(0) brightness(1.55); }
+      100% { opacity: 0; transform: translateZ(0) scale(1.42); filter: blur(10px) brightness(2.4); }
+    }
+
+    @keyframes introCopyDataOut {
+      to { opacity: 0; transform: translate3d(0,14px,0) scale(.985); filter: blur(4px); }
+    }
+
+    @keyframes invitationMaterialize {
+      0% {
+        opacity: 0;
+        transform: translate3d(0,34px,0) scale(.965);
+        filter: blur(10px) saturate(1.25);
+        clip-path: inset(48% 0 48% 0 round 22px);
+      }
+      38% { opacity: .74; filter: blur(3px) saturate(1.18); }
+      74% { opacity: 1; clip-path: inset(0 0 0 0 round 22px); }
+      100% { opacity: 1; transform: translate3d(0,0,0) scale(1); filter: blur(0) saturate(1); clip-path: inset(0 0 0 0 round 0); }
+    }
+
+    @media (max-width: 720px) {
+      .portal-ring,
+      .portal-ring::before,
+      .portal-ring::after { width: min(94vw, 620px); }
+      .portal-status { bottom: 9vh; font-size: 8px; letter-spacing: .16em; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .transition-portal.active,
+      .transition-portal.active::before,
+      .transition-portal.active .portal-ring,
+      .transition-portal.active .portal-core,
+      .transition-portal.active .portal-scan,
+      .transition-portal.active .portal-status,
+      .tech-intro.transitioning,
+      .tech-intro.transitioning .hologram-number,
+      .tech-intro.transitioning .intro-copy,
+      .invitation-content.visible {
+        animation-duration: .2s !important;
+      }
+    }
+
+
+    /* CENTER-FOCUS TRANSITION OVERRIDE
+       The motion now travels through a single central portal instead of spreading sideways. */
+    .transition-portal {
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,.16) 0 1%, rgba(39,159,255,.16) 4%, rgba(5,33,84,.13) 14%, transparent 34%),
+        rgba(1, 6, 18, .08);
+    }
+
+    .transition-portal::before {
+      inset: -40%;
+      background:
+        repeating-radial-gradient(circle at 50% 50%, rgba(89,185,255,.14) 0 1px, transparent 2px 42px),
+        conic-gradient(from 0deg at 50% 50%, transparent 0 12deg, rgba(80,175,255,.08) 13deg 14deg, transparent 15deg 42deg, rgba(255,126,38,.055) 43deg 44deg, transparent 45deg 90deg);
+      transform: scale(.18) rotate(-10deg);
+      transform-origin: 50% 50%;
+      -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 0 42%, transparent 73%);
+      mask-image: radial-gradient(circle at 50% 50%, #000 0 42%, transparent 73%);
+    }
+
+    .portal-ring,
+    .portal-ring::before,
+    .portal-ring::after {
+      width: min(48vw, 520px);
+      transform-origin: 50% 50%;
+    }
+
+    .portal-ring {
+      transform: scale(.08) rotate(-18deg);
+    }
+
+    .portal-core {
+      width: 7px;
+      height: 7px;
+      box-shadow:
+        0 0 18px 7px rgba(255,255,255,.98),
+        0 0 58px 25px rgba(36,145,255,.74),
+        0 0 95px 38px rgba(255,113,26,.30);
+    }
+
+    .portal-scan {
+      left: 50%;
+      top: 50%;
+      width: 2px;
+      height: min(68vh, 680px);
+      transform: translate(-50%, -50%) scaleY(.05);
+      transform-origin: 50% 50%;
+      background: linear-gradient(180deg, transparent, rgba(76,179,255,.3), #fff 48%, #fff 52%, rgba(255,126,38,.38), transparent);
+      box-shadow:
+        0 0 16px rgba(61,170,255,.88),
+        0 0 38px rgba(61,170,255,.48),
+        0 0 64px rgba(255,119,26,.28);
+    }
+
+    .invitation-content.preparing {
+      opacity: 0;
+      visibility: visible;
+      transform: translate3d(0, 0, 0) scale(.86);
+      transform-origin: 50% 38vh;
+      filter: blur(14px) saturate(1.28) brightness(1.22);
+      clip-path: circle(0% at 50% 38vh);
+    }
+
+    .invitation-content.visible {
+      transform-origin: 50% 38vh;
+      animation: invitationMaterializeCenter .96s cubic-bezier(.16,.82,.14,1) forwards !important;
+    }
+
+    @keyframes portalGrid {
+      0% {
+        opacity: 0;
+        transform: scale(.12) rotate(-12deg);
+      }
+      34% { opacity: .72; }
+      76% {
+        opacity: .52;
+        transform: scale(.78) rotate(6deg);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(1.16) rotate(12deg);
+      }
+    }
+
+    @keyframes portalRingBurst {
+      0% { opacity: 0; transform: scale(.06) rotate(-22deg); }
+      22% { opacity: 1; }
+      60% { opacity: .96; transform: scale(.54) rotate(8deg); }
+      84% { opacity: .78; transform: scale(.94) rotate(18deg); }
+      100% { opacity: 0; transform: scale(1.12) rotate(24deg); }
+    }
+
+    @keyframes portalCoreFlash {
+      0% { opacity: 0; transform: scale(.08); }
+      26% { opacity: 1; transform: scale(.58); }
+      52% { opacity: 1; transform: scale(4.6); }
+      76% { opacity: .72; transform: scale(8.5); }
+      100% { opacity: 0; transform: scale(13); }
+    }
+
+    @keyframes portalScan {
+      0% { opacity: 0; transform: translate(-50%, -50%) scaleY(.02); }
+      26% { opacity: 1; transform: translate(-50%, -50%) scaleY(.22); }
+      62% { opacity: .96; transform: translate(-50%, -50%) scaleY(1); }
+      100% { opacity: 0; transform: translate(-50%, -50%) scaleY(.34); }
+    }
+
+    @keyframes highTechIntroOut {
+      0% {
+        opacity: 1;
+        transform: translate3d(0,0,0) scale(1);
+        filter: blur(0) saturate(1);
+      }
+      48% {
+        opacity: 1;
+        transform: translate3d(0,0,0) scale(1.025);
+        filter: blur(0) saturate(1.16) brightness(1.08);
+      }
+      78% {
+        opacity: .5;
+        transform: translate3d(0,0,0) scale(1.085);
+        filter: blur(4px) saturate(1.35) brightness(1.2);
+      }
+      100% {
+        opacity: 0;
+        transform: translate3d(0,0,0) scale(1.16);
+        filter: blur(14px) saturate(1.5) brightness(1.35);
+        visibility: hidden;
+      }
+    }
+
+    @keyframes introNumberWarp {
+      0% { opacity: 1; transform: translateZ(0) scale(1); filter: blur(0) brightness(1); }
+      54% { opacity: 1; transform: translateZ(0) scale(1.12); filter: blur(0) brightness(1.65); }
+      100% { opacity: 0; transform: translateZ(0) scale(1.72); filter: blur(12px) brightness(2.7); }
+    }
+
+    @keyframes invitationMaterializeCenter {
+      0% {
+        opacity: 0;
+        transform: translate3d(0,0,0) scale(.86);
+        filter: blur(14px) saturate(1.28) brightness(1.24);
+        clip-path: circle(0% at 50% 38vh);
+      }
+      34% {
+        opacity: .5;
+        transform: translate3d(0,0,0) scale(.91);
+        filter: blur(7px) saturate(1.2) brightness(1.16);
+        clip-path: circle(16% at 50% 38vh);
+      }
+      68% {
+        opacity: .94;
+        transform: translate3d(0,0,0) scale(.975);
+        filter: blur(2px) saturate(1.08) brightness(1.06);
+        clip-path: circle(64% at 50% 38vh);
+      }
+      100% {
+        opacity: 1;
+        transform: translate3d(0,0,0) scale(1);
+        filter: blur(0) saturate(1) brightness(1);
+        clip-path: circle(150% at 50% 38vh);
+      }
+    }
+
+    @media (max-width: 720px) {
+      .portal-ring,
+      .portal-ring::before,
+      .portal-ring::after { width: min(72vw, 440px); }
+
+      .invitation-content.preparing,
+      .invitation-content.visible { transform-origin: 50% 42vh; }
     }
 
   </style>
@@ -4934,7 +5412,7 @@
           </div>
 
           <div class="combined-greeting">
-            Thân gửi <span class="employee-name">Ahamover</span>,
+            Thân gửi, <span class="employee-name">Ahamover</span>
           </div>
 
           <p class="combined-intro">
@@ -4944,6 +5422,7 @@
 
           <div class="combined-theme-pill">
             <span class="theme-orange">CHUYỂN MÌNH</span>
+            <span class="theme-separator">–</span>
             <span class="theme-blue">BỨT PHÁ</span>
           </div>
 
@@ -5078,7 +5557,7 @@
                 <p class="combined-detail-label">Hạn chót đăng ký</p>
                 <p class="combined-detail-value">
                   <span class="theme-orange">12:00</span>
-                  <span> | 29/07/2026</span>
+                  <span> | 29.07.2026</span>
                 </p>
               </div>
             </div>
@@ -5108,6 +5587,7 @@
         </div>
 
         <p class="footer-note">
+          Hẹn gặp bạn tại hành trình tiếp theo của Ahamove.<br>
           <strong>Always Moving Together.</strong>
         </p>
       </main>
@@ -5187,6 +5667,13 @@
   </div>
 
 
+  <div id="transitionPortal" class="transition-portal" aria-hidden="true">
+    <div class="portal-ring"></div>
+    <div class="portal-core"></div>
+    <div class="portal-scan"></div>
+    <div class="portal-status">Đang giải mã thư mời</div>
+  </div>
+
   <script>
     function getTokenFromUrl() {
       const pathMatch = window.location.pathname.match(/^\/i\/([^/?#]+)/i);
@@ -5201,8 +5688,9 @@
     const techIntro = document.getElementById('techIntro');
     const invitationContent = document.getElementById('invitationContent');
 
-    /* SINGLE GPU-FRIENDLY INTRO TRANSITION */
+    /* SINGLE HIGH-TECH INTRO TRANSITION — one handler only */
     let introIsOpening = false;
+    const transitionPortal = document.getElementById('transitionPortal');
 
     function openInvitationSmoothly() {
       if (!techIntro || !invitationContent || introIsOpening) return;
@@ -5210,18 +5698,22 @@
       introIsOpening = true;
       document.body.classList.add('opening-invitation');
 
-      // Dựng nội dung thư trước một frame để tránh giật khi vừa click.
       invitationContent.classList.add('preparing');
       invitationContent.setAttribute('aria-hidden', 'false');
+      transitionPortal?.classList.add('active');
+      transitionPortal?.setAttribute('aria-hidden', 'false');
+
+      // Pre-render the destination frame before the portal starts.
       void invitationContent.offsetHeight;
 
       requestAnimationFrame(() => {
         techIntro.classList.add('transitioning');
 
-        requestAnimationFrame(() => {
+        // Invitation begins to materialize after the portal flash peaks.
+        window.setTimeout(() => {
           invitationContent.classList.remove('preparing');
           invitationContent.classList.add('visible');
-        });
+        }, 360);
       });
 
       let completed = false;
@@ -5235,6 +5727,9 @@
         techIntro.setAttribute('aria-hidden', 'true');
 
         invitationContent.classList.remove('visible', 'preparing');
+        transitionPortal?.classList.remove('active');
+        transitionPortal?.setAttribute('aria-hidden', 'true');
+
         document.body.classList.remove('opening-invitation');
         document.body.classList.add('invitation-opened');
 
@@ -5242,21 +5737,16 @@
         window.scrollTo(0, 0);
       };
 
-      techIntro.addEventListener('animationend', finishTransition, {
-        once: true
-      });
-
-      // Fallback cho mobile browser không phát animationend ổn định.
-      window.setTimeout(finishTransition, 760);
+      techIntro.addEventListener('animationend', finishTransition, { once: true });
+      window.setTimeout(finishTransition, 1120);
     }
 
-    // Decode ảnh trước để lần mở đầu tiên không bị khựng.
+    // Decode trước hình ảnh chính để lần mở đầu tiên không bị giật.
     Promise.all(
       Array.from(document.images).map(image => {
         if (typeof image.decode !== 'function' || image.complete) {
           return Promise.resolve();
         }
-
         return image.decode().catch(() => undefined);
       })
     ).catch(() => undefined);
