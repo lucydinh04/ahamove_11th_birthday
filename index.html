@@ -5122,7 +5122,7 @@
     .invitation-content.preparing {
       opacity: 0;
       visibility: visible;
-      transform: translate3d(0, 0, 0) scale(.86);
+      transform: translate3d(0, 52px, 0) scale(.86);
       transform-origin: 50% 38vh;
       filter: blur(14px) saturate(1.28) brightness(1.22);
       clip-path: circle(0% at 50% 38vh);
@@ -5166,10 +5166,10 @@
     }
 
     @keyframes portalScan {
-      0% { opacity: 0; transform: translate(-50%, -50%) scaleY(.02); }
-      26% { opacity: 1; transform: translate(-50%, -50%) scaleY(.22); }
-      62% { opacity: .96; transform: translate(-50%, -50%) scaleY(1); }
-      100% { opacity: 0; transform: translate(-50%, -50%) scaleY(.34); }
+      0% { opacity: 0; transform: translate(-50%, 34%) scaleY(.12); }
+      26% { opacity: 1; transform: translate(-50%, 12%) scaleY(.38); }
+      62% { opacity: .96; transform: translate(-50%, -58%) scaleY(1); }
+      100% { opacity: 0; transform: translate(-50%, -132%) scaleY(.42); }
     }
 
     @keyframes highTechIntroOut {
@@ -5205,19 +5205,19 @@
     @keyframes invitationMaterializeCenter {
       0% {
         opacity: 0;
-        transform: translate3d(0,0,0) scale(.86);
+        transform: translate3d(0,52px,0) scale(.86);
         filter: blur(14px) saturate(1.28) brightness(1.24);
         clip-path: circle(0% at 50% 38vh);
       }
       34% {
         opacity: .5;
-        transform: translate3d(0,0,0) scale(.91);
+        transform: translate3d(0,34px,0) scale(.91);
         filter: blur(7px) saturate(1.2) brightness(1.16);
         clip-path: circle(16% at 50% 38vh);
       }
       68% {
         opacity: .94;
-        transform: translate3d(0,0,0) scale(.975);
+        transform: translate3d(0,12px,0) scale(.975);
         filter: blur(2px) saturate(1.08) brightness(1.06);
         clip-path: circle(64% at 50% 38vh);
       }
@@ -5238,7 +5238,45 @@
       .invitation-content.visible { transform-origin: 50% 42vh; }
     }
 
-  </style>
+  
+
+    /* FINAL MOTION DIRECTION OVERRIDE — all inner tech lines move upward */
+    @keyframes starDrift {
+      from { background-position: 0 86px, 34px 144px, 78px 206px; }
+      to   { background-position: 0 0, 34px 18px, 78px 42px; }
+    }
+
+    @keyframes dataRain {
+      from { background-position: 0 120px, 32px 180px, 76px 240px; }
+      to   { background-position: 0 0, 32px 18px, 76px 44px; }
+    }
+
+    @keyframes gridMove {
+      from { transform: perspective(600px) rotateX(65deg) translateY(38px); }
+      to   { transform: perspective(600px) rotateX(65deg) translateY(0); }
+    }
+
+    @keyframes streamDrop {
+      0% {
+        transform: translateY(360%);
+        opacity: 0;
+      }
+      15%, 75% {
+        opacity: .6;
+      }
+      100% {
+        transform: translateY(-35%);
+        opacity: 0;
+      }
+    }
+
+    @keyframes scan {
+      0%, 100% { top: 82%; opacity: 0; }
+      15% { opacity: .72; }
+      70% { opacity: .72; }
+      100% { top: 18%; opacity: 0; }
+    }
+</style>
 </head>
 
 <body>
@@ -5412,7 +5450,7 @@
           </div>
 
           <div class="combined-greeting">
-            Thân gửi, <span class="employee-name">Ahamover</span>
+            Thân gửi <span class="employee-name">Ahamover</span>,
           </div>
 
           <p class="combined-intro">
@@ -5422,7 +5460,6 @@
 
           <div class="combined-theme-pill">
             <span class="theme-orange">CHUYỂN MÌNH</span>
-            <span class="theme-separator">–</span>
             <span class="theme-blue">BỨT PHÁ</span>
           </div>
 
@@ -5557,7 +5594,7 @@
                 <p class="combined-detail-label">Hạn chót đăng ký</p>
                 <p class="combined-detail-value">
                   <span class="theme-orange">12:00</span>
-                  <span> | 29.07.2026</span>
+                  <span> | 29/07/2026</span>
                 </p>
               </div>
             </div>
