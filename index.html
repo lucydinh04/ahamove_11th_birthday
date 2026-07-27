@@ -7978,6 +7978,63 @@
       }
     }
 
+  
+    /* =========================================================
+       MOBILE HERO — MATCH DESKTOP COMPOSITION
+       Remove all empty space below CHUYỂN MÌNH / BỨT PHÁ
+       ========================================================= */
+
+    @media (max-width: 600px) {
+      .hero {
+        min-height: 0 !important;
+        height: auto !important;
+        padding-top: calc(12px + env(safe-area-inset-top)) !important;
+        padding-bottom: 8px !important;
+        display: block !important;
+      }
+
+      .hero-tech-layout {
+        margin-bottom: 0 !important;
+      }
+
+      .campaign-title-tech {
+        margin-top: 4px !important;
+        margin-bottom: 0 !important;
+        padding-bottom: 0 !important;
+      }
+
+      .campaign-title-tech span {
+        margin-bottom: 0 !important;
+      }
+
+      .campaign-title-blue {
+        margin-bottom: 0 !important;
+      }
+
+      .combined-card-shell {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .hero {
+        min-height: 0 !important;
+        height: auto !important;
+        padding-bottom: 6px !important;
+      }
+
+      .combined-card-shell {
+        margin-top: 0 !important;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .hero {
+        padding-bottom: 4px !important;
+      }
+    }
+
   </style>
 </head>
 
