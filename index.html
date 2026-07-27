@@ -7922,6 +7922,62 @@
       }
     }
 
+  
+    /* =========================================================
+       MOBILE HERO GAP FIX
+       - Remove excess empty space below CHUYỂN MÌNH / BỨT PHÁ
+       - Pull invitation card upward
+       - Keep 4 tech cards and title scale unchanged
+       ========================================================= */
+
+    @media (max-width: 600px) {
+      .hero {
+        min-height: 485px !important;
+        padding-bottom: 4px !important;
+      }
+
+      .hero-tech-layout {
+        margin-bottom: 0 !important;
+      }
+
+      .campaign-title-tech {
+        margin-bottom: 0 !important;
+        padding-bottom: 0 !important;
+      }
+
+      .campaign-title-orange,
+      .campaign-title-blue {
+        margin-bottom: 0 !important;
+      }
+
+      .combined-card-shell {
+        margin-top: -46px !important;
+        padding-top: 0 !important;
+        position: relative;
+        z-index: 30;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .hero {
+        min-height: 470px !important;
+      }
+
+      .combined-card-shell {
+        margin-top: -52px !important;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .hero {
+        min-height: 456px !important;
+      }
+
+      .combined-card-shell {
+        margin-top: -56px !important;
+      }
+    }
+
   </style>
 </head>
 
