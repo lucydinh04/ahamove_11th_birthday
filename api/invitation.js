@@ -11,7 +11,6 @@ function splitVenue(value) {
   };
 }
 
-
 function normalizeEventDate(value) {
   if (!value) return '';
 
@@ -30,6 +29,41 @@ function normalizeEventDate(value) {
   return text;
 }
 
+function buildInvitationResponse(source) {
+  const event = source.event || {};
+  const venue = splitVenue(event.venue);
+  const mapQuery = [event.venue, event.city]
+    .filter(Boolean)
+    .join(', ');
+
+  return {
+    employeeId: source.employeeId || '',
+    name: source.name || 'Ahamover',
+    email: source.email || '',
+    dept: source.dept || '',
+    location: source.location || event.code || '',
+    token: source.token || '',
+    invitationLink: source.invitationLink || '',
+    status: source.status || '',
+    note: source.note || '',
+    responseTime: source.responseTime || '',
+    event: {
+      site: event.code || source.eventCode || source.location || 'SGN',
+      eventDate: normalizeEventDate(event.date || ''),
+      eventTime: event.time || '',
+      venueName: venue.venueName,
+      venueDetail: venue.venueDetail,
+      address: event.address || event.city || '',
+      city: event.city || '',
+      dresscode: event.dresscode || '',
+      mapUrl: mapQuery
+        ? 'https://www.google.com/maps/search/?api=1&query=' +
+          encodeURIComponent(mapQuery)
+        : ''
+    }
+  };
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({
@@ -39,26 +73,35 @@ export default async function handler(req, res) {
   }
 
   const token = String(req.query.token || '').trim();
+  const email = String(req.query.email || '').trim().toLowerCase();
 
-  if (!token) {
+  if (!token && !email) {
     return res.status(400).json({
       success: false,
-      message: 'Thiếu token thư mời.'
+      message: 'Thiếu token hoặc email tra cứu.'
     });
   }
 
   try {
-    const url =
-      APPS_SCRIPT_URL +
-      '?action=invitation&token=' +
-      encodeURIComponent(token);
+    const params = new URLSearchParams();
 
-    const upstream = await fetch(url, {
-      method: 'GET',
-      headers: { Accept: 'application/json' },
-      redirect: 'follow',
-      cache: 'no-store'
-    });
+    if (email) {
+      params.set('action', 'lookupByEmail');
+      params.set('email', email);
+    } else {
+      params.set('action', 'invitation');
+      params.set('token', token);
+    }
+
+    const upstream = await fetch(
+      APPS_SCRIPT_URL + '?' + params.toString(),
+      {
+        method: 'GET',
+        headers: { Accept: 'application/json' },
+        redirect: 'follow',
+        cache: 'no-store'
+      }
+    );
 
     const rawText = await upstream.text();
     let data;
@@ -76,42 +119,15 @@ export default async function handler(req, res) {
         success: false,
         message:
           data.message ||
-          'Không tìm thấy thông tin thư mời.'
+          (email
+            ? 'Email này chưa có thư mời.'
+            : 'Không tìm thấy thông tin thư mời.')
       });
     }
 
-    const source = data.invitation;
-    const event = source.event || {};
-    const venue = splitVenue(event.venue);
-    const mapQuery = [event.venue, event.city]
-      .filter(Boolean)
-      .join(', ');
-
     return res.status(200).json({
       success: true,
-      invitation: {
-        employeeId: source.employeeId || '',
-        name: source.name || 'Ahamover',
-        email: source.email || '',
-        location: source.location || event.code || '',
-        status: source.status || '',
-        note: source.note || '',
-        responseTime: source.responseTime || '',
-        event: {
-          site: event.code || source.eventCode || source.location || 'SGN',
-          eventDate: normalizeEventDate(event.date || ''),
-          eventTime: event.time || '',
-          venueName: venue.venueName,
-          venueDetail: venue.venueDetail,
-          address: event.city || '',
-          city: event.city || '',
-          dresscode: event.dresscode || '',
-          mapUrl: mapQuery
-            ? 'https://www.google.com/maps/search/?api=1&query=' +
-              encodeURIComponent(mapQuery)
-            : ''
-        }
-      }
+      invitation: buildInvitationResponse(data.invitation)
     });
   } catch (error) {
     console.error(error);
