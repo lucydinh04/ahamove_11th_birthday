@@ -1,19 +1,7 @@
 {
   "rewrites": [
-    {
-      "source": "/i/:token",
-      "destination": "/index.html?token=:token"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/api/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-store, max-age=0"
-        }
-      ]
-    }
+    { "source": "/lookup", "destination": "/index.html" },
+    { "source": "/lookup/", "destination": "/index.html" },
+    { "source": "/i/:token", "destination": "/index.html" }
   ]
 }
