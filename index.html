@@ -6342,6 +6342,469 @@
       display: none !important;
     }
 
+  
+    /* =========================================================
+       MOBILE UX FINAL — optimized for phones
+       ========================================================= */
+
+    @media (max-width: 600px) {
+      html {
+        scroll-padding-top: 12px;
+      }
+
+      body {
+        width: 100%;
+        min-width: 0;
+        overflow-x: hidden !important;
+        overscroll-behavior-y: contain;
+      }
+
+      .invite-shell {
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+      }
+
+      /* Intro */
+      .tech-intro {
+        padding:
+          calc(18px + env(safe-area-inset-top))
+          16px
+          calc(20px + env(safe-area-inset-bottom));
+      }
+
+      .tech-intro-content {
+        width: min(100%, 360px) !important;
+        padding: 22px 18px !important;
+      }
+
+      .intro-logo,
+      .intro-logo img {
+        max-width: 172px !important;
+      }
+
+      .intro-title {
+        font-size: clamp(24px, 8vw, 34px) !important;
+        line-height: 1.08 !important;
+      }
+
+      .intro-subtitle {
+        font-size: 12px !important;
+        line-height: 1.55 !important;
+      }
+
+      /* Hero */
+      .hero {
+        min-height: 540px !important;
+        padding:
+          calc(18px + env(safe-area-inset-top))
+          12px
+          74px !important;
+      }
+
+      .brand {
+        width: fit-content !important;
+        max-width: 190px !important;
+        margin: 0 auto 12px !important;
+        padding: 7px 13px !important;
+      }
+
+      .brand-horizontal-logo {
+        width: 150px !important;
+        max-width: 100% !important;
+      }
+
+      .hero-tech-layout {
+        display: block !important;
+        width: 100% !important;
+        max-width: 360px !important;
+        margin: 0 auto 6px !important;
+        padding: 0 !important;
+      }
+
+      /* Hide four support cards on small screens to protect hierarchy */
+      .hero-tech-column {
+        display: none !important;
+      }
+
+      .hero-tech-center {
+        width: 100% !important;
+      }
+
+      .hero-year-label {
+        margin-bottom: 4px !important;
+        font-size: 9px !important;
+        letter-spacing: .16em !important;
+      }
+
+      .hero-number-stage {
+        width: 210px !important;
+        max-width: 58vw !important;
+        margin: 0 auto !important;
+      }
+
+      .hero-number-image {
+        width: 210px !important;
+        max-width: 100% !important;
+        transform: scale(.92) !important;
+      }
+
+      .hero-years-text {
+        margin-top: -10px !important;
+        font-size: 9px !important;
+      }
+
+      .campaign-title-tech {
+        width: min(100%, 330px) !important;
+        max-width: 330px !important;
+        margin: -4px auto 0 !important;
+        padding: 0 54px !important;
+        gap: 0 !important;
+      }
+
+      .campaign-title-orange,
+      .campaign-title-blue {
+        font-size: clamp(29px, 9.4vw, 40px) !important;
+        line-height: 1.02 !important;
+        letter-spacing: -.04em !important;
+      }
+
+      .campaign-title-orange {
+        margin-bottom: 3px !important;
+      }
+
+      .hero-birthday-cake {
+        left: -8px !important;
+        bottom: 24px !important;
+        width: 78px !important;
+        max-height: 112px !important;
+        animation-duration: 7s !important;
+      }
+
+      .hero-birthday-hat {
+        right: -4px !important;
+        bottom: 26px !important;
+        width: 54px !important;
+        max-height: 104px !important;
+        animation-duration: 6.4s !important;
+      }
+
+      .digital-firework,
+      .holo-ribbon,
+      .floating-cube,
+      .data-stream {
+        opacity: .25 !important;
+      }
+
+      /* Main card */
+      .combined-card-shell {
+        margin-top: -24px !important;
+        padding:
+          0
+          10px
+          calc(30px + env(safe-area-inset-bottom)) !important;
+      }
+
+      .combined-invite-card {
+        padding: 24px 14px 20px !important;
+        clip-path:
+          polygon(
+            14px 0,
+            calc(100% - 14px) 0,
+            100% 14px,
+            100% calc(100% - 14px),
+            calc(100% - 14px) 100%,
+            14px 100%,
+            0 calc(100% - 14px),
+            0 14px
+          ) !important;
+        box-shadow:
+          0 0 24px rgba(35,128,255,.12),
+          inset 0 0 24px rgba(45,120,220,.05) !important;
+      }
+
+      .corner {
+        width: 14px !important;
+        height: 14px !important;
+      }
+
+      .combined-card-head {
+        gap: 8px !important;
+        font-size: 9px !important;
+        letter-spacing: .22em !important;
+      }
+
+      .combined-greeting {
+        margin-top: 15px !important;
+        font-size: clamp(22px, 7vw, 29px) !important;
+        line-height: 1.22 !important;
+      }
+
+      .combined-intro {
+        margin-top: 9px !important;
+        font-size: 12px !important;
+        line-height: 1.55 !important;
+      }
+
+      .combined-theme-pill {
+        width: 100% !important;
+        margin-top: 15px !important;
+        padding: 11px 10px !important;
+        font-size: clamp(16px, 5vw, 20px) !important;
+        white-space: nowrap !important;
+      }
+
+      .combined-story {
+        margin-top: 16px !important;
+        padding: 15px 12px !important;
+        border-radius: 14px !important;
+      }
+
+      .combined-story-lead,
+      .combined-story-copy,
+      .combined-story-ending {
+        font-size: 12px !important;
+        line-height: 1.65 !important;
+        text-align: left !important;
+      }
+
+      .combined-story-grid {
+        grid-template-columns: 1fr !important;
+        gap: 8px !important;
+        margin-top: 13px !important;
+      }
+
+      .combined-story-item {
+        min-height: 52px !important;
+        padding: 10px 11px !important;
+        gap: 10px !important;
+        font-size: 11px !important;
+        border-radius: 12px !important;
+      }
+
+      .combined-story-index {
+        width: 28px !important;
+        height: 28px !important;
+        flex-basis: 28px !important;
+      }
+
+      /* Event information */
+      .combined-details {
+        margin-top: 18px !important;
+        border-radius: 15px !important;
+      }
+
+      .combined-detail-row {
+        grid-template-columns: 1fr !important;
+      }
+
+      .combined-detail-item {
+        gap: 11px !important;
+        padding: 15px 13px !important;
+      }
+
+      .combined-detail-row-top .combined-detail-item + .combined-detail-item {
+        border-left: 0 !important;
+        border-top: 1px solid rgba(74,157,228,.24) !important;
+      }
+
+      .combined-detail-full {
+        border-top: 1px solid rgba(74,157,228,.24) !important;
+      }
+
+      .combined-detail-icon {
+        width: 24px !important;
+        height: 24px !important;
+        flex-basis: 24px !important;
+      }
+
+      .combined-detail-label {
+        font-size: 9px !important;
+        letter-spacing: .18em !important;
+      }
+
+      .combined-detail-value {
+        margin-top: 4px !important;
+        font-size: 15px !important;
+        line-height: 1.35 !important;
+      }
+
+      .combined-detail-sub {
+        font-size: 11px !important;
+        line-height: 1.5 !important;
+      }
+
+      .dresscode-palette {
+        gap: 5px 7px !important;
+      }
+
+      .dresscode-choice {
+        gap: 5px !important;
+        font-size: 12px !important;
+      }
+
+      .dresscode-dot {
+        width: 7px !important;
+        height: 7px !important;
+        flex-basis: 7px !important;
+      }
+
+      /* RSVP buttons */
+      .combined-rsvp {
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+        margin-top: 18px !important;
+      }
+
+      .rsvp-button {
+        width: 100% !important;
+        min-height: 54px !important;
+        padding: 12px 14px !important;
+        font-size: 13px !important;
+        border-radius: 14px !important;
+      }
+
+      .combined-response-status {
+        min-height: 18px !important;
+        margin-top: 14px !important;
+        padding: 0 4px !important;
+        font-size: 10px !important;
+        line-height: 1.5 !important;
+      }
+
+      .combined-chevron {
+        margin-top: 14px !important;
+      }
+
+      /* Email lookup */
+      .email-lookup-overlay {
+        align-items: flex-end !important;
+        padding:
+          12px
+          10px
+          calc(10px + env(safe-area-inset-bottom)) !important;
+      }
+
+      .email-lookup-card {
+        width: 100% !important;
+        max-height: min(90dvh, 720px) !important;
+        overflow-y: auto !important;
+        padding: 23px 16px 18px !important;
+        border-radius: 22px 22px 16px 16px !important;
+      }
+
+      .email-lookup-card h3 {
+        padding-right: 35px !important;
+        font-size: 21px !important;
+      }
+
+      .email-lookup-copy,
+      .email-lookup-status,
+      .email-lookup-preview {
+        font-size: 12px !important;
+      }
+
+      .email-lookup-input {
+        min-height: 50px !important;
+        font-size: 16px !important; /* prevents iOS zoom */
+      }
+
+      .email-lookup-submit,
+      .email-lookup-open {
+        min-height: 50px !important;
+        font-size: 13px !important;
+      }
+
+      /* Performance: reduce expensive effects on phone */
+      .hero-tech-card,
+      .combined-invite-card,
+      .email-lookup-card {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .hero {
+        min-height: 505px !important;
+      }
+
+      .brand-horizontal-logo {
+        width: 132px !important;
+      }
+
+      .hero-number-stage,
+      .hero-number-image {
+        width: 180px !important;
+      }
+
+      .campaign-title-tech {
+        padding-inline: 46px !important;
+      }
+
+      .campaign-title-orange,
+      .campaign-title-blue {
+        font-size: 28px !important;
+      }
+
+      .hero-birthday-cake {
+        width: 68px !important;
+      }
+
+      .hero-birthday-hat {
+        width: 47px !important;
+      }
+
+      .combined-invite-card {
+        padding-inline: 12px !important;
+      }
+
+      .combined-greeting {
+        font-size: 21px !important;
+      }
+
+      .combined-theme-pill {
+        font-size: 15px !important;
+      }
+    }
+
+  
+    /* =========================================================
+       ICON POSITION FIX — align cake & party hat with "BỨT PHÁ"
+       ========================================================= */
+
+    @media (max-width: 600px) {
+      .hero-birthday-cake {
+        bottom: 118px !important;
+        left: 8px !important;
+        width: 72px !important;
+        max-height: 102px !important;
+      }
+
+      .hero-birthday-hat {
+        bottom: 120px !important;
+        right: 8px !important;
+        width: 50px !important;
+        max-height: 96px !important;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .hero-birthday-cake {
+        bottom: 112px !important;
+        left: 4px !important;
+        width: 66px !important;
+      }
+
+      .hero-birthday-hat {
+        bottom: 114px !important;
+        right: 4px !important;
+        width: 46px !important;
+      }
+    }
+
   </style>
 </head>
 
