@@ -8881,6 +8881,97 @@
       visibility: visible !important;
     }
 
+
+    /* COMPLETE EVENT INFORMATION ON SHARE CARD */
+    .share-card-event-info {
+      width: min(100%, 92%);
+      margin: 18px auto 0;
+      overflow: hidden;
+      border: 1px solid rgba(91,194,255,.30);
+      border-radius: 14px;
+      background:
+        linear-gradient(145deg, rgba(8,37,73,.78), rgba(2,14,34,.82));
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.04),
+        0 0 20px rgba(38,159,255,.08);
+      text-align: left;
+    }
+
+    .share-card-event-row {
+      display: grid;
+      grid-template-columns: 88px minmax(0, 1fr);
+      gap: 12px;
+      align-items: center;
+      padding: 11px 14px;
+    }
+
+    .share-card-event-row + .share-card-event-row {
+      border-top: 1px solid rgba(91,194,255,.16);
+    }
+
+    .share-card-event-label {
+      color: #68caff;
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: .14em;
+    }
+
+    .share-card-event-row strong {
+      min-width: 0;
+      color: #eef9ff;
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    .share-card-event-dot {
+      padding: 0 5px;
+      color: #ff8740;
+    }
+
+    .dresscode-mini-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      margin-right: 4px;
+      border: 1px solid rgba(255,255,255,.38);
+      border-radius: 50%;
+      vertical-align: 1px;
+    }
+
+    .dresscode-mini-white {
+      background: #fff;
+    }
+
+    .dresscode-mini-silver {
+      background: linear-gradient(145deg, #fff, #9ba6b2);
+    }
+
+    .dresscode-mini-blue {
+      background: #269fff;
+    }
+
+    @media (max-width: 420px) {
+      .share-card-event-info {
+        width: 96%;
+        margin-top: 14px;
+      }
+
+      .share-card-event-row {
+        grid-template-columns: 72px minmax(0, 1fr);
+        gap: 8px;
+        padding: 9px 10px;
+      }
+
+      .share-card-event-label {
+        font-size: 7px;
+      }
+
+      .share-card-event-row strong {
+        font-size: 9px;
+      }
+    }
+
 </style>
 </head>
 
@@ -9347,13 +9438,33 @@
         <div class="share-card-divider"></div>
         <h3 id="shareCardName">Ahamover</h3>
         
-        <div class="share-card-event">
-          <span id="shareCardEventDate">--/--/----</span>
-          <i></i>
-          <span id="shareCardEventTime">--:--</span>
+        <div class="share-card-event-info">
+          <div class="share-card-event-row">
+            <span class="share-card-event-label">THỜI GIAN</span>
+            <strong>
+              <span id="shareCardEventDate">--/--/----</span>
+              <span class="share-card-event-dot">•</span>
+              <span id="shareCardEventTime">--:--</span>
+            </strong>
+          </div>
+
+          <div class="share-card-event-row">
+            <span class="share-card-event-label">ĐỊA ĐIỂM</span>
+            <strong id="shareCardVenue">Địa điểm sẽ được cập nhật</strong>
+          </div>
+
+          <div class="share-card-event-row">
+            <span class="share-card-event-label">DRESSCODE</span>
+            <strong id="shareCardDresscode">
+              <span class="dresscode-mini-dot dresscode-mini-white"></span>TRẮNG
+              <span class="share-card-event-dot">•</span>
+              <span class="dresscode-mini-dot dresscode-mini-silver"></span>BẠC
+              <span class="share-card-event-dot">•</span>
+              <span class="dresscode-mini-dot dresscode-mini-blue"></span>XANH DƯƠNG
+            </strong>
+          </div>
         </div>
 
-        <p id="shareCardVenue" class="share-card-venue">Địa điểm sẽ được cập nhật</p>
         <p class="share-card-hashtag">#Ahamove11Years &nbsp; #ChuyenMinhButPha</p>
           </div>
         </div>
@@ -10095,11 +10206,8 @@ function setLoadingState() {
         document.querySelector('.employee-name')?.textContent?.trim() ||
         'Ahamover';
 
-      const department = currentDepartment || '';
-
       document.getElementById('shareCardName').textContent = employeeName;
       if (shareCardNamePreview) shareCardNamePreview.textContent = employeeName;
-      document.getElementById('shareCardDepartment').textContent = department;
 
       document.getElementById('shareCardEventDate').textContent =
         currentEvent?.eventDate || '--/--/----';
@@ -10108,7 +10216,11 @@ function setLoadingState() {
         currentEvent?.eventTime || '--:--';
 
       document.getElementById('shareCardVenue').textContent =
-        [currentEvent?.venueName, currentEvent?.venueDetail]
+        [
+          currentEvent?.venueName,
+          currentEvent?.venueDetail,
+          currentEvent?.venueAddress
+        ]
           .filter(Boolean)
           .join(' • ') ||
         'Địa điểm sẽ được cập nhật';
@@ -10324,31 +10436,73 @@ const lineGradient = ctx.createLinearGradient(430, 0, 650, 0);
       ctx.fillStyle = lineGradient;
       ctx.fillRect(430, 1075, 220, 4);
 
-      ctx.fillStyle = '#dff4ff';
-      ctx.font = '700 32px Lexend, Arial, sans-serif';
+      roundedRectPath(ctx, 120, 1088, 840, 190, 24);
+      ctx.fillStyle = 'rgba(4,22,50,.86)';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(91,194,255,.36)';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      ctx.textAlign = 'left';
+
+      ctx.fillStyle = '#68caff';
+      ctx.font = '700 18px Lexend, Arial, sans-serif';
+      ctx.fillText('THỜI GIAN', 158, 1132);
+
+      ctx.fillStyle = '#eef9ff';
+      ctx.font = '700 27px Lexend, Arial, sans-serif';
       ctx.fillText(
         `${currentEvent?.eventDate || '--/--/----'}  •  ${currentEvent?.eventTime || '--:--'}`,
-        540,
-        1145
+        360,
+        1132
       );
 
+      ctx.strokeStyle = 'rgba(91,194,255,.16)';
+      ctx.beginPath();
+      ctx.moveTo(145, 1155);
+      ctx.lineTo(935, 1155);
+      ctx.stroke();
+
       const venue =
-        [currentEvent?.venueName, currentEvent?.venueDetail]
+        [
+          currentEvent?.venueName,
+          currentEvent?.venueDetail,
+          currentEvent?.venueAddress
+        ]
           .filter(Boolean)
           .join(' • ') ||
         'Địa điểm sẽ được cập nhật';
 
-      const venueSize = fitCanvasText(ctx, venue, 880, 38, 26);
-      ctx.fillStyle = '#e1f3ff';
+      ctx.fillStyle = '#68caff';
+      ctx.font = '700 18px Lexend, Arial, sans-serif';
+      ctx.fillText('ĐỊA ĐIỂM', 158, 1195);
+
+      const venueSize = fitCanvasText(ctx, venue, 570, 25, 17);
+      ctx.fillStyle = '#eef9ff';
       ctx.font = `700 ${venueSize}px Lexend, Arial, sans-serif`;
-      ctx.fillText(venue, 540, 1210);
+      ctx.fillText(venue, 360, 1195);
+
+      ctx.strokeStyle = 'rgba(91,194,255,.16)';
+      ctx.beginPath();
+      ctx.moveTo(145, 1218);
+      ctx.lineTo(935, 1218);
+      ctx.stroke();
 
       ctx.fillStyle = '#68caff';
-      ctx.font = '600 24px Lexend, Arial, sans-serif';
+      ctx.font = '700 18px Lexend, Arial, sans-serif';
+      ctx.fillText('DRESSCODE', 158, 1255);
+
+      ctx.fillStyle = '#eef9ff';
+      ctx.font = '700 22px Lexend, Arial, sans-serif';
+      ctx.fillText('TRẮNG  •  BẠC  •  XANH DƯƠNG', 360, 1255);
+
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#68caff';
+      ctx.font = '600 22px Lexend, Arial, sans-serif';
       ctx.fillText(
         '#Ahamove11Years   #ChuyenMinhButPha',
         540,
-        1295
+        1320
       );
 
       return canvas;
@@ -10393,8 +10547,11 @@ const lineGradient = ctx.createLinearGradient(430, 0, 650, 0);
 
         shareCardStatus.textContent = 'Đã tải thiệp PNG thành công.';
       } catch (error) {
-        shareCardStatus.textContent =
-          error.message || 'Chưa thể tải thiệp. Vui lòng thử lại.';
+        console.error('Download share card error:', error);
+        if (shareCardStatus) {
+          shareCardStatus.textContent =
+            error?.message || 'Chưa thể tải thiệp. Vui lòng thử lại.';
+        }
       }
     }
 
