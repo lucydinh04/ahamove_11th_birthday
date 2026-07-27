@@ -8754,6 +8754,87 @@
       }
     }
 
+
+    /* =========================================================
+       SHARE CARD SETUP — SHOW FULL CARD PREVIEW
+       ========================================================= */
+
+    .share-card-overlay {
+      align-items: flex-start !important;
+      overflow-y: auto !important;
+      padding: 18px 12px 28px !important;
+    }
+
+    .share-card-popup {
+      width: min(100%, 540px) !important;
+      max-height: none !important;
+      overflow: visible !important;
+      margin: auto;
+    }
+
+    .employee-share-card {
+      aspect-ratio: 4 / 5 !important;
+      width: 100% !important;
+      height: auto !important;
+      max-height: none !important;
+      overflow: hidden !important;
+    }
+
+    .share-card-main-title {
+      position: relative;
+      z-index: 3;
+      margin: 0 0 18px;
+      color: #d9f2ff;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      text-align: center;
+      text-shadow: 0 0 12px rgba(38,159,255,.34);
+    }
+
+    .share-card-eyebrow {
+      margin-bottom: 10px !important;
+    }
+
+    @media (max-width: 560px) {
+      .share-card-popup {
+        width: min(100%, 500px) !important;
+        padding: 18px 12px 14px !important;
+      }
+
+      .employee-share-card {
+        transform: scale(.94);
+        transform-origin: top center;
+        margin-bottom: -6%;
+      }
+
+      .share-card-main-title {
+        margin-bottom: 14px;
+        font-size: 12px;
+        letter-spacing: .13em;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .share-card-overlay {
+        padding-inline: 8px !important;
+      }
+
+      .share-card-popup {
+        padding-inline: 8px !important;
+      }
+
+      .employee-share-card {
+        transform: scale(.90);
+        margin-bottom: -10%;
+      }
+
+      .share-card-main-title {
+        font-size: 11px;
+      }
+    }
+
 </style>
 </head>
 
@@ -9162,6 +9243,7 @@
 
       <div id="employeeShareCard" class="employee-share-card">
         <div class="share-card-grid" aria-hidden="true"></div>
+        <div class="share-card-main-title">Ahamove 11th Birthday</div>
         <div class="share-card-glow share-card-glow-blue" aria-hidden="true"></div>
         <div class="share-card-glow share-card-glow-orange" aria-hidden="true"></div>
 
@@ -10042,6 +10124,10 @@ function setLoadingState() {
 
       ctx.textAlign = 'center';
 
+      ctx.fillStyle = '#d9f2ff';
+      ctx.font = '700 28px Lexend, Arial, sans-serif';
+      ctx.fillText('AHAMOVE 11TH BIRTHDAY', 540, 72);
+
       try {
         const brandLogo = await loadImageSource('/ahamove-logo.svg');
         const anniversaryLogo = await loadImageSource('/11_3D.png');
@@ -10060,40 +10146,40 @@ function setLoadingState() {
         const totalWidth = brandWidth + 48 + anniversaryWidth;
         const startX = 540 - totalWidth / 2;
 
-        ctx.drawImage(brandLogo, startX, 108, brandWidth, brandHeight);
+        ctx.drawImage(brandLogo, startX, 126, brandWidth, brandHeight);
 
         const dividerX = startX + brandWidth + 24;
-        const dividerGradient = ctx.createLinearGradient(dividerX, 102, dividerX, 176);
+        const dividerGradient = ctx.createLinearGradient(dividerX, 120, dividerX, 194);
         dividerGradient.addColorStop(0, 'rgba(160,225,255,0)');
         dividerGradient.addColorStop(.5, 'rgba(160,225,255,.95)');
         dividerGradient.addColorStop(1, 'rgba(160,225,255,0)');
         ctx.fillStyle = dividerGradient;
-        ctx.fillRect(dividerX, 102, 2, 74);
+        ctx.fillRect(dividerX, 120, 2, 74);
 
         ctx.drawImage(
           anniversaryLogo,
           startX + brandWidth + 48,
-          90,
+          108,
           anniversaryWidth,
           anniversaryHeight
         );
       } catch (error) {
         ctx.fillStyle = '#ffffff';
         ctx.font = '800 30px Lexend, Arial, sans-serif';
-        ctx.fillText('AHAMOVE 11 YEARS', 540, 140);
+        ctx.fillText('AHAMOVE 11 YEARS', 540, 158);
       }
 
       ctx.fillStyle = '#ff8b43';
       ctx.font = '800 82px Lexend, Arial, sans-serif';
-      ctx.fillText('CHUYỂN MÌNH', 540, 325);
+      ctx.fillText('CHUYỂN MÌNH', 540, 350);
 
       ctx.fillStyle = '#59c6ff';
       ctx.font = '800 92px Lexend, Arial, sans-serif';
-      ctx.fillText('BỨT PHÁ', 540, 415);
+      ctx.fillText('BỨT PHÁ', 540, 440);
 
       const photoSize = 400;
       const photoX = 540 - photoSize / 2;
-      const photoY = 475;
+      const photoY = 500;
 
       ctx.save();
       ctx.beginPath();
@@ -10142,7 +10228,7 @@ function setLoadingState() {
       const nameSize = fitCanvasText(ctx, employeeName, 850, 66, 40);
       ctx.fillStyle = '#ffffff';
       ctx.font = `700 ${nameSize}px Lexend, Arial, sans-serif`;
-      ctx.fillText(employeeName, 540, 970);
+      ctx.fillText(employeeName, 540, 995);
 
       const department =
         document.getElementById('shareCardDepartment').textContent.trim();
@@ -10150,21 +10236,21 @@ function setLoadingState() {
       if (department) {
         ctx.fillStyle = '#ff9c5b';
         ctx.font = '500 28px Lexend, Arial, sans-serif';
-        ctx.fillText(department.slice(0, 58), 540, 1018);
+        ctx.fillText(department.slice(0, 58), 540, 1043);
       }
 
       const lineGradient = ctx.createLinearGradient(430, 0, 650, 0);
       lineGradient.addColorStop(0, '#269fff');
       lineGradient.addColorStop(1, '#f26522');
       ctx.fillStyle = lineGradient;
-      ctx.fillRect(430, 1050, 220, 4);
+      ctx.fillRect(430, 1075, 220, 4);
 
       ctx.fillStyle = '#dff4ff';
       ctx.font = '700 32px Lexend, Arial, sans-serif';
       ctx.fillText(
         `${currentEvent?.eventDate || '--/--/----'}  •  ${currentEvent?.eventTime || '--:--'}`,
         540,
-        1120
+        1145
       );
 
       const venue =
@@ -10176,14 +10262,14 @@ function setLoadingState() {
       const venueSize = fitCanvasText(ctx, venue, 880, 38, 26);
       ctx.fillStyle = '#e1f3ff';
       ctx.font = `700 ${venueSize}px Lexend, Arial, sans-serif`;
-      ctx.fillText(venue, 540, 1185);
+      ctx.fillText(venue, 540, 1210);
 
       ctx.fillStyle = '#68caff';
       ctx.font = '600 24px Lexend, Arial, sans-serif';
       ctx.fillText(
         '#Ahamove11Years   #ChuyenMinhButPha',
         540,
-        1275
+        1295
       );
 
       return canvas;
