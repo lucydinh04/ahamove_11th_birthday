@@ -8972,6 +8972,31 @@
       }
     }
 
+
+    /* FINAL PNG / PREVIEW BALANCE PASS */
+    .employee-share-card {
+      padding-bottom: 32px !important;
+    }
+
+    .share-card-event-info {
+      width: min(100%, 88%) !important;
+      margin-top: 18px !important;
+    }
+
+    .share-card-hashtag {
+      margin-top: 16px !important;
+      padding-bottom: 4px;
+    }
+
+    .share-card-event-row {
+      padding-left: 16px !important;
+      padding-right: 16px !important;
+    }
+
+    .share-card-event-row strong {
+      overflow-wrap: anywhere;
+    }
+
 </style>
 </head>
 
@@ -10372,15 +10397,15 @@ function setLoadingState() {
 
       ctx.fillStyle = '#ff8b43';
       ctx.font = '800 82px Lexend, Arial, sans-serif';
-      ctx.fillText('CHUYỂN MÌNH', 540, 350);
+      ctx.fillText('CHUYỂN MÌNH', 540, 335);
 
       ctx.fillStyle = '#59c6ff';
       ctx.font = '800 92px Lexend, Arial, sans-serif';
-      ctx.fillText('BỨT PHÁ', 540, 440);
+      ctx.fillText('BỨT PHÁ', 540, 420);
 
       const photoSize = 400;
       const photoX = 540 - photoSize / 2;
-      const photoY = 500;
+      const photoY = 470;
 
       ctx.save();
       ctx.beginPath();
@@ -10429,14 +10454,14 @@ function setLoadingState() {
       const nameSize = fitCanvasText(ctx, employeeName, 850, 66, 40);
       ctx.fillStyle = '#ffffff';
       ctx.font = `700 ${nameSize}px Lexend, Arial, sans-serif`;
-      ctx.fillText(employeeName, 540, 995);
+      ctx.fillText(employeeName, 540, 930);
 const lineGradient = ctx.createLinearGradient(430, 0, 650, 0);
       lineGradient.addColorStop(0, '#269fff');
       lineGradient.addColorStop(1, '#f26522');
       ctx.fillStyle = lineGradient;
-      ctx.fillRect(430, 1075, 220, 4);
+      ctx.fillRect(430, 1015, 220, 4);
 
-      roundedRectPath(ctx, 120, 1088, 840, 190, 24);
+      roundedRectPath(ctx, 135, 1068, 810, 178, 24);
       ctx.fillStyle = 'rgba(4,22,50,.86)';
       ctx.fill();
       ctx.strokeStyle = 'rgba(91,194,255,.36)';
@@ -10447,20 +10472,20 @@ const lineGradient = ctx.createLinearGradient(430, 0, 650, 0);
 
       ctx.fillStyle = '#68caff';
       ctx.font = '700 18px Lexend, Arial, sans-serif';
-      ctx.fillText('THỜI GIAN', 158, 1132);
+      ctx.fillText('THỜI GIAN', 168, 1108);
 
       ctx.fillStyle = '#eef9ff';
       ctx.font = '700 27px Lexend, Arial, sans-serif';
       ctx.fillText(
         `${currentEvent?.eventDate || '--/--/----'}  •  ${currentEvent?.eventTime || '--:--'}`,
-        360,
-        1132
+        345,
+        1108
       );
 
       ctx.strokeStyle = 'rgba(91,194,255,.16)';
       ctx.beginPath();
-      ctx.moveTo(145, 1155);
-      ctx.lineTo(935, 1155);
+      ctx.moveTo(160, 1132);
+      ctx.lineTo(920, 1132);
       ctx.stroke();
 
       const venue =
@@ -10475,26 +10500,51 @@ const lineGradient = ctx.createLinearGradient(430, 0, 650, 0);
 
       ctx.fillStyle = '#68caff';
       ctx.font = '700 18px Lexend, Arial, sans-serif';
-      ctx.fillText('ĐỊA ĐIỂM', 158, 1195);
+      ctx.fillText('ĐỊA ĐIỂM', 168, 1165);
 
       const venueSize = fitCanvasText(ctx, venue, 570, 25, 17);
       ctx.fillStyle = '#eef9ff';
       ctx.font = `700 ${venueSize}px Lexend, Arial, sans-serif`;
-      ctx.fillText(venue, 360, 1195);
+      ctx.fillText(venue, 345, 1165);
 
       ctx.strokeStyle = 'rgba(91,194,255,.16)';
       ctx.beginPath();
-      ctx.moveTo(145, 1218);
-      ctx.lineTo(935, 1218);
+      ctx.moveTo(160, 1190);
+      ctx.lineTo(920, 1190);
       ctx.stroke();
 
       ctx.fillStyle = '#68caff';
       ctx.font = '700 18px Lexend, Arial, sans-serif';
-      ctx.fillText('DRESSCODE', 158, 1255);
+      ctx.fillText('DRESSCODE', 168, 1224);
 
-      ctx.fillStyle = '#eef9ff';
       ctx.font = '700 22px Lexend, Arial, sans-serif';
-      ctx.fillText('TRẮNG  •  BẠC  •  XANH DƯƠNG', 360, 1255);
+
+      const dresscodeY = 1224;
+      let dresscodeX = 345;
+
+      const drawDresscodeDot = (x, color, stroke = 'rgba(255,255,255,.45)') => {
+        ctx.beginPath();
+        ctx.arc(x, dresscodeY - 7, 8, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.strokeStyle = stroke;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      };
+
+      drawDresscodeDot(dresscodeX, '#ffffff');
+      ctx.fillStyle = '#eef9ff';
+      ctx.fillText('TRẮNG', dresscodeX + 18, dresscodeY);
+
+      dresscodeX += 120;
+      drawDresscodeDot(dresscodeX, '#bfc7d1');
+      ctx.fillStyle = '#eef9ff';
+      ctx.fillText('BẠC', dresscodeX + 18, dresscodeY);
+
+      dresscodeX += 100;
+      drawDresscodeDot(dresscodeX, '#269fff');
+      ctx.fillStyle = '#eef9ff';
+      ctx.fillText('XANH DƯƠNG', dresscodeX + 18, dresscodeY);
 
       ctx.textAlign = 'center';
       ctx.fillStyle = '#68caff';
@@ -10502,7 +10552,7 @@ const lineGradient = ctx.createLinearGradient(430, 0, 650, 0);
       ctx.fillText(
         '#Ahamove11Years   #ChuyenMinhButPha',
         540,
-        1320
+        1288
       );
 
       return canvas;
