@@ -6805,6 +6805,155 @@
       }
     }
 
+  
+    /* =========================================================
+       MOBILE HERO COMPACT FIX
+       - Hiển thị trọn "CHUYỂN MÌNH / BỨT PHÁ"
+       - Giảm khoảng trống dư giữa hero và thư mời
+       - Căn lại cake + party hat
+       ========================================================= */
+
+    @media (max-width: 600px) {
+      .hero {
+        min-height: 470px !important;
+        padding-top: calc(14px + env(safe-area-inset-top)) !important;
+        padding-bottom: 34px !important;
+      }
+
+      .brand {
+        margin-bottom: 6px !important;
+      }
+
+      .hero-tech-layout {
+        max-width: 340px !important;
+        margin-bottom: 0 !important;
+      }
+
+      .hero-number-stage {
+        width: 178px !important;
+        max-width: 52vw !important;
+        margin-bottom: -4px !important;
+      }
+
+      .hero-number-image {
+        width: 178px !important;
+        transform: scale(.88) !important;
+      }
+
+      .hero-years-text {
+        margin-top: -14px !important;
+        margin-bottom: 0 !important;
+      }
+
+      .campaign-title-tech {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: -8px auto 0 !important;
+        padding: 0 56px !important;
+        gap: 0 !important;
+        overflow: visible !important;
+      }
+
+      .campaign-title-tech span {
+        width: auto !important;
+        max-width: 100% !important;
+        white-space: nowrap !important;
+        overflow: visible !important;
+        text-align: center !important;
+      }
+
+      .campaign-title-orange,
+      .campaign-title-blue {
+        font-size: 28px !important;
+        line-height: 1.04 !important;
+        letter-spacing: -.045em !important;
+      }
+
+      .campaign-title-orange {
+        margin-bottom: 4px !important;
+      }
+
+      .hero-birthday-cake {
+        left: 4px !important;
+        bottom: 42px !important;
+        width: 66px !important;
+        max-height: 92px !important;
+      }
+
+      .hero-birthday-hat {
+        right: 6px !important;
+        bottom: 44px !important;
+        width: 46px !important;
+        max-height: 88px !important;
+      }
+
+      .combined-card-shell {
+        margin-top: -10px !important;
+        padding-top: 0 !important;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .hero {
+        min-height: 452px !important;
+        padding-bottom: 28px !important;
+      }
+
+      .hero-number-stage,
+      .hero-number-image {
+        width: 164px !important;
+      }
+
+      .campaign-title-tech {
+        padding: 0 50px !important;
+        margin-top: -10px !important;
+      }
+
+      .campaign-title-orange,
+      .campaign-title-blue {
+        font-size: 26px !important;
+      }
+
+      .hero-birthday-cake {
+        left: 2px !important;
+        bottom: 38px !important;
+        width: 62px !important;
+      }
+
+      .hero-birthday-hat {
+        right: 3px !important;
+        bottom: 40px !important;
+        width: 43px !important;
+      }
+
+      .combined-card-shell {
+        margin-top: -14px !important;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .hero {
+        min-height: 438px !important;
+      }
+
+      .campaign-title-tech {
+        padding: 0 46px !important;
+      }
+
+      .campaign-title-orange,
+      .campaign-title-blue {
+        font-size: 24px !important;
+      }
+
+      .hero-birthday-cake {
+        width: 58px !important;
+      }
+
+      .hero-birthday-hat {
+        width: 40px !important;
+      }
+    }
+
   </style>
 </head>
 
