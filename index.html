@@ -8186,6 +8186,317 @@
   }
 }
 
+
+    /* =========================================================
+       PERSONALIZED SHARE CARD — AFTER RSVP SUCCESS
+       ========================================================= */
+
+    .share-card-overlay {
+      z-index: 12000;
+      align-items: center;
+      padding: 14px;
+      overflow-y: auto;
+      background:
+        radial-gradient(circle at 50% 28%, rgba(38,159,255,.18), transparent 30%),
+        rgba(1,7,18,.94) !important;
+    }
+
+    .share-card-popup {
+      position: relative;
+      width: min(100%, 470px);
+      max-height: calc(100dvh - 28px);
+      overflow-y: auto;
+      padding: 22px 18px 18px;
+      border: 1px solid rgba(77,190,255,.35);
+      border-radius: 24px;
+      background: linear-gradient(160deg, #071c3d, #030b1c 72%);
+      box-shadow:
+        0 0 34px rgba(38,159,255,.18),
+        0 24px 70px rgba(0,0,0,.55);
+      transform: translateY(20px) scale(.96);
+      opacity: 0;
+    }
+
+    .share-card-overlay.active .share-card-popup {
+      animation: shareCardPopupIn .52s cubic-bezier(.2,.9,.2,1) forwards;
+    }
+
+    .share-card-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 5;
+      width: 36px;
+      height: 36px;
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 50%;
+      background: rgba(255,255,255,.05);
+      color: #e7f4ff;
+      font-size: 21px;
+      cursor: pointer;
+    }
+
+    .share-card-eyebrow {
+      margin: 0 42px 14px;
+      color: #79ceff;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .18em;
+      text-align: center;
+    }
+
+    .employee-share-card {
+      position: relative;
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      padding: 28px 24px 24px;
+      border: 1px solid rgba(91,204,255,.52);
+      border-radius: 22px;
+      background:
+        radial-gradient(circle at 50% 22%, rgba(33,135,255,.25), transparent 28%),
+        linear-gradient(160deg, #061d45 0%, #03152f 48%, #020813 100%);
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.035),
+        inset 0 0 70px rgba(38,159,255,.07),
+        0 18px 44px rgba(0,0,0,.36);
+      text-align: center;
+      isolation: isolate;
+    }
+
+    .share-card-grid {
+      position: absolute;
+      inset: -20%;
+      z-index: -3;
+      background-image:
+        linear-gradient(rgba(64,178,255,.075) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(64,178,255,.075) 1px, transparent 1px);
+      background-size: 30px 30px;
+      transform: perspective(600px) rotateX(62deg) translateY(30%);
+    }
+
+    .share-card-glow {
+      position: absolute;
+      z-index: -2;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      filter: blur(48px);
+      opacity: .21;
+    }
+
+    .share-card-glow-blue {
+      top: -70px;
+      left: -65px;
+      background: #269fff;
+    }
+
+    .share-card-glow-orange {
+      right: -75px;
+      bottom: -68px;
+      background: #f26522;
+    }
+
+    .share-card-logo {
+      display: inline-flex;
+      padding: 7px 13px;
+      border: 1px solid rgba(92,197,255,.44);
+      border-radius: 999px;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      box-shadow: 0 0 18px rgba(38,159,255,.14);
+    }
+
+    .share-card-number {
+      margin-top: 18px;
+      color: #fff;
+      font-size: clamp(72px, 22vw, 104px);
+      font-weight: 800;
+      line-height: .78;
+      letter-spacing: -.09em;
+      text-shadow:
+        0 0 8px rgba(255,255,255,.72),
+        0 0 24px rgba(38,159,255,.64),
+        7px 7px 0 rgba(242,101,34,.18);
+    }
+
+    .share-card-years {
+      margin-top: 9px;
+      color: #bde8ff;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .54em;
+      padding-left: .54em;
+    }
+
+    .share-card-theme {
+      margin-top: 20px;
+      font-size: clamp(26px, 7.4vw, 38px);
+      font-weight: 800;
+      line-height: 1.02;
+      letter-spacing: -.04em;
+    }
+
+    .share-card-theme span {
+      display: block;
+      color: #ff8b43;
+    }
+
+    .share-card-theme strong {
+      display: block;
+      color: #59c6ff;
+    }
+
+    .share-card-divider {
+      width: 58px;
+      height: 2px;
+      margin: 18px auto;
+      background: linear-gradient(90deg, #269fff, #f26522);
+      box-shadow: 0 0 12px rgba(38,159,255,.28);
+    }
+
+    .share-card-caption {
+      margin: 0;
+      color: #9fc4de;
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: .20em;
+    }
+
+    .employee-share-card h3 {
+      margin: 9px 0 0;
+      color: #fff;
+      font-size: clamp(20px, 5.8vw, 29px);
+      line-height: 1.2;
+    }
+
+    .share-card-department {
+      min-height: 17px;
+      margin: 6px 0 0;
+      color: #ff9c5b;
+      font-size: 11px;
+      line-height: 1.4;
+    }
+
+    .share-card-event {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 16px;
+      color: #dff4ff;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .share-card-event i {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #ff7c32;
+      box-shadow: 0 0 8px #ff7c32;
+    }
+
+    .share-card-venue {
+      margin: 8px auto 0;
+      color: #a8bdd0;
+      font-size: 10px;
+      line-height: 1.5;
+    }
+
+    .share-card-hashtag {
+      position: absolute;
+      right: 18px;
+      bottom: 14px;
+      left: 18px;
+      margin: 0;
+      color: #68caff;
+      font-size: 8px;
+      font-weight: 600;
+      letter-spacing: .05em;
+    }
+
+    .share-card-copy {
+      margin: 15px 4px 0;
+      color: #b9c9d9;
+      font-size: 12px;
+      line-height: 1.55;
+      text-align: center;
+    }
+
+    .share-card-actions {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 9px;
+      margin-top: 14px;
+    }
+
+    .share-card-primary,
+    .share-card-secondary {
+      min-height: 50px;
+      border-radius: 14px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .07em;
+      cursor: pointer;
+    }
+
+    .share-card-primary {
+      border: 1px solid #55caff;
+      background: linear-gradient(135deg, #1268b5, #07356d);
+      color: #effaff;
+      box-shadow: 0 0 20px rgba(38,159,255,.17);
+    }
+
+    .share-card-secondary {
+      border: 1px solid rgba(255,139,67,.65);
+      background: rgba(242,101,34,.08);
+      color: #ffd1b3;
+    }
+
+    .share-card-status {
+      min-height: 18px;
+      margin: 10px 0 0;
+      color: #93c5fd;
+      font-size: 11px;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    @keyframes shareCardPopupIn {
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @media (min-width: 560px) {
+      .share-card-actions {
+        grid-template-columns: 1.25fr .75fr;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .share-card-popup {
+        padding: 18px 12px 14px;
+        border-radius: 20px;
+      }
+
+      .employee-share-card {
+        padding: 23px 18px 20px;
+        border-radius: 18px;
+      }
+
+      .share-card-theme {
+        margin-top: 16px;
+      }
+
+      .share-card-divider {
+        margin: 14px auto;
+      }
+    }
+
 </style>
 </head>
 
@@ -8582,7 +8893,61 @@
         cùng nhau chuyển mình và bứt phá.
       </p>
       <div id="successEventDetail" class="popup-detail">Đang tải thông tin sự kiện...</div>
-      <button id="closeSuccess" class="close-button" type="button">TUYỆT VỜI, HẸN GẶP NHAU!</button>
+      <button id="closeSuccess" class="close-button" type="button">XEM THIỆP CỦA TÔI</button>
+    </div>
+  </div>
+
+  <div id="shareCardOverlay" class="overlay share-card-overlay" aria-live="polite" aria-hidden="true">
+    <div class="share-card-popup">
+      <button id="closeShareCard" class="share-card-close" type="button" aria-label="Đóng">×</button>
+
+      <p class="share-card-eyebrow">AHAMOVE 11 YEARS · I'M IN</p>
+
+      <div id="employeeShareCard" class="employee-share-card">
+        <div class="share-card-grid" aria-hidden="true"></div>
+        <div class="share-card-glow share-card-glow-blue" aria-hidden="true"></div>
+        <div class="share-card-glow share-card-glow-orange" aria-hidden="true"></div>
+
+        <div class="share-card-logo">AHAMOVE</div>
+
+        <div class="share-card-number">11</div>
+        <div class="share-card-years">YEARS</div>
+
+        <div class="share-card-theme">
+          <span>CHUYỂN MÌNH</span>
+          <strong>BỨT PHÁ</strong>
+        </div>
+
+        <div class="share-card-divider"></div>
+
+        <p class="share-card-caption">TÔI SẼ CÓ MẶT TẠI</p>
+        <h3 id="shareCardName">Ahamover</h3>
+        <p id="shareCardDepartment" class="share-card-department"></p>
+
+        <div class="share-card-event">
+          <span id="shareCardEventDate">--/--/----</span>
+          <i></i>
+          <span id="shareCardEventTime">--:--</span>
+        </div>
+
+        <p id="shareCardVenue" class="share-card-venue">Địa điểm sẽ được cập nhật</p>
+        <p class="share-card-hashtag">#Ahamove11Years &nbsp; #ChuyenMinhButPha</p>
+      </div>
+
+      <p class="share-card-copy">
+        Lưu hoặc chia sẻ chiếc thiệp này để cùng lan tỏa không khí Sinh nhật Ahamove 11 tuổi nhé!
+      </p>
+
+      <div class="share-card-actions">
+        <button id="shareInvitationCard" class="share-card-primary" type="button">
+          CHIA SẺ LÊN MẠNG XÃ HỘI
+        </button>
+        <button id="downloadInvitationCard" class="share-card-secondary" type="button">
+          TẢI THIỆP PNG
+        </button>
+      </div>
+
+      <p id="shareCardStatus" class="share-card-status" aria-live="polite"></p>
     </div>
   </div>
 
@@ -8700,6 +9065,7 @@
     let invitationToken = getTokenFromUrl();
     let currentStatus = '';
     let currentEvent = null;
+    let currentDepartment = '';
 
     const techIntro = document.getElementById('techIntro');
     const invitationContent = document.getElementById('invitationContent');
@@ -9025,6 +9391,11 @@
     const declineButton = document.getElementById('declineButton');
     const responseStatus = document.getElementById('responseStatus');
     const successOverlay = document.getElementById('successOverlay');
+    const shareCardOverlay = document.getElementById('shareCardOverlay');
+    const closeShareCardButton = document.getElementById('closeShareCard');
+    const shareInvitationCardButton = document.getElementById('shareInvitationCard');
+    const downloadInvitationCardButton = document.getElementById('downloadInvitationCard');
+    const shareCardStatus = document.getElementById('shareCardStatus');
     const declineOverlay = document.getElementById('declineOverlay');
     const declineReasonOverlay = document.getElementById('declineReasonOverlay');
     const declineReasonInput = document.getElementById('declineReason');
@@ -9223,6 +9594,12 @@ function setLoadingState() {
           ''
         ).trim().toUpperCase();
 
+        currentDepartment = String(
+          result.invitation.dept ||
+          result.invitation.department ||
+          ''
+        ).trim();
+
         currentEvent = result.invitation.event || {
           site: result.invitation.location || 'SGN',
           eventDate: '',
@@ -9252,6 +9629,310 @@ function setLoadingState() {
           error.message || 'Không tìm thấy thư mời từ đường dẫn này.';
         emailLookupStatus.style.color = '#ff9d9d';
         window.setTimeout(openEmailLookup, 350);
+      }
+    }
+
+
+    function populateShareCard() {
+      const employeeName =
+        document.querySelector('.employee-name')?.textContent?.trim() ||
+        'Ahamover';
+
+      const department = currentDepartment || '';
+
+      document.getElementById('shareCardName').textContent = employeeName;
+      document.getElementById('shareCardDepartment').textContent = department;
+
+      document.getElementById('shareCardEventDate').textContent =
+        currentEvent?.eventDate || '--/--/----';
+
+      document.getElementById('shareCardEventTime').textContent =
+        currentEvent?.eventTime || '--:--';
+
+      document.getElementById('shareCardVenue').textContent =
+        [currentEvent?.venueName, currentEvent?.venueDetail]
+          .filter(Boolean)
+          .join(' • ') ||
+        'Địa điểm sẽ được cập nhật';
+    }
+
+    function openShareCard() {
+      populateShareCard();
+      shareCardStatus.textContent = '';
+      shareCardOverlay.classList.add('active');
+      shareCardOverlay.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeShareCard() {
+      shareCardOverlay.classList.remove('active');
+      shareCardOverlay.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    function roundedRectPath(context, x, y, width, height, radius) {
+      const r = Math.min(radius, width / 2, height / 2);
+      context.beginPath();
+      context.moveTo(x + r, y);
+      context.arcTo(x + width, y, x + width, y + height, r);
+      context.arcTo(x + width, y + height, x, y + height, r);
+      context.arcTo(x, y + height, x, y, r);
+      context.arcTo(x, y, x + width, y, r);
+      context.closePath();
+    }
+
+    function fitCanvasText(context, text, maxWidth, startSize, minSize = 28) {
+      let size = startSize;
+      do {
+        context.font = `700 ${size}px Lexend, Arial, sans-serif`;
+        if (context.measureText(text).width <= maxWidth) return size;
+        size -= 2;
+      } while (size >= minSize);
+      return minSize;
+    }
+
+    function createShareCardCanvas() {
+      populateShareCard();
+
+      const canvas = document.createElement('canvas');
+      canvas.width = 1080;
+      canvas.height = 1350;
+
+      const ctx = canvas.getContext('2d');
+      if (!ctx) throw new Error('Trình duyệt không hỗ trợ tạo ảnh.');
+
+      const gradient = ctx.createLinearGradient(0, 0, 1080, 1350);
+      gradient.addColorStop(0, '#061d45');
+      gradient.addColorStop(.55, '#03142f');
+      gradient.addColorStop(1, '#020813');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, 1080, 1350);
+
+      const blueGlow = ctx.createRadialGradient(220, 130, 0, 220, 130, 430);
+      blueGlow.addColorStop(0, 'rgba(38,159,255,.34)');
+      blueGlow.addColorStop(1, 'rgba(38,159,255,0)');
+      ctx.fillStyle = blueGlow;
+      ctx.fillRect(0, 0, 1080, 650);
+
+      const orangeGlow = ctx.createRadialGradient(930, 1160, 0, 930, 1160, 420);
+      orangeGlow.addColorStop(0, 'rgba(242,101,34,.28)');
+      orangeGlow.addColorStop(1, 'rgba(242,101,34,0)');
+      ctx.fillStyle = orangeGlow;
+      ctx.fillRect(560, 700, 520, 650);
+
+      ctx.strokeStyle = 'rgba(85,198,255,.16)';
+      ctx.lineWidth = 1;
+      for (let x = 0; x <= 1080; x += 60) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, 1350);
+        ctx.stroke();
+      }
+      for (let y = 0; y <= 1350; y += 60) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(1080, y);
+        ctx.stroke();
+      }
+
+      roundedRectPath(ctx, 42, 42, 996, 1266, 44);
+      ctx.strokeStyle = 'rgba(85,198,255,.65)';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      ctx.textAlign = 'center';
+
+      roundedRectPath(ctx, 400, 95, 280, 64, 32);
+      ctx.fillStyle = 'rgba(6,31,68,.88)';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(85,198,255,.62)';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '800 30px Lexend, Arial, sans-serif';
+      ctx.fillText('AHAMOVE', 540, 137);
+
+      ctx.shadowColor = 'rgba(38,159,255,.75)';
+      ctx.shadowBlur = 30;
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '800 260px Lexend, Arial, sans-serif';
+      ctx.fillText('11', 540, 435);
+      ctx.shadowBlur = 0;
+
+      ctx.fillStyle = '#bde8ff';
+      ctx.font = '700 24px Lexend, Arial, sans-serif';
+      ctx.fillText('Y E A R S', 540, 482);
+
+      ctx.fillStyle = '#ff8b43';
+      ctx.font = '800 76px Lexend, Arial, sans-serif';
+      ctx.fillText('CHUYỂN MÌNH', 540, 605);
+
+      ctx.fillStyle = '#59c6ff';
+      ctx.font = '800 86px Lexend, Arial, sans-serif';
+      ctx.fillText('BỨT PHÁ', 540, 690);
+
+      const lineGradient = ctx.createLinearGradient(420, 0, 660, 0);
+      lineGradient.addColorStop(0, '#269fff');
+      lineGradient.addColorStop(1, '#f26522');
+      ctx.fillStyle = lineGradient;
+      ctx.fillRect(430, 738, 220, 4);
+
+      ctx.fillStyle = '#9fc4de';
+      ctx.font = '700 22px Lexend, Arial, sans-serif';
+      ctx.fillText('TÔI SẼ CÓ MẶT TẠI', 540, 805);
+
+      const employeeName =
+        document.getElementById('shareCardName').textContent.trim() ||
+        'Ahamover';
+
+      const nameSize = fitCanvasText(ctx, employeeName, 860, 64, 38);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = `700 ${nameSize}px Lexend, Arial, sans-serif`;
+      ctx.fillText(employeeName, 540, 885);
+
+      const department =
+        document.getElementById('shareCardDepartment').textContent.trim();
+
+      if (department) {
+        ctx.fillStyle = '#ff9c5b';
+        ctx.font = '500 25px Lexend, Arial, sans-serif';
+        ctx.fillText(department.slice(0, 58), 540, 934);
+      }
+
+      ctx.fillStyle = '#dff4ff';
+      ctx.font = '700 31px Lexend, Arial, sans-serif';
+      ctx.fillText(
+        `${currentEvent?.eventDate || '--/--/----'}  •  ${currentEvent?.eventTime || '--:--'}`,
+        540,
+        1015
+      );
+
+      const venue =
+        [currentEvent?.venueName, currentEvent?.venueDetail]
+          .filter(Boolean)
+          .join(' • ') ||
+        'Địa điểm sẽ được cập nhật';
+
+      const venueSize = fitCanvasText(ctx, venue, 840, 27, 20);
+      ctx.fillStyle = '#a8bdd0';
+      ctx.font = `500 ${venueSize}px Lexend, Arial, sans-serif`;
+      ctx.fillText(venue, 540, 1070);
+
+      ctx.fillStyle = '#68caff';
+      ctx.font = '600 23px Lexend, Arial, sans-serif';
+      ctx.fillText(
+        '#Ahamove11Years   #ChuyenMinhButPha',
+        540,
+        1245
+      );
+
+      return canvas;
+    }
+
+    function canvasToBlob(canvas) {
+      return new Promise((resolve, reject) => {
+        canvas.toBlob(blob => {
+          if (blob) resolve(blob);
+          else reject(new Error('Không thể tạo file ảnh.'));
+        }, 'image/png', .95);
+      });
+    }
+
+    function safeFileName(value) {
+      return String(value || 'Ahamover')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-zA-Z0-9_-]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .slice(0, 60) || 'Ahamover';
+    }
+
+    async function downloadShareCard() {
+      try {
+        shareCardStatus.textContent = 'Đang tạo thiệp PNG...';
+        const canvas = createShareCardCanvas();
+        const blob = await canvasToBlob(canvas);
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        const employeeName =
+          document.getElementById('shareCardName').textContent.trim();
+
+        link.href = url;
+        link.download =
+          `Ahamove-11-${safeFileName(employeeName)}.png`;
+
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.setTimeout(() => URL.revokeObjectURL(url), 1200);
+
+        shareCardStatus.textContent = 'Đã tải thiệp PNG thành công.';
+      } catch (error) {
+        shareCardStatus.textContent =
+          error.message || 'Chưa thể tải thiệp. Vui lòng thử lại.';
+      }
+    }
+
+    async function shareInvitationCard() {
+      const employeeName =
+        document.getElementById('shareCardName').textContent.trim() ||
+        'Ahamover';
+
+      const shareText =
+        `${employeeName} đã sẵn sàng cùng Ahamove chuyển mình bứt phá tại Sinh nhật 11 tuổi! ` +
+        '#Ahamove11Years #ChuyenMinhButPha';
+
+      try {
+        shareCardStatus.textContent = 'Đang chuẩn bị nội dung chia sẻ...';
+
+        const canvas = createShareCardCanvas();
+        const blob = await canvasToBlob(canvas);
+        const file = new File(
+          [blob],
+          `Ahamove-11-${safeFileName(employeeName)}.png`,
+          { type: 'image/png' }
+        );
+
+        if (
+          navigator.share &&
+          navigator.canShare &&
+          navigator.canShare({ files: [file] })
+        ) {
+          await navigator.share({
+            title: 'Ahamove 11 Years',
+            text: shareText,
+            files: [file]
+          });
+
+          shareCardStatus.textContent = 'Đã mở trình chia sẻ.';
+          return;
+        }
+
+        if (navigator.share) {
+          await navigator.share({
+            title: 'Ahamove 11 Years',
+            text: shareText,
+            url: window.location.href
+          });
+
+          shareCardStatus.textContent = 'Đã mở trình chia sẻ.';
+          return;
+        }
+
+        await navigator.clipboard.writeText(
+          `${shareText}\n${window.location.href}`
+        );
+        shareCardStatus.textContent =
+          'Thiết bị chưa hỗ trợ chia sẻ trực tiếp. Nội dung đã được sao chép.';
+      } catch (error) {
+        if (error?.name === 'AbortError') {
+          shareCardStatus.textContent = 'Bạn đã đóng trình chia sẻ.';
+          return;
+        }
+
+        shareCardStatus.textContent =
+          'Chưa thể chia sẻ trực tiếp. Bạn có thể tải thiệp PNG để đăng nhé.';
       }
     }
 
@@ -9392,8 +10073,21 @@ function setLoadingState() {
 
     document.getElementById('closeSuccess').addEventListener(
       'click',
-      () => successOverlay.classList.remove('active')
+      () => {
+        successOverlay.classList.remove('active');
+        window.setTimeout(openShareCard, 180);
+      }
     );
+
+    closeShareCardButton.addEventListener('click', closeShareCard);
+    shareInvitationCardButton.addEventListener('click', shareInvitationCard);
+    downloadInvitationCardButton.addEventListener('click', downloadShareCard);
+
+    shareCardOverlay.addEventListener('click', event => {
+      if (event.target === shareCardOverlay) {
+        closeShareCard();
+      }
+    });
 
     document.getElementById('closeDecline').addEventListener(
       'click',
