@@ -8497,6 +8497,124 @@
       }
     }
 
+
+    /* SHARE CARD UPGRADE: logo, larger venue, personal photo */
+    .share-card-logo {
+      min-width: 154px;
+      min-height: 52px;
+      padding: 9px 18px !important;
+      background: rgba(255,255,255,.055);
+    }
+
+    .share-card-logo img {
+      display: block;
+      width: 136px;
+      max-height: 34px;
+      object-fit: contain;
+    }
+
+    .share-card-photo-frame {
+      position: relative;
+      width: 122px;
+      height: 122px;
+      margin: 16px auto 0;
+      overflow: hidden;
+      border: 2px solid rgba(99,205,255,.72);
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 50% 35%, rgba(61,177,255,.16), transparent 65%),
+        rgba(2,13,31,.88);
+      box-shadow:
+        0 0 0 6px rgba(38,159,255,.07),
+        0 0 25px rgba(38,159,255,.26),
+        8px 8px 0 rgba(242,101,34,.10);
+      cursor: pointer;
+    }
+
+    .share-card-photo-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      color: #9adfff;
+    }
+
+    .share-card-photo-placeholder span {
+      font-size: 30px;
+      font-weight: 300;
+      line-height: 1;
+    }
+
+    .share-card-photo-placeholder small {
+      max-width: 84px;
+      font-size: 7px;
+      font-weight: 700;
+      line-height: 1.35;
+      letter-spacing: .11em;
+    }
+
+    .share-card-photo {
+      display: none;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .share-card-photo.active {
+      display: block;
+    }
+
+    .share-card-photo-frame.has-photo .share-card-photo-placeholder {
+      display: none;
+    }
+
+    .share-card-venue {
+      margin-top: 10px !important;
+      color: #e1f3ff !important;
+      font-size: 14px !important;
+      font-weight: 700;
+      line-height: 1.45 !important;
+    }
+
+    .share-card-upload {
+      display: flex;
+      min-height: 48px;
+      margin-top: 14px;
+      align-items: center;
+      justify-content: center;
+      border: 1px dashed rgba(91,202,255,.60);
+      border-radius: 14px;
+      background: rgba(38,159,255,.055);
+      color: #bdeaff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .07em;
+      cursor: pointer;
+    }
+
+    .share-card-upload input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    @media (max-width: 420px) {
+      .share-card-photo-frame {
+        width: 104px;
+        height: 104px;
+        margin-top: 12px;
+      }
+
+      .share-card-venue {
+        font-size: 13px !important;
+      }
+    }
+
 </style>
 </head>
 
@@ -8908,10 +9026,18 @@
         <div class="share-card-glow share-card-glow-blue" aria-hidden="true"></div>
         <div class="share-card-glow share-card-glow-orange" aria-hidden="true"></div>
 
-        <div class="share-card-logo">AHAMOVE</div>
+        <div class="share-card-logo"><img src="/ahamove-logo.svg" alt="Ahamove" crossorigin="anonymous"></div>
 
         <div class="share-card-number">11</div>
         <div class="share-card-years">YEARS</div>
+
+        <div id="shareCardPhotoFrame" class="share-card-photo-frame">
+          <div id="shareCardPhotoPlaceholder" class="share-card-photo-placeholder">
+            <span>+</span>
+            <small>THÊM ẢNH CỦA BẠN</small>
+          </div>
+          <img id="shareCardPhoto" class="share-card-photo" alt="Ảnh cá nhân">
+        </div>
 
         <div class="share-card-theme">
           <span>CHUYỂN MÌNH</span>
@@ -8936,6 +9062,11 @@
       <p class="share-card-copy">
         Lưu hoặc chia sẻ chiếc thiệp này để cùng lan tỏa không khí Sinh nhật Ahamove 11 tuổi nhé!
       </p>
+
+      <label class="share-card-upload" for="shareCardPhotoInput">
+        <input id="shareCardPhotoInput" type="file" accept="image/*">
+        <span>THÊM / ĐỔI ẢNH CÁ NHÂN</span>
+      </label>
 
       <div class="share-card-actions">
         <button id="shareInvitationCard" class="share-card-primary" type="button">
@@ -9395,6 +9526,9 @@
     const shareInvitationCardButton = document.getElementById('shareInvitationCard');
     const downloadInvitationCardButton = document.getElementById('downloadInvitationCard');
     const shareCardStatus = document.getElementById('shareCardStatus');
+    const shareCardPhotoInput = document.getElementById('shareCardPhotoInput');
+    const shareCardPhoto = document.getElementById('shareCardPhoto');
+    const shareCardPhotoFrame = document.getElementById('shareCardPhotoFrame');
     const declineOverlay = document.getElementById('declineOverlay');
     const declineReasonOverlay = document.getElementById('declineReasonOverlay');
     const declineReasonInput = document.getElementById('declineReason');
@@ -9632,6 +9766,32 @@ function setLoadingState() {
     }
 
 
+
+    let shareCardPhotoDataUrl = '';
+
+    function openPhotoPicker() {
+      shareCardPhotoInput.click();
+    }
+
+    function loadImageSource(source) {
+      return new Promise((resolve, reject) => {
+        const image = new Image();
+        image.crossOrigin = 'anonymous';
+        image.onload = () => resolve(image);
+        image.onerror = () => reject(new Error('Không thể tải hình ảnh.'));
+        image.src = source;
+      });
+    }
+
+    function drawImageCover(context, image, x, y, width, height) {
+      const scale = Math.max(width / image.width, height / image.height);
+      const drawWidth = image.width * scale;
+      const drawHeight = image.height * scale;
+      const dx = x + (width - drawWidth) / 2;
+      const dy = y + (height - drawHeight) / 2;
+      context.drawImage(image, dx, dy, drawWidth, drawHeight);
+    }
+
     function populateShareCard() {
       const employeeName =
         document.querySelector('.employee-name')?.textContent?.trim() ||
@@ -9690,7 +9850,7 @@ function setLoadingState() {
       return minSize;
     }
 
-    function createShareCardCanvas() {
+    async function createShareCardCanvas() {
       populateShareCard();
 
       const canvas = document.createElement('canvas');
@@ -9741,45 +9901,96 @@ function setLoadingState() {
 
       ctx.textAlign = 'center';
 
-      roundedRectPath(ctx, 400, 95, 280, 64, 32);
+      roundedRectPath(ctx, 380, 88, 320, 78, 39);
       ctx.fillStyle = 'rgba(6,31,68,.88)';
       ctx.fill();
       ctx.strokeStyle = 'rgba(85,198,255,.62)';
       ctx.lineWidth = 2;
       ctx.stroke();
 
-      ctx.fillStyle = '#ffffff';
-      ctx.font = '800 30px Lexend, Arial, sans-serif';
-      ctx.fillText('AHAMOVE', 540, 137);
+      try {
+        const logoImage = await loadImageSource('/ahamove-logo.svg');
+        const logoRatio = logoImage.width / logoImage.height;
+        const logoHeight = 42;
+        const logoWidth = Math.min(240, logoHeight * logoRatio);
+        ctx.drawImage(
+          logoImage,
+          540 - logoWidth / 2,
+          127 - logoHeight / 2,
+          logoWidth,
+          logoHeight
+        );
+      } catch (error) {
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '800 30px Lexend, Arial, sans-serif';
+        ctx.fillText('AHAMOVE', 540, 137);
+      }
 
       ctx.shadowColor = 'rgba(38,159,255,.75)';
       ctx.shadowBlur = 30;
       ctx.fillStyle = '#ffffff';
       ctx.font = '800 260px Lexend, Arial, sans-serif';
-      ctx.fillText('11', 540, 435);
+      ctx.fillText('11', 540, 410);
       ctx.shadowBlur = 0;
 
       ctx.fillStyle = '#bde8ff';
       ctx.font = '700 24px Lexend, Arial, sans-serif';
-      ctx.fillText('Y E A R S', 540, 482);
+      ctx.fillText('Y E A R S', 540, 455);
+
+      const photoX = 430;
+      const photoY = 485;
+      const photoSize = 220;
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(540, photoY + photoSize / 2, photoSize / 2, 0, Math.PI * 2);
+      ctx.closePath();
+      ctx.clip();
+
+      if (shareCardPhotoDataUrl) {
+        try {
+          const personalPhoto = await loadImageSource(shareCardPhotoDataUrl);
+          drawImageCover(ctx, personalPhoto, photoX, photoY, photoSize, photoSize);
+        } catch (error) {
+          ctx.fillStyle = '#061b3a';
+          ctx.fillRect(photoX, photoY, photoSize, photoSize);
+        }
+      } else {
+        const photoGradient = ctx.createRadialGradient(540, 550, 20, 540, 595, 140);
+        photoGradient.addColorStop(0, 'rgba(52,175,255,.26)');
+        photoGradient.addColorStop(1, 'rgba(2,13,31,.96)');
+        ctx.fillStyle = photoGradient;
+        ctx.fillRect(photoX, photoY, photoSize, photoSize);
+
+        ctx.fillStyle = '#a8ddff';
+        ctx.font = '300 70px Lexend, Arial, sans-serif';
+        ctx.fillText('+', 540, 605);
+      }
+      ctx.restore();
+
+      ctx.beginPath();
+      ctx.arc(540, photoY + photoSize / 2, photoSize / 2 + 3, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(94,205,255,.88)';
+      ctx.lineWidth = 6;
+      ctx.stroke();
 
       ctx.fillStyle = '#ff8b43';
       ctx.font = '800 76px Lexend, Arial, sans-serif';
-      ctx.fillText('CHUYỂN MÌNH', 540, 605);
+      ctx.fillText('CHUYỂN MÌNH', 540, 790);
 
       ctx.fillStyle = '#59c6ff';
       ctx.font = '800 86px Lexend, Arial, sans-serif';
-      ctx.fillText('BỨT PHÁ', 540, 690);
+      ctx.fillText('BỨT PHÁ', 540, 872);
 
       const lineGradient = ctx.createLinearGradient(420, 0, 660, 0);
       lineGradient.addColorStop(0, '#269fff');
       lineGradient.addColorStop(1, '#f26522');
       ctx.fillStyle = lineGradient;
-      ctx.fillRect(430, 738, 220, 4);
+      ctx.fillRect(430, 914, 220, 4);
 
       ctx.fillStyle = '#9fc4de';
       ctx.font = '700 22px Lexend, Arial, sans-serif';
-      ctx.fillText('TÔI SẼ CÓ MẶT TẠI', 540, 805);
+      ctx.fillText('TÔI SẼ CÓ MẶT TẠI', 540, 970);
 
       const employeeName =
         document.getElementById('shareCardName').textContent.trim() ||
@@ -9788,7 +9999,7 @@ function setLoadingState() {
       const nameSize = fitCanvasText(ctx, employeeName, 860, 64, 38);
       ctx.fillStyle = '#ffffff';
       ctx.font = `700 ${nameSize}px Lexend, Arial, sans-serif`;
-      ctx.fillText(employeeName, 540, 885);
+      ctx.fillText(employeeName, 540, 1045);
 
       const department =
         document.getElementById('shareCardDepartment').textContent.trim();
@@ -9796,7 +10007,7 @@ function setLoadingState() {
       if (department) {
         ctx.fillStyle = '#ff9c5b';
         ctx.font = '500 25px Lexend, Arial, sans-serif';
-        ctx.fillText(department.slice(0, 58), 540, 934);
+        ctx.fillText(department.slice(0, 58), 540, 1092);
       }
 
       ctx.fillStyle = '#dff4ff';
@@ -9804,7 +10015,7 @@ function setLoadingState() {
       ctx.fillText(
         `${currentEvent?.eventDate || '--/--/----'}  •  ${currentEvent?.eventTime || '--:--'}`,
         540,
-        1015
+        1160
       );
 
       const venue =
@@ -9813,17 +10024,17 @@ function setLoadingState() {
           .join(' • ') ||
         'Địa điểm sẽ được cập nhật';
 
-      const venueSize = fitCanvasText(ctx, venue, 840, 27, 20);
+      const venueSize = fitCanvasText(ctx, venue, 860, 34, 24);
       ctx.fillStyle = '#a8bdd0';
       ctx.font = `500 ${venueSize}px Lexend, Arial, sans-serif`;
-      ctx.fillText(venue, 540, 1070);
+      ctx.fillText(venue, 540, 1210);
 
       ctx.fillStyle = '#68caff';
       ctx.font = '600 23px Lexend, Arial, sans-serif';
       ctx.fillText(
         '#Ahamove11Years   #ChuyenMinhButPha',
         540,
-        1245
+        1280
       );
 
       return canvas;
@@ -9850,7 +10061,7 @@ function setLoadingState() {
     async function downloadShareCard() {
       try {
         shareCardStatus.textContent = 'Đang tạo thiệp PNG...';
-        const canvas = createShareCardCanvas();
+        const canvas = await createShareCardCanvas();
         const blob = await canvasToBlob(canvas);
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
@@ -9885,7 +10096,7 @@ function setLoadingState() {
       try {
         shareCardStatus.textContent = 'Đang chuẩn bị nội dung chia sẻ...';
 
-        const canvas = createShareCardCanvas();
+        const canvas = await createShareCardCanvas();
         const blob = await canvasToBlob(canvas);
         const file = new File(
           [blob],
@@ -10068,6 +10279,38 @@ function setLoadingState() {
 
       reasonError.textContent = '';
       submitResponse('KHÔNG THAM GIA ĐƯỢC', reason);
+    });
+
+
+    shareCardPhotoFrame.addEventListener('click', openPhotoPicker);
+
+    shareCardPhotoInput.addEventListener('change', event => {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+
+      if (!file.type.startsWith('image/')) {
+        shareCardStatus.textContent = 'Vui lòng chọn đúng file hình ảnh.';
+        return;
+      }
+
+      if (file.size > 10 * 1024 * 1024) {
+        shareCardStatus.textContent = 'Ảnh cần nhỏ hơn 10 MB.';
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        shareCardPhotoDataUrl = String(reader.result || '');
+        shareCardPhoto.src = shareCardPhotoDataUrl;
+        shareCardPhoto.classList.add('active');
+        shareCardPhotoFrame.classList.add('has-photo');
+        shareCardStatus.textContent =
+          'Đã thêm ảnh cá nhân. Thiệp tải xuống sẽ dùng ảnh này.';
+      };
+      reader.onerror = () => {
+        shareCardStatus.textContent = 'Không thể đọc ảnh. Vui lòng thử lại.';
+      };
+      reader.readAsDataURL(file);
     });
 
     document.getElementById('closeSuccess').addEventListener(
