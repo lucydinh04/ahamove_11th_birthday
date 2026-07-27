@@ -8035,7 +8035,158 @@
       }
     }
 
-  </style>
+  
+    /* =========================================================
+       FINAL MOBILE PERFORMANCE PASS
+       ========================================================= */
+
+    @media (max-width: 600px) {
+      html,
+      body {
+        scroll-behavior: auto !important;
+        overscroll-behavior-y: auto !important;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      /* Avoid forced GPU layers during scroll */
+      .invite-shell,
+      .hero,
+      .combined-card-shell,
+      .combined-invite-card {
+        transform: none !important;
+        backface-visibility: visible !important;
+      }
+
+      /* Remove repaint-heavy filters and animated glows */
+      .hero-number-image,
+      .theme-birthday-cake,
+      .theme-birthday-hat,
+      .brand,
+      .hero-tech-card,
+      .combined-theme-pill,
+      .rsvp-button {
+        filter: none !important;
+        text-shadow: none !important;
+      }
+
+      .theme-birthday-cake,
+      .theme-birthday-hat,
+      .reactor-ring,
+      .reactor-node,
+      .digital-firework,
+      .holo-ribbon,
+      .particle,
+      .spark,
+      .light-streak {
+        animation: none !important;
+      }
+
+      /* Simplify shadows on mobile */
+      .combined-invite-card,
+      .combined-story,
+      .combined-story-item,
+      .combined-details,
+      .hero-tech-card,
+      .email-lookup-card {
+        box-shadow: none !important;
+      }
+
+      /* Paint below-the-fold sections only when approaching viewport */
+      .combined-story,
+      .combined-details,
+      .combined-rsvp,
+      .combined-response-status {
+        content-visibility: auto;
+        contain-intrinsic-size: 1px 420px;
+      }
+
+      .combined-story {
+        contain-intrinsic-size: 1px 620px;
+      }
+
+      .combined-details {
+        contain-intrinsic-size: 1px 360px;
+      }
+
+      /* Reduce image decode/render cost while preserving display */
+      .hero-number-image,
+      .theme-birthday-cake,
+      .theme-birthday-hat,
+      .brand-horizontal-logo {
+        image-rendering: auto;
+      }
+
+      /* Keep taps responsive without long transitions */
+      .rsvp-button,
+      .email-lookup-submit,
+      .email-lookup-open,
+      .email-lookup-close {
+        transition: opacity .12s ease, transform .12s ease !important;
+      }
+
+      /* Prevent expensive overflow clipping on every nested panel */
+      .combined-story,
+      .combined-story-item,
+      .combined-details,
+      .combined-detail-item {
+        overflow: visible !important;
+      }
+
+      /* Use simpler background rendering on mobile */
+      .invite-shell,
+      .hero {
+        background-attachment: scroll !important;
+      }
+    }
+
+  
+/* =========================================================
+   KEEP UPWARD REVEAL ANIMATION
+   while preserving smooth scrolling
+   ========================================================= */
+
+@media (max-width:600px){
+
+  /* Keep only the page reveal animation */
+  .invite-shell,
+  .hero,
+  .combined-card-shell,
+  .combined-invite-card{
+      animation: fadeUp .55s cubic-bezier(.22,.61,.36,1) both !important;
+      will-change: opacity, transform;
+  }
+
+  @keyframes fadeUp{
+      from{
+          opacity:0;
+          transform:translate3d(0,20px,0);
+      }
+      to{
+          opacity:1;
+          transform:translate3d(0,0,0);
+      }
+  }
+
+  /* Decorative animations remain disabled for performance */
+  .reactor-ring,
+  .reactor-node,
+  .digital-firework,
+  .holo-ribbon,
+  .particle,
+  .spark,
+  .light-streak,
+  .theme-birthday-cake,
+  .theme-birthday-hat{
+      animation:none !important;
+  }
+
+  /* Remove will-change after animation completes */
+  .animation-done{
+      will-change:auto !important;
+  }
+}
+
+</style>
 </head>
 
 <body>
@@ -9311,27 +9462,15 @@ if (isDedicatedLookupPage) {
 (()=>{const t=matchMedia('(hover: none), (pointer: coarse)').matches,n=matchMedia('(max-width: 720px)').matches;document.documentElement.classList.toggle('is-touch-device',t);document.documentElement.classList.toggle('is-mobile-layout',n);const s=()=>document.documentElement.style.setProperty('--app-vh',`${innerHeight*.01}px`);s();addEventListener('resize',s,{passive:true});addEventListener('orientationchange',s,{passive:true});if(t)document.querySelectorAll('[data-parallax],.parallax-layer').forEach(e=>e.style.transform='')})();
 </script>
 
-  <script>
-    // Mobile scroll performance: keep touch and wheel listeners passive.
-    (() => {
-      const passiveEvents = ['touchstart', 'touchmove', 'wheel'];
-      const originalAddEventListener = EventTarget.prototype.addEventListener;
 
-      EventTarget.prototype.addEventListener = function(type, listener, options) {
-        if (passiveEvents.includes(type)) {
-          if (options === undefined) {
-            options = { passive: true };
-          } else if (typeof options === 'boolean') {
-            options = { capture: options, passive: true };
-          } else if (options && typeof options === 'object') {
-            options = { ...options, passive: options.passive ?? true };
-          }
-        }
-
-        return originalAddEventListener.call(this, type, listener, options);
-      };
-    })();
-  </script>
+<script>
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    document.querySelectorAll('.invite-shell,.hero,.combined-card-shell,.combined-invite-card')
+      .forEach(el=>el.classList.add('animation-done'));
+  },700);
+});
+</script>
 
 </body>
 </html>
