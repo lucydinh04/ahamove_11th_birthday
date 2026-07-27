@@ -7080,6 +7080,165 @@
       }
     }
 
+  
+    /* =========================================================
+       FINAL RESPONSIVE SPACING + TITLE SCALE FIX
+       - Remove excess space below hero title on desktop and mobile
+       - Restore larger mobile title size
+       - Keep cake/hat beside the topic pill only
+       ========================================================= */
+
+    /* Desktop / laptop */
+    .hero {
+      min-height: 650px !important;
+      padding-bottom: 42px !important;
+    }
+
+    .campaign-title-tech {
+      margin-bottom: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .combined-card-shell {
+      margin-top: -22px !important;
+    }
+
+    .theme-celebration-row {
+      margin-top: 12px !important;
+      margin-bottom: 0 !important;
+    }
+
+    .combined-invite-card {
+      margin-top: 0 !important;
+    }
+
+    @media (min-width: 601px) and (max-width: 1100px) {
+      .hero {
+        min-height: 600px !important;
+        padding-bottom: 34px !important;
+      }
+
+      .combined-card-shell {
+        margin-top: -18px !important;
+      }
+
+      .campaign-title-orange,
+      .campaign-title-blue {
+        font-size: clamp(48px, 6.8vw, 68px) !important;
+      }
+    }
+
+    /* Mobile */
+    @media (max-width: 600px) {
+      .hero {
+        min-height: 430px !important;
+        padding-top: calc(14px + env(safe-area-inset-top)) !important;
+        padding-bottom: 18px !important;
+      }
+
+      .brand {
+        margin-bottom: 6px !important;
+      }
+
+      .hero-tech-layout {
+        margin-bottom: 0 !important;
+      }
+
+      .hero-number-stage {
+        margin-bottom: -8px !important;
+      }
+
+      .hero-years-text {
+        margin-top: -14px !important;
+        margin-bottom: 0 !important;
+      }
+
+      .campaign-title-tech {
+        width: 100% !important;
+        max-width: 360px !important;
+        margin: -8px auto 0 !important;
+        padding: 0 8px !important;
+        gap: 2px !important;
+        line-height: .98 !important;
+      }
+
+      .campaign-title-tech span {
+        width: 100% !important;
+        white-space: nowrap !important;
+        overflow: visible !important;
+        text-align: center !important;
+      }
+
+      /* Restore the larger title size from before the side-icon option */
+      .campaign-title-orange,
+      .campaign-title-blue {
+        font-size: clamp(34px, 11.2vw, 46px) !important;
+        line-height: 1 !important;
+        letter-spacing: -.045em !important;
+      }
+
+      .campaign-title-orange {
+        margin-bottom: 2px !important;
+      }
+
+      .combined-card-shell {
+        margin-top: -6px !important;
+        padding-top: 0 !important;
+      }
+
+      .theme-celebration-row {
+        margin-top: 12px !important;
+        margin-bottom: 0 !important;
+      }
+
+      .theme-celebration-row .combined-theme-pill {
+        min-height: 46px !important;
+        padding: 10px 6px !important;
+        font-size: clamp(15px, 4.4vw, 19px) !important;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .hero {
+        min-height: 412px !important;
+        padding-bottom: 14px !important;
+      }
+
+      .campaign-title-tech {
+        max-width: 340px !important;
+        margin-top: -10px !important;
+        padding-inline: 4px !important;
+      }
+
+      .campaign-title-orange,
+      .campaign-title-blue {
+        font-size: clamp(32px, 10.8vw, 42px) !important;
+      }
+
+      .combined-card-shell {
+        margin-top: -8px !important;
+      }
+
+      .theme-celebration-row {
+        margin-top: 10px !important;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .hero {
+        min-height: 398px !important;
+      }
+
+      .campaign-title-tech {
+        max-width: 320px !important;
+      }
+
+      .campaign-title-orange,
+      .campaign-title-blue {
+        font-size: 30px !important;
+      }
+    }
+
   </style>
 </head>
 
