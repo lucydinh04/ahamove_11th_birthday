@@ -16,6 +16,7 @@
 
   <style>
     :root {
+      --share-card-custom-bg: url("https://lh3.googleusercontent.com/d/1JjtZVmmUfqeccrxy_8T9ng-kA0S85Whb=w1600&v=2");
       --bg: #020813;
       --surface: #071321;
       --surface-2: #0b2449;
@@ -9041,6 +9042,29 @@
       }
     }
 
+
+    /* SHARE CARD CUSTOM BACKGROUND — GOOGLE DRIVE */
+    .employee-share-card {
+      background:
+        linear-gradient(
+          180deg,
+          rgba(2,10,28,.16) 0%,
+          rgba(2,10,28,.30) 50%,
+          rgba(2,10,28,.66) 100%
+        ),
+        var(--share-card-custom-bg) center center / cover no-repeat !important;
+    }
+
+    .share-card-grid {
+      opacity: .12 !important;
+      mix-blend-mode: screen;
+    }
+
+    .share-card-glow-blue,
+    .share-card-glow-orange {
+      opacity: .08 !important;
+    }
+
 </style>
 </head>
 
@@ -10353,12 +10377,24 @@ function setLoadingState() {
       const ctx = canvas.getContext('2d');
       if (!ctx) throw new Error('Trình duyệt không hỗ trợ tạo ảnh.');
 
-      const gradient = ctx.createLinearGradient(0, 0, 1080, 1350);
-      gradient.addColorStop(0, '#061d45');
-      gradient.addColorStop(.55, '#03142f');
-      gradient.addColorStop(1, '#020813');
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, 1080, 1350);
+      try {
+        const shareCardBackground = await loadImageSource('https://lh3.googleusercontent.com/d/1JjtZVmmUfqeccrxy_8T9ng-kA0S85Whb=w1600&v=2');
+        drawImageCover(ctx, shareCardBackground, 0, 0, 1080, 1350);
+
+        const backgroundOverlay = ctx.createLinearGradient(0, 0, 0, 1350);
+        backgroundOverlay.addColorStop(0, 'rgba(2,10,28,.12)');
+        backgroundOverlay.addColorStop(.50, 'rgba(2,10,28,.28)');
+        backgroundOverlay.addColorStop(1, 'rgba(2,10,28,.64)');
+        ctx.fillStyle = backgroundOverlay;
+        ctx.fillRect(0, 0, 1080, 1350);
+      } catch (error) {
+        const gradient = ctx.createLinearGradient(0, 0, 1080, 1350);
+        gradient.addColorStop(0, '#061d45');
+        gradient.addColorStop(.55, '#03142f');
+        gradient.addColorStop(1, '#020813');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, 1080, 1350);
+      }
 
       const blueGlow = ctx.createRadialGradient(220, 130, 0, 220, 130, 430);
       blueGlow.addColorStop(0, 'rgba(38,159,255,.34)');
