@@ -5481,25 +5481,16 @@
       }
     }
 
+  
 
-
-    /* FINAL DESKTOP + MOBILE NATIVE SCROLL OVERRIDE */
+    /* NATIVE WHEEL SCROLL PERFORMANCE FIX — final override */
     html,
     body {
-      width: 100% !important;
-      height: auto !important;
-      min-height: 100% !important;
-      max-height: none !important;
-      overflow-x: hidden !important;
-      overflow-y: auto !important;
-      overscroll-behavior-y: auto !important;
-      touch-action: pan-y !important;
       scroll-behavior: auto !important;
+      overscroll-behavior-y: auto !important;
     }
 
-    body.opening-invitation,
-    body.invitation-opened,
-    html.invitation-opened {
+    body.invitation-opened {
       overflow-x: hidden !important;
       overflow-y: auto !important;
       height: auto !important;
@@ -5507,23 +5498,79 @@
       touch-action: pan-y !important;
     }
 
-    #invitationContent,
-    #invitationContent.visible,
     body.invitation-opened #invitationContent,
-    .invite-shell,
-    .combined-card-shell,
-    .combined-invite-card {
-      height: auto !important;
+    body.invitation-opened .invite-shell,
+    body.invitation-opened .hero,
+    body.invitation-opened .content,
+    body.invitation-opened .combined-card-shell,
+    body.invitation-opened .combined-invite-card {
+      contain: none !important;
+      will-change: auto !important;
+      transform: none !important;
       max-height: none !important;
       overflow: visible !important;
-      touch-action: pan-y !important;
     }
 
-    .tech-intro.opened,
-    .transition-portal:not(.active) {
-      display: none !important;
-      pointer-events: none !important;
+    /* Freeze continuous decorative motion after the card opens. The visual stays
+       intact, but the browser no longer repaints dozens of layers on every wheel tick. */
+    body.invitation-opened .invite-shell::before,
+    body.invitation-opened .invite-shell::after,
+    body.invitation-opened .ai-scene,
+    body.invitation-opened .ai-scene *,
+    body.invitation-opened .hero-stage-ring,
+    body.invitation-opened .hero-number-visual,
+    body.invitation-opened .hero-number-visual::before,
+    body.invitation-opened .hero-tech-card,
+    body.invitation-opened .hero-tech-card::before,
+    body.invitation-opened .hero-tech-card::after,
+    body.invitation-opened .combined-chevron,
+    body.invitation-opened .rsvp-button::after,
+    body.invitation-opened .confirm-button,
+    body.invitation-opened .decline-button,
+    body.invitation-opened .button-tech-icon::after {
+      animation: none !important;
+      animation-play-state: paused !important;
     }
+
+    /* Remove expensive live blur layers from the scrolling document. */
+    body.invitation-opened .content,
+    body.invitation-opened .combined-card-shell,
+    body.invitation-opened .combined-invite-card,
+    body.invitation-opened .combined-story,
+    body.invitation-opened .combined-details,
+    body.invitation-opened .hero-tech-card,
+    body.invitation-opened .event-card,
+    body.invitation-opened .dresscode,
+    body.invitation-opened .value-item,
+    body.invitation-opened .brand {
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      filter: none !important;
+    }
+
+    /* Disable pointer-parallax transforms that compete with trackpad/wheel input. */
+    body.invitation-opened .ai-scene,
+    body.invitation-opened .hero-number-wrap,
+    body.invitation-opened .ai-chip,
+    body.invitation-opened .hero-tech-card {
+      transform: none !important;
+      transition: none !important;
+    }
+
+    /* During active wheel/trackpad movement, reduce painting even further. */
+    body.wheel-scrolling .invite-shell::before,
+    body.wheel-scrolling .invite-shell::after,
+    body.wheel-scrolling .ai-scene,
+    body.wheel-scrolling .hero::after {
+      visibility: hidden !important;
+    }
+
+    body.wheel-scrolling .combined-invite-card,
+    body.wheel-scrolling .combined-story,
+    body.wheel-scrolling .combined-details {
+      box-shadow: none !important;
+    }
+
   </style>
 </head>
 
@@ -6026,11 +6073,6 @@
       body.classList.remove('invitation-opened');
       body.classList.add('opening-invitation');
 
-      // Do not lock the document scroll. The fixed intro already covers the page,
-      // while keeping native wheel/touch scrolling available avoids frozen states.
-      root.style.overflowY = 'auto';
-      body.style.overflowY = 'auto';
-
       invitationContent.hidden = false;
       invitationContent.setAttribute('aria-hidden', 'false');
       invitationContent.classList.remove('visible');
@@ -6069,21 +6111,8 @@
 
         body.classList.remove('opening-invitation');
         body.classList.add('invitation-opened');
-        root.classList.add('invitation-opened');
         unlockInvitationScroll();
-
-        // Remove any stale inline scroll locks left by older cached builds.
-        root.style.position = '';
-        body.style.position = '';
-        root.style.top = '';
-        body.style.top = '';
-        root.style.overflow = '';
-        body.style.overflow = '';
-        root.style.overflowX = 'hidden';
-        body.style.overflowX = 'hidden';
-        root.style.overflowY = 'auto';
-        body.style.overflowY = 'auto';
-        window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+        window.scrollTo(0, 0);
 
         // Release compositor memory after the motion is complete.
         invitationContent.style.willChange = 'auto';
@@ -6104,13 +6133,6 @@
 
     techIntro?.addEventListener('click', openInvitationSmoothly);
 
-    // Desktop wheel safety: never let a stale overlay or body lock freeze the letter.
-    window.addEventListener('wheel', () => {
-      if (document.body.classList.contains('invitation-opened')) {
-        document.documentElement.style.overflowY = 'auto';
-        document.body.style.overflowY = 'auto';
-      }
-    }, { passive: true });
 
     techIntro?.addEventListener('keydown', event => {
       if (event.key === 'Enter' || event.key === ' ') {
@@ -6496,5 +6518,56 @@ loadInvitation();
 <script>
 (()=>{const t=matchMedia('(hover: none), (pointer: coarse)').matches,n=matchMedia('(max-width: 720px)').matches;document.documentElement.classList.toggle('is-touch-device',t);document.documentElement.classList.toggle('is-mobile-layout',n);const s=()=>document.documentElement.style.setProperty('--app-vh',`${innerHeight*.01}px`);s();addEventListener('resize',s,{passive:true});addEventListener('orientationchange',s,{passive:true});if(t)document.querySelectorAll('[data-parallax],.parallax-layer').forEach(e=>e.style.transform='')})();
 </script>
+
+<script>
+(() => {
+  let wheelIdleTimer = 0;
+
+  const ensureNativeScroll = () => {
+    const root = document.documentElement;
+    const body = document.body;
+
+    root.style.scrollBehavior = 'auto';
+    root.style.overflowX = 'hidden';
+    root.style.overflowY = 'auto';
+    root.style.height = 'auto';
+    root.style.maxHeight = 'none';
+
+    body.style.scrollBehavior = 'auto';
+    body.style.overflowX = 'hidden';
+    body.style.overflowY = 'auto';
+    body.style.height = 'auto';
+    body.style.maxHeight = 'none';
+    body.style.position = 'static';
+    body.style.top = 'auto';
+  };
+
+  window.addEventListener('wheel', () => {
+    if (!document.body.classList.contains('invitation-opened')) return;
+
+    ensureNativeScroll();
+    document.body.classList.add('wheel-scrolling');
+    window.clearTimeout(wheelIdleTimer);
+    wheelIdleTimer = window.setTimeout(() => {
+      document.body.classList.remove('wheel-scrolling');
+    }, 140);
+  }, { passive: true });
+
+  window.addEventListener('scroll', () => {
+    if (document.body.classList.contains('invitation-opened')) {
+      ensureNativeScroll();
+    }
+  }, { passive: true });
+
+  const observer = new MutationObserver(() => {
+    if (document.body.classList.contains('invitation-opened')) {
+      ensureNativeScroll();
+    }
+  });
+
+  observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+})();
+</script>
+
 </body>
 </html>
