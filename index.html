@@ -7397,6 +7397,177 @@
       }
     }
 
+  
+    /* =========================================================
+       MOBILE HERO FRAME + 4 TECH CARDS FIX
+       - Keep CHUYỂN MÌNH / BỨT PHÁ inside the hero frame
+       - Restore all 4 technology cards on mobile
+       ========================================================= */
+
+    @media (max-width: 600px) {
+      .hero {
+        min-height: 610px !important;
+        padding:
+          calc(14px + env(safe-area-inset-top))
+          10px
+          26px !important;
+        overflow: hidden !important;
+      }
+
+      .hero-tech-layout {
+        width: 100% !important;
+        max-width: 370px !important;
+        margin: 0 auto !important;
+        display: grid !important;
+        grid-template-columns: 74px minmax(0, 1fr) 74px !important;
+        align-items: center !important;
+        gap: 6px !important;
+      }
+
+      .hero-tech-column {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 8px !important;
+      }
+
+      .hero-tech-card {
+        min-height: 92px !important;
+        padding: 9px 5px !important;
+        border-radius: 12px !important;
+      }
+
+      .hero-tech-icon {
+        width: 34px !important;
+        height: 34px !important;
+        margin-bottom: 7px !important;
+      }
+
+      .hero-tech-card-title {
+        font-size: 7.5px !important;
+        line-height: 1.35 !important;
+        letter-spacing: .11em !important;
+      }
+
+      .hero-tech-center {
+        width: 100% !important;
+        min-width: 0 !important;
+      }
+
+      .hero-number-stage {
+        width: 160px !important;
+        max-width: 100% !important;
+        margin: 0 auto !important;
+      }
+
+      .hero-number-image {
+        width: 160px !important;
+        max-width: 100% !important;
+        transform: scale(.86) !important;
+      }
+
+      .hero-years-text {
+        margin-top: -15px !important;
+        margin-bottom: 2px !important;
+      }
+
+      .campaign-title-tech {
+        width: 100% !important;
+        max-width: 350px !important;
+        margin: 5px auto 0 !important;
+        padding: 0 6px !important;
+        gap: 2px !important;
+        overflow: visible !important;
+      }
+
+      .campaign-title-tech span {
+        width: 100% !important;
+        max-width: 100% !important;
+        white-space: nowrap !important;
+        overflow: visible !important;
+        text-align: center !important;
+      }
+
+      .campaign-title-orange,
+      .campaign-title-blue {
+        font-size: clamp(31px, 9.7vw, 39px) !important;
+        line-height: 1.02 !important;
+        letter-spacing: -.055em !important;
+      }
+
+      .campaign-title-orange {
+        margin-bottom: 3px !important;
+      }
+
+      .combined-card-shell {
+        margin-top: -4px !important;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .hero {
+        min-height: 585px !important;
+      }
+
+      .hero-tech-layout {
+        max-width: 350px !important;
+        grid-template-columns: 68px minmax(0, 1fr) 68px !important;
+        gap: 5px !important;
+      }
+
+      .hero-tech-card {
+        min-height: 86px !important;
+        padding: 8px 4px !important;
+      }
+
+      .hero-tech-icon {
+        width: 31px !important;
+        height: 31px !important;
+      }
+
+      .hero-tech-card-title {
+        font-size: 7px !important;
+      }
+
+      .hero-number-stage,
+      .hero-number-image {
+        width: 148px !important;
+      }
+
+      .campaign-title-tech {
+        max-width: 330px !important;
+        padding-inline: 4px !important;
+      }
+
+      .campaign-title-orange,
+      .campaign-title-blue {
+        font-size: clamp(29px, 9.4vw, 36px) !important;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .hero {
+        min-height: 560px !important;
+      }
+
+      .hero-tech-layout {
+        grid-template-columns: 62px minmax(0, 1fr) 62px !important;
+      }
+
+      .hero-tech-card {
+        min-height: 80px !important;
+      }
+
+      .hero-number-stage,
+      .hero-number-image {
+        width: 138px !important;
+      }
+
+      .campaign-title-orange,
+      .campaign-title-blue {
+        font-size: 28px !important;
+      }
+    }
+
   </style>
 </head>
 
