@@ -8997,6 +8997,50 @@
       overflow-wrap: anywhere;
     }
 
+
+    /* FINAL POSITIONING FIX */
+    .share-card-main-title {
+      margin: 22px 0 8px !important;
+      color: #d9f2ff !important;
+      font-size: 14px !important;
+      font-weight: 700 !important;
+      letter-spacing: .12em !important;
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    .share-card-theme {
+      margin-top: 0 !important;
+    }
+
+    .share-card-photo-frame {
+      margin-top: 28px !important;
+    }
+
+    .employee-share-card h3 {
+      margin-top: 34px !important;
+      line-height: 1.2 !important;
+    }
+
+    .share-card-divider {
+      margin-top: 22px !important;
+    }
+
+    .share-card-hashtag {
+      display: none !important;
+    }
+
+    @media (max-width: 420px) {
+      .share-card-main-title {
+        margin-top: 18px !important;
+        font-size: 11px !important;
+      }
+
+      .employee-share-card h3 {
+        margin-top: 28px !important;
+      }
+    }
+
 </style>
 </head>
 
@@ -9435,8 +9479,7 @@
         <div class="share-card-preview-column">
           <div id="employeeShareCard" class="employee-share-card">
         <div class="share-card-grid" aria-hidden="true"></div>
-        <div class="share-card-main-title">Ahamove 11th Birthday</div>
-        <div class="share-card-glow share-card-glow-blue" aria-hidden="true"></div>
+                <div class="share-card-glow share-card-glow-blue" aria-hidden="true"></div>
         <div class="share-card-glow share-card-glow-orange" aria-hidden="true"></div>
 
         <div class="share-card-brand-row">
@@ -9446,6 +9489,8 @@
           <div class="share-card-brand-divider" aria-hidden="true"></div>
           <img class="share-card-11-logo" src="/11_3D.png" alt="11 năm" crossorigin="anonymous">
         </div>
+
+        <div class="share-card-main-title">Ahamove 11th Birthday</div>
 
         <div class="share-card-theme">
           <span>CHUYỂN MÌNH</span>
@@ -9490,7 +9535,6 @@
           </div>
         </div>
 
-        <p class="share-card-hashtag">#Ahamove11Years &nbsp; #ChuyenMinhButPha</p>
           </div>
         </div>
       </div>
@@ -10350,10 +10394,6 @@ function setLoadingState() {
 
       ctx.textAlign = 'center';
 
-      ctx.fillStyle = '#d9f2ff';
-      ctx.font = '700 28px Lexend, Arial, sans-serif';
-      ctx.fillText('AHAMOVE 11TH BIRTHDAY', 540, 72);
-
       try {
         const brandLogo = await loadImageSource('/ahamove-logo.svg');
         const anniversaryLogo = await loadImageSource('/11_3D.png');
@@ -10372,40 +10412,44 @@ function setLoadingState() {
         const totalWidth = brandWidth + 48 + anniversaryWidth;
         const startX = 540 - totalWidth / 2;
 
-        ctx.drawImage(brandLogo, startX, 126, brandWidth, brandHeight);
+        ctx.drawImage(brandLogo, startX, 92, brandWidth, brandHeight);
 
         const dividerX = startX + brandWidth + 24;
-        const dividerGradient = ctx.createLinearGradient(dividerX, 120, dividerX, 194);
+        const dividerGradient = ctx.createLinearGradient(dividerX, 86, dividerX, 160);
         dividerGradient.addColorStop(0, 'rgba(160,225,255,0)');
         dividerGradient.addColorStop(.5, 'rgba(160,225,255,.95)');
         dividerGradient.addColorStop(1, 'rgba(160,225,255,0)');
         ctx.fillStyle = dividerGradient;
-        ctx.fillRect(dividerX, 120, 2, 74);
+        ctx.fillRect(dividerX, 86, 2, 74);
 
         ctx.drawImage(
           anniversaryLogo,
           startX + brandWidth + 48,
-          108,
+          74,
           anniversaryWidth,
           anniversaryHeight
         );
       } catch (error) {
         ctx.fillStyle = '#ffffff';
         ctx.font = '800 30px Lexend, Arial, sans-serif';
-        ctx.fillText('AHAMOVE 11 YEARS', 540, 158);
+        ctx.fillText('AHAMOVE 11 YEARS', 540, 124);
       }
+
+      ctx.fillStyle = '#d9f2ff';
+      ctx.font = '700 28px Lexend, Arial, sans-serif';
+      ctx.fillText('AHAMOVE 11TH BIRTHDAY', 540, 220);
 
       ctx.fillStyle = '#ff8b43';
       ctx.font = '800 82px Lexend, Arial, sans-serif';
-      ctx.fillText('CHUYỂN MÌNH', 540, 335);
+      ctx.fillText('CHUYỂN MÌNH', 540, 315);
 
       ctx.fillStyle = '#59c6ff';
       ctx.font = '800 92px Lexend, Arial, sans-serif';
-      ctx.fillText('BỨT PHÁ', 540, 420);
+      ctx.fillText('BỨT PHÁ', 540, 398);
 
       const photoSize = 400;
       const photoX = 540 - photoSize / 2;
-      const photoY = 470;
+      const photoY = 455;
 
       ctx.save();
       ctx.beginPath();
@@ -10454,12 +10498,12 @@ function setLoadingState() {
       const nameSize = fitCanvasText(ctx, employeeName, 850, 66, 40);
       ctx.fillStyle = '#ffffff';
       ctx.font = `700 ${nameSize}px Lexend, Arial, sans-serif`;
-      ctx.fillText(employeeName, 540, 930);
+      ctx.fillText(employeeName, 540, 950);
 const lineGradient = ctx.createLinearGradient(430, 0, 650, 0);
       lineGradient.addColorStop(0, '#269fff');
       lineGradient.addColorStop(1, '#f26522');
       ctx.fillStyle = lineGradient;
-      ctx.fillRect(430, 1015, 220, 4);
+      ctx.fillRect(430, 1028, 220, 4);
 
       roundedRectPath(ctx, 135, 1068, 810, 178, 24);
       ctx.fillStyle = 'rgba(4,22,50,.86)';
@@ -10546,14 +10590,7 @@ const lineGradient = ctx.createLinearGradient(430, 0, 650, 0);
       ctx.fillStyle = '#eef9ff';
       ctx.fillText('XANH DƯƠNG', dresscodeX + 18, dresscodeY);
 
-      ctx.textAlign = 'center';
-      ctx.fillStyle = '#68caff';
-      ctx.font = '600 22px Lexend, Arial, sans-serif';
-      ctx.fillText(
-        '#Ahamove11Years   #ChuyenMinhButPha',
-        540,
-        1288
-      );
+
 
       return canvas;
     }
