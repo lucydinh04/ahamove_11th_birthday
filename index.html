@@ -8865,6 +8865,22 @@
     @media (max-width:899px){.share-card-workspace{grid-template-columns:1fr}.share-card-controls{width:min(100%,520px);margin:0 auto}.share-card-preview-column .employee-share-card{width:min(100%,520px)!important;max-height:none!important;transform:none!important;margin-bottom:0!important}}
     @media (max-width:560px){.share-card-controls{padding:18px 16px}.share-card-avatar-button{width:140px;height:140px}}
     
+
+    /* HOTFIX: keep share card visible after clicking "XEM THIỆP CỦA TÔI" */
+    #shareCardOverlay.active {
+      display: flex !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      pointer-events: auto !important;
+      z-index: 13000 !important;
+    }
+
+    #shareCardOverlay.active .share-card-popup {
+      display: block !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+
 </style>
 </head>
 
@@ -10099,8 +10115,21 @@ function setLoadingState() {
     }
 
     function openShareCard() {
-      populateShareCard();
-      shareCardStatus.textContent = '';
+      try {
+        populateShareCard();
+      } catch (error) {
+        console.error('Share card populate error:', error);
+      }
+
+      if (shareCardStatus) {
+        shareCardStatus.textContent = '';
+      }
+
+      if (!shareCardOverlay) {
+        console.error('Không tìm thấy shareCardOverlay.');
+        return;
+      }
+
       shareCardOverlay.classList.add('active');
       shareCardOverlay.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
@@ -10602,13 +10631,20 @@ const lineGradient = ctx.createLinearGradient(430, 0, 650, 0);
       reader.readAsDataURL(file);
     });
 
-    document.getElementById('closeSuccess').addEventListener(
-      'click',
-      () => {
-        successOverlay.classList.remove('active');
-        window.setTimeout(openShareCard, 180);
-      }
-    );
+    const closeSuccessButton = document.getElementById('closeSuccess');
+
+    if (closeSuccessButton) {
+      closeSuccessButton.addEventListener(
+        'click',
+        () => {
+          if (successOverlay) {
+            successOverlay.classList.remove('active');
+          }
+
+          window.setTimeout(openShareCard, 120);
+        }
+      );
+    }
 
     closeShareCardButton.addEventListener('click', closeShareCard);
     shareInvitationCardButton.addEventListener('click', shareInvitationCard);
