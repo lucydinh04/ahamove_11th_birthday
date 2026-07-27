@@ -8835,6 +8835,36 @@
       }
     }
 
+
+    /* SHARE CARD DESKTOP WORKSPACE */
+    .share-card-overlay{align-items:flex-start!important;overflow-y:auto!important;padding:14px!important}
+    .share-card-popup{width:min(100%,1500px)!important;max-height:none!important;overflow:visible!important;margin:0 auto!important;padding:16px 18px 18px!important}
+    .share-card-main-title{margin-bottom:10px!important;font-size:15px!important}
+    .share-card-workspace{display:grid;grid-template-columns:330px minmax(0,1fr);gap:24px;align-items:start}
+    .share-card-controls{padding:24px 22px;border:1px solid rgba(72,181,255,.34);border-radius:22px;background:radial-gradient(circle at top right,rgba(38,159,255,.10),transparent 34%),linear-gradient(160deg,rgba(7,30,61,.96),rgba(3,14,33,.98));box-shadow:inset 0 0 0 1px rgba(255,255,255,.025),0 16px 40px rgba(0,0,0,.26)}
+    .share-card-controls-head{display:flex;gap:12px;align-items:flex-start;padding-bottom:18px;border-bottom:1px dashed rgba(79,190,255,.22)}
+    .share-card-controls-icon{display:grid;place-items:center;width:38px;height:38px;flex:0 0 38px;border:1px solid rgba(99,207,255,.42);border-radius:50%;color:#8bdcff;font-size:17px}
+    .share-card-controls h3{margin:0;color:#bcecff;font-size:14px;letter-spacing:.10em}
+    .share-card-controls-head p{margin:6px 0 0;color:#9fb2c6;font-size:11px;line-height:1.5}
+    .share-card-control-section{padding:20px 0;border-bottom:1px dashed rgba(79,190,255,.18)}
+    .share-card-control-section:last-child{border-bottom:0;padding-bottom:0}
+    .share-card-control-label{margin:0 0 12px;color:#77ceff;font-size:10px;font-weight:700;letter-spacing:.16em}
+    .share-card-avatar-button{position:relative;display:block;width:166px;height:166px;margin:0 auto;padding:0;border:0;border-radius:50%;background:transparent;cursor:pointer}
+    .share-card-avatar-preview-wrap{display:block;width:100%;height:100%;overflow:hidden;border:2px solid #4bc5ff;border-radius:50%;background:#07182f;box-shadow:0 0 0 6px rgba(38,159,255,.07),0 0 26px rgba(38,159,255,.26)}
+    .share-card-avatar-preview{display:none;width:100%;height:100%;object-fit:cover}
+    .share-card-avatar-preview.active{display:block}
+    .share-card-avatar-empty{display:grid;width:100%;height:100%;place-items:center;color:#9addff;font-size:42px;font-weight:300}
+    .share-card-avatar-edit{position:absolute;right:6px;top:10px;display:grid;width:42px;height:42px;place-items:center;border:1px solid rgba(139,224,255,.72);border-radius:50%;background:linear-gradient(145deg,#1476d5,#064c9e);color:#fff;box-shadow:0 0 18px rgba(38,159,255,.38);font-size:18px}
+    .share-card-control-help{margin:12px 0 0;color:#8fa5bb;font-size:10px;line-height:1.5;text-align:center}
+    .share-card-name-preview{padding:14px 15px;border:1px solid rgba(91,190,255,.22);border-radius:12px;background:rgba(1,12,29,.72);color:#fff;font-size:15px;font-weight:600}
+    .share-card-preview-column{display:flex;justify-content:center;min-width:0}
+    .share-card-preview-column .employee-share-card{width:min(100%,740px)!important;max-height:calc(100vh - 90px)!important;aspect-ratio:4/5!important;transform:scale(var(--share-card-scale,1));transform-origin:top center}
+    .share-card-copy,.share-card-actions,.share-card-status{width:min(100%,740px);margin-left:auto!important;margin-right:auto!important}
+    @media (min-width:900px) and (max-height:900px){.share-card-preview-column .employee-share-card{--share-card-scale:.80;margin-bottom:-20%}.share-card-popup{padding-top:10px!important}}
+    @media (min-width:900px) and (max-height:760px){.share-card-preview-column .employee-share-card{--share-card-scale:.68;margin-bottom:-32%}.share-card-controls{transform:scale(.92);transform-origin:top left}}
+    @media (max-width:899px){.share-card-workspace{grid-template-columns:1fr}.share-card-controls{width:min(100%,520px);margin:0 auto}.share-card-preview-column .employee-share-card{width:min(100%,520px)!important;max-height:none!important;transform:none!important;margin-bottom:0!important}}
+    @media (max-width:560px){.share-card-controls{padding:18px 16px}.share-card-avatar-button{width:140px;height:140px}}
+    
 </style>
 </head>
 
@@ -9239,9 +9269,39 @@
     <div class="share-card-popup">
       <button id="closeShareCard" class="share-card-close" type="button" aria-label="Đóng">×</button>
 
-      <p class="share-card-eyebrow">AHAMOVE 11 YEARS · I'M IN</p>
+      
+      <div class="share-card-workspace">
+        <aside class="share-card-controls">
+          <div class="share-card-controls-head">
+            <div class="share-card-controls-icon">◉</div>
+            <div>
+              <h3>TÙY CHỈNH THIỆP CỦA BẠN</h3>
+              <p>Cập nhật ảnh để tạo thiệp cá nhân hóa</p>
+            </div>
+          </div>
 
-      <div id="employeeShareCard" class="employee-share-card">
+          <div class="share-card-control-section">
+            <p class="share-card-control-label">ẢNH CỦA BẠN</p>
+            <button id="shareCardAvatarButton" class="share-card-avatar-button" type="button">
+              <span class="share-card-avatar-preview-wrap">
+                <img id="shareCardAvatarPreview" class="share-card-avatar-preview" alt="Ảnh cá nhân">
+                <span id="shareCardAvatarEmpty" class="share-card-avatar-empty">+</span>
+              </span>
+              <span class="share-card-avatar-edit">✎</span>
+            </button>
+            <p class="share-card-control-help">Nhấn vào ảnh tròn để chọn hoặc thay đổi ảnh</p>
+          </div>
+
+          <div class="share-card-control-section">
+            <p class="share-card-control-label">TÊN CỦA BẠN</p>
+            <div id="shareCardNamePreview" class="share-card-name-preview">Ahamover</div>
+          </div>
+
+          <input id="shareCardPhotoInput" type="file" accept="image/*" hidden>
+        </aside>
+
+        <div class="share-card-preview-column">
+          <div id="employeeShareCard" class="employee-share-card">
         <div class="share-card-grid" aria-hidden="true"></div>
         <div class="share-card-main-title">Ahamove 11th Birthday</div>
         <div class="share-card-glow share-card-glow-blue" aria-hidden="true"></div>
@@ -9270,8 +9330,7 @@
 
         <div class="share-card-divider"></div>
         <h3 id="shareCardName">Ahamover</h3>
-        <p id="shareCardDepartment" class="share-card-department"></p>
-
+        
         <div class="share-card-event">
           <span id="shareCardEventDate">--/--/----</span>
           <i></i>
@@ -9280,18 +9339,14 @@
 
         <p id="shareCardVenue" class="share-card-venue">Địa điểm sẽ được cập nhật</p>
         <p class="share-card-hashtag">#Ahamove11Years &nbsp; #ChuyenMinhButPha</p>
+          </div>
+        </div>
       </div>
 
       <p class="share-card-copy">
         Lưu hoặc chia sẻ chiếc thiệp này để cùng lan tỏa không khí Sinh nhật Ahamove 11 tuổi nhé!
       </p>
-
-      <label class="share-card-upload" for="shareCardPhotoInput">
-        <input id="shareCardPhotoInput" type="file" accept="image/*">
-        <span>THÊM / ĐỔI ẢNH CÁ NHÂN</span>
-      </label>
-
-      <div class="share-card-actions">
+<div class="share-card-actions">
         <button id="shareInvitationCard" class="share-card-primary" type="button">
           CHIA SẺ LÊN MẠNG XÃ HỘI
         </button>
@@ -9750,6 +9805,10 @@
     const downloadInvitationCardButton = document.getElementById('downloadInvitationCard');
     const shareCardStatus = document.getElementById('shareCardStatus');
     const shareCardPhotoInput = document.getElementById('shareCardPhotoInput');
+    const shareCardAvatarButton = document.getElementById('shareCardAvatarButton');
+    const shareCardAvatarPreview = document.getElementById('shareCardAvatarPreview');
+    const shareCardAvatarEmpty = document.getElementById('shareCardAvatarEmpty');
+    const shareCardNamePreview = document.getElementById('shareCardNamePreview');
     const shareCardPhoto = document.getElementById('shareCardPhoto');
     const shareCardPhotoFrame = document.getElementById('shareCardPhotoFrame');
     const declineOverlay = document.getElementById('declineOverlay');
@@ -10023,6 +10082,7 @@ function setLoadingState() {
       const department = currentDepartment || '';
 
       document.getElementById('shareCardName').textContent = employeeName;
+      if (shareCardNamePreview) shareCardNamePreview.textContent = employeeName;
       document.getElementById('shareCardDepartment').textContent = department;
 
       document.getElementById('shareCardEventDate').textContent =
@@ -10229,17 +10289,7 @@ function setLoadingState() {
       ctx.fillStyle = '#ffffff';
       ctx.font = `700 ${nameSize}px Lexend, Arial, sans-serif`;
       ctx.fillText(employeeName, 540, 995);
-
-      const department =
-        document.getElementById('shareCardDepartment').textContent.trim();
-
-      if (department) {
-        ctx.fillStyle = '#ff9c5b';
-        ctx.font = '500 28px Lexend, Arial, sans-serif';
-        ctx.fillText(department.slice(0, 58), 540, 1043);
-      }
-
-      const lineGradient = ctx.createLinearGradient(430, 0, 650, 0);
+const lineGradient = ctx.createLinearGradient(430, 0, 650, 0);
       lineGradient.addColorStop(0, '#269fff');
       lineGradient.addColorStop(1, '#f26522');
       ctx.fillStyle = lineGradient;
@@ -10518,6 +10568,7 @@ function setLoadingState() {
 
 
     shareCardPhotoFrame.addEventListener('click', openPhotoPicker);
+    shareCardAvatarButton.addEventListener('click', openPhotoPicker);
 
     shareCardPhotoInput.addEventListener('change', event => {
       const file = event.target.files && event.target.files[0];
@@ -10539,6 +10590,9 @@ function setLoadingState() {
         shareCardPhoto.src = shareCardPhotoDataUrl;
         shareCardPhoto.classList.add('active');
         shareCardPhotoFrame.classList.add('has-photo');
+        shareCardAvatarPreview.src = shareCardPhotoDataUrl;
+        shareCardAvatarPreview.classList.add('active');
+        shareCardAvatarEmpty.style.display = 'none';
         shareCardStatus.textContent =
           'Đã thêm ảnh cá nhân. Thiệp tải xuống sẽ dùng ảnh này.';
       };
