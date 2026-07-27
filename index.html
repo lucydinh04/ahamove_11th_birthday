@@ -5481,16 +5481,28 @@
       }
     }
 
-  
 
-    /* NATIVE WHEEL SCROLL PERFORMANCE FIX — final override */
+
+    /* OPTION 1 — email lookup only appears when token is missing/invalid */
+    .email-lookup-trigger { display: none !important; }
+
+    /* FINAL DESKTOP + MOBILE NATIVE SCROLL OVERRIDE */
     html,
     body {
-      scroll-behavior: auto !important;
+      width: 100% !important;
+      height: auto !important;
+      min-height: 100% !important;
+      max-height: none !important;
+      overflow-x: hidden !important;
+      overflow-y: auto !important;
       overscroll-behavior-y: auto !important;
+      touch-action: pan-y !important;
+      scroll-behavior: auto !important;
     }
 
-    body.invitation-opened {
+    body.opening-invitation,
+    body.invitation-opened,
+    html.invitation-opened {
       overflow-x: hidden !important;
       overflow-y: auto !important;
       height: auto !important;
@@ -5498,77 +5510,255 @@
       touch-action: pan-y !important;
     }
 
+    #invitationContent,
+    #invitationContent.visible,
     body.invitation-opened #invitationContent,
-    body.invitation-opened .invite-shell,
-    body.invitation-opened .hero,
-    body.invitation-opened .content,
-    body.invitation-opened .combined-card-shell,
-    body.invitation-opened .combined-invite-card {
-      contain: none !important;
-      will-change: auto !important;
-      transform: none !important;
+    .invite-shell,
+    .combined-card-shell,
+    .combined-invite-card {
+      height: auto !important;
       max-height: none !important;
       overflow: visible !important;
+      touch-action: pan-y !important;
     }
 
-    /* Freeze continuous decorative motion after the card opens. The visual stays
-       intact, but the browser no longer repaints dozens of layers on every wheel tick. */
-    body.invitation-opened .invite-shell::before,
-    body.invitation-opened .invite-shell::after,
-    body.invitation-opened .ai-scene,
-    body.invitation-opened .ai-scene *,
-    body.invitation-opened .hero-stage-ring,
-    body.invitation-opened .hero-number-visual,
-    body.invitation-opened .hero-number-visual::before,
-    body.invitation-opened .hero-tech-card,
-    body.invitation-opened .hero-tech-card::before,
-    body.invitation-opened .hero-tech-card::after,
-    body.invitation-opened .combined-chevron,
-    body.invitation-opened .rsvp-button::after,
-    body.invitation-opened .confirm-button,
-    body.invitation-opened .decline-button,
-    body.invitation-opened .button-tech-icon::after {
-      animation: none !important;
-      animation-play-state: paused !important;
+    .tech-intro.opened,
+    .transition-portal:not(.active) {
+      display: none !important;
+      pointer-events: none !important;
+    }
+  
+    /* EMAIL INVITATION LOOKUP */
+    .email-lookup-trigger {
+      position: relative;
+      z-index: 3;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin: 14px auto 0;
+      padding: 10px 14px;
+      border: 0;
+      background: transparent;
+      color: #78cfff;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      cursor: pointer;
     }
 
-    /* Remove expensive live blur layers from the scrolling document. */
-    body.invitation-opened .content,
-    body.invitation-opened .combined-card-shell,
-    body.invitation-opened .combined-invite-card,
-    body.invitation-opened .combined-story,
-    body.invitation-opened .combined-details,
-    body.invitation-opened .hero-tech-card,
-    body.invitation-opened .event-card,
-    body.invitation-opened .dresscode,
-    body.invitation-opened .value-item,
-    body.invitation-opened .brand {
-      backdrop-filter: none !important;
-      -webkit-backdrop-filter: none !important;
-      filter: none !important;
+    .email-lookup-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 11000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: rgba(1, 7, 18, .94);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity .2s ease, visibility .2s ease;
     }
 
-    /* Disable pointer-parallax transforms that compete with trackpad/wheel input. */
-    body.invitation-opened .ai-scene,
-    body.invitation-opened .hero-number-wrap,
-    body.invitation-opened .ai-chip,
-    body.invitation-opened .hero-tech-card {
-      transform: none !important;
-      transition: none !important;
+    .email-lookup-overlay.active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
     }
 
-    /* During active wheel/trackpad movement, reduce painting even further. */
-    body.wheel-scrolling .invite-shell::before,
-    body.wheel-scrolling .invite-shell::after,
-    body.wheel-scrolling .ai-scene,
-    body.wheel-scrolling .hero::after {
-      visibility: hidden !important;
+    .email-lookup-card {
+      position: relative;
+      width: min(100%, 460px);
+      padding: 28px 24px 24px;
+      border: 1px solid rgba(75, 189, 255, .42);
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at top right, rgba(242, 101, 34, .14), transparent 34%),
+        linear-gradient(160deg, #0b2445 0%, #071526 52%, #050d19 100%);
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,.04) inset,
+        0 0 34px rgba(38,159,255,.18),
+        0 24px 70px rgba(0,0,0,.55);
     }
 
-    body.wheel-scrolling .combined-invite-card,
-    body.wheel-scrolling .combined-story,
-    body.wheel-scrolling .combined-details {
-      box-shadow: none !important;
+    .email-lookup-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 36px;
+      height: 36px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 50%;
+      background: rgba(255,255,255,.04);
+      color: #d8e9f7;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .email-lookup-eyebrow {
+      margin: 0;
+      color: #6bcaff;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+    }
+
+    .email-lookup-card h3 {
+      margin: 10px 0 0;
+      color: #fff;
+      font-size: 24px;
+      line-height: 1.25;
+    }
+
+    .email-lookup-copy {
+      margin: 12px 0 0;
+      color: #b9c9d9;
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .email-lookup-label {
+      display: block;
+      margin-top: 20px;
+      color: #d9ebf8;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .email-lookup-input {
+      width: 100%;
+      min-height: 52px;
+      margin-top: 8px;
+      padding: 0 15px;
+      border: 1px solid rgba(96, 197, 255, .34);
+      border-radius: 14px;
+      outline: 0;
+      background: rgba(1, 12, 29, .82);
+      color: #fff;
+      font-size: 16px;
+    }
+
+    .email-lookup-input:focus {
+      border-color: #64cbff;
+      box-shadow: 0 0 0 3px rgba(38,159,255,.1);
+    }
+
+    .email-lookup-submit {
+      width: 100%;
+      min-height: 54px;
+      margin-top: 14px;
+      border: 1px solid #4cc9ff;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #1264ac, #073c79);
+      color: #eaf9ff;
+      font-weight: 700;
+      letter-spacing: .05em;
+      cursor: pointer;
+      box-shadow: 0 0 24px rgba(38,159,255,.2);
+    }
+
+    .email-lookup-submit:disabled {
+      cursor: wait;
+      opacity: .68;
+    }
+
+    .email-lookup-status {
+      min-height: 20px;
+      margin: 12px 0 0;
+      color: #9fb4c7;
+      font-size: 12px;
+      line-height: 1.55;
+      text-align: center;
+    }
+
+    .email-lookup-preview {
+      display: none;
+      margin-top: 16px;
+      padding: 15px;
+      border: 1px solid rgba(62, 185, 255, .22);
+      border-radius: 14px;
+      background: rgba(38,159,255,.06);
+    }
+
+    .email-lookup-preview.active {
+      display: block;
+    }
+
+    .email-lookup-preview strong {
+      display: block;
+      color: #fff;
+      font-size: 16px;
+    }
+
+    .email-lookup-preview span {
+      display: block;
+      margin-top: 5px;
+      color: #a9bfd3;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .email-lookup-open {
+      width: 100%;
+      min-height: 50px;
+      margin-top: 12px;
+      border: 1px solid #ff8b43;
+      border-radius: 13px;
+      background: linear-gradient(135deg, #a84714, #5b260f);
+      color: #fff0e5;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    @media (max-width: 560px) {
+      .email-lookup-card {
+        padding: 26px 18px 20px;
+        border-radius: 20px;
+      }
+    }
+
+  
+
+    /* DEDICATED /lookup PAGE */
+    body.lookup-page {
+      min-height: 100dvh !important;
+      overflow: hidden !important;
+      background:
+        radial-gradient(circle at 50% 34%, rgba(38,159,255,.24), transparent 30%),
+        radial-gradient(circle at 82% 18%, rgba(242,101,34,.15), transparent 25%),
+        linear-gradient(160deg, #01050f 0%, #041633 54%, #020813 100%) !important;
+    }
+
+    body.lookup-page #techIntro,
+    body.lookup-page #invitationContent,
+    body.lookup-page #transitionPortal {
+      display: none !important;
+    }
+
+    body.lookup-page .email-lookup-overlay {
+      opacity: 1 !important;
+      visibility: visible !important;
+      pointer-events: auto !important;
+      background:
+        radial-gradient(circle at 50% 42%, rgba(38,159,255,.16), transparent 34%),
+        rgba(1,7,18,.72) !important;
+    }
+
+    body.lookup-page .email-lookup-card {
+      animation: lookupDedicatedEnter .55s cubic-bezier(.2,.85,.2,1) both;
+    }
+
+    body.lookup-page #closeEmailLookup {
+      display: none !important;
+    }
+
+    @keyframes lookupDedicatedEnter {
+      from { opacity: 0; transform: translateY(18px) scale(.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
   </style>
@@ -5998,6 +6188,45 @@
   </div>
 
 
+
+  <div id="emailLookupOverlay" class="email-lookup-overlay" aria-hidden="true">
+    <div class="email-lookup-card" role="dialog" aria-modal="true" aria-labelledby="emailLookupTitle">
+      <button id="closeEmailLookup" class="email-lookup-close" type="button" aria-label="Đóng">×</button>
+
+      <p class="email-lookup-eyebrow">Ahamove 11 Years</p>
+      <h3 id="emailLookupTitle">Tra cứu thư mời</h3>
+      <p class="email-lookup-copy">
+        Nhập email Ahamove đã có trong danh sách khách mời để mở đúng thư mời cá nhân và xác nhận tham dự.
+      </p>
+
+      <form id="emailLookupForm" novalidate>
+        <label class="email-lookup-label" for="emailLookupInput">Email Ahamove</label>
+        <input
+          id="emailLookupInput"
+          class="email-lookup-input"
+          type="email"
+          inputmode="email"
+          autocomplete="email"
+          placeholder="name@ahamove.com"
+          required
+        >
+        <button id="emailLookupSubmit" class="email-lookup-submit" type="submit">
+          TRA CỨU THƯ MỜI
+        </button>
+      </form>
+
+      <p id="emailLookupStatus" class="email-lookup-status" aria-live="polite"></p>
+
+      <div id="emailLookupPreview" class="email-lookup-preview">
+        <strong id="emailLookupName">Ahamover</strong>
+        <span id="emailLookupMeta"></span>
+        <button id="emailLookupOpen" class="email-lookup-open" type="button">
+          MỞ THƯ MỜI CÁ NHÂN
+        </button>
+      </div>
+    </div>
+  </div>
+
   <div id="transitionPortal" class="transition-portal" aria-hidden="true">
     <div class="portal-ring"></div>
     <div class="portal-core"></div>
@@ -6006,18 +6235,166 @@
   </div>
 
   <script>
+    const normalizedPath = window.location.pathname.replace(/\/+$/, '') || '/';
+    const isDedicatedLookupPage = normalizedPath.toLowerCase() === '/lookup';
+
     function getTokenFromUrl() {
       const pathMatch = window.location.pathname.match(/^\/i\/([^/?#]+)/i);
       const params = new URLSearchParams(window.location.search);
       return String(pathMatch?.[1] || params.get('token') || '').trim();
     }
 
-    const invitationToken = getTokenFromUrl();
+    if (isDedicatedLookupPage) {
+      document.body.classList.add('lookup-page');
+    }
+
+    let invitationToken = getTokenFromUrl();
     let currentStatus = '';
     let currentEvent = null;
 
     const techIntro = document.getElementById('techIntro');
     const invitationContent = document.getElementById('invitationContent');
+
+    const emailLookupOverlay = document.getElementById('emailLookupOverlay');
+    const openEmailLookupButton = document.getElementById('openEmailLookup');
+    const closeEmailLookupButton = document.getElementById('closeEmailLookup');
+    const emailLookupForm = document.getElementById('emailLookupForm');
+    const emailLookupInput = document.getElementById('emailLookupInput');
+    const emailLookupSubmit = document.getElementById('emailLookupSubmit');
+    const emailLookupStatus = document.getElementById('emailLookupStatus');
+    const emailLookupPreview = document.getElementById('emailLookupPreview');
+    const emailLookupName = document.getElementById('emailLookupName');
+    const emailLookupMeta = document.getElementById('emailLookupMeta');
+    const emailLookupOpen = document.getElementById('emailLookupOpen');
+
+    let lookupToken = '';
+
+    function openEmailLookup() {
+      emailLookupOverlay.classList.add('active');
+      emailLookupOverlay.setAttribute('aria-hidden', 'false');
+      emailLookupStatus.textContent = '';
+      window.setTimeout(() => emailLookupInput.focus(), 120);
+    }
+
+    function closeEmailLookup() {
+      if (isDedicatedLookupPage) return;
+      emailLookupOverlay.classList.remove('active');
+      emailLookupOverlay.setAttribute('aria-hidden', 'true');
+    }
+
+    function normalizeLookupResult(result) {
+      const invitation = result?.invitation || result?.data || result || {};
+      return {
+        success: Boolean(result?.success),
+        token: String(invitation.token || result?.token || '').trim(),
+        name: String(invitation.name || result?.name || 'Ahamover').trim(),
+        dept: String(invitation.dept || result?.dept || '').trim(),
+        location: String(invitation.location || invitation.site || result?.location || result?.site || '').trim(),
+        status: String(invitation.status || invitation.rsvp || result?.status || result?.rsvp || '').trim(),
+        message: String(result?.message || '').trim()
+      };
+    }
+
+    async function lookupInvitationByEmail(email) {
+      const normalizedEmail = String(email || '').trim().toLowerCase();
+
+      if (!normalizedEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
+        throw new Error('Vui lòng nhập email hợp lệ.');
+      }
+
+      /*
+       * Backend contract:
+       * GET /api/invitation?email=name@ahamove.com
+       * Response:
+       * {
+       *   success: true,
+       *   invitation: { token, name, dept, location, status }
+       * }
+       */
+      const response = await fetch(
+        '/api/invitation?email=' + encodeURIComponent(normalizedEmail),
+        {
+          method: 'GET',
+          headers: { 'Accept': 'application/json' },
+          cache: 'no-store'
+        }
+      );
+
+      let result;
+      try {
+        result = await response.json();
+      } catch (_) {
+        throw new Error('Hệ thống trả về dữ liệu không hợp lệ.');
+      }
+
+      const normalized = normalizeLookupResult(result);
+
+      if (!response.ok || !normalized.success || !normalized.token) {
+        throw new Error(
+          normalized.message ||
+          'Email này chưa có trong danh sách khách mời. Vui lòng kiểm tra lại.'
+        );
+      }
+
+      return normalized;
+    }
+
+    openEmailLookupButton?.addEventListener('click', openEmailLookup);
+    closeEmailLookupButton?.addEventListener('click', closeEmailLookup);
+
+    emailLookupOverlay?.addEventListener('click', event => {
+      if (!isDedicatedLookupPage && event.target === emailLookupOverlay) closeEmailLookup();
+    });
+
+    document.addEventListener('keydown', event => {
+      if (
+        !isDedicatedLookupPage &&
+        event.key === 'Escape' &&
+        emailLookupOverlay?.classList.contains('active')
+      ) {
+        closeEmailLookup();
+      }
+    });
+
+    emailLookupForm?.addEventListener('submit', async event => {
+      event.preventDefault();
+
+      lookupToken = '';
+      emailLookupPreview.classList.remove('active');
+      emailLookupStatus.textContent = 'Đang tra cứu thông tin...';
+      emailLookupStatus.style.color = '#9fd4ff';
+      emailLookupSubmit.disabled = true;
+
+      try {
+        const result = await lookupInvitationByEmail(emailLookupInput.value);
+
+        lookupToken = result.token;
+        emailLookupName.textContent = result.name || 'Ahamover';
+
+        const meta = [result.dept, result.location, result.status]
+          .filter(Boolean)
+          .join(' • ');
+
+        emailLookupMeta.textContent =
+          meta || 'Đã tìm thấy thư mời cá nhân của bạn.';
+
+        emailLookupPreview.classList.add('active');
+        emailLookupStatus.textContent = 'Đã tìm thấy thông tin thư mời.';
+        emailLookupStatus.style.color = '#6ee7b7';
+      } catch (error) {
+        emailLookupStatus.textContent =
+          error.message || 'Không thể tra cứu thư mời. Vui lòng thử lại.';
+        emailLookupStatus.style.color = '#ff9d9d';
+      } finally {
+        emailLookupSubmit.disabled = false;
+      }
+    });
+
+    emailLookupOpen?.addEventListener('click', () => {
+      if (!lookupToken) return;
+      window.location.assign('/i/' + encodeURIComponent(lookupToken));
+    });
+
 
     /* SINGLE HIGH-TECH INTRO TRANSITION — one handler only */
     let introIsOpening = false;
@@ -6073,6 +6450,11 @@
       body.classList.remove('invitation-opened');
       body.classList.add('opening-invitation');
 
+      // Do not lock the document scroll. The fixed intro already covers the page,
+      // while keeping native wheel/touch scrolling available avoids frozen states.
+      root.style.overflowY = 'auto';
+      body.style.overflowY = 'auto';
+
       invitationContent.hidden = false;
       invitationContent.setAttribute('aria-hidden', 'false');
       invitationContent.classList.remove('visible');
@@ -6111,8 +6493,21 @@
 
         body.classList.remove('opening-invitation');
         body.classList.add('invitation-opened');
+        root.classList.add('invitation-opened');
         unlockInvitationScroll();
-        window.scrollTo(0, 0);
+
+        // Remove any stale inline scroll locks left by older cached builds.
+        root.style.position = '';
+        body.style.position = '';
+        root.style.top = '';
+        body.style.top = '';
+        root.style.overflow = '';
+        body.style.overflow = '';
+        root.style.overflowX = 'hidden';
+        body.style.overflowX = 'hidden';
+        root.style.overflowY = 'auto';
+        body.style.overflowY = 'auto';
+        window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
 
         // Release compositor memory after the motion is complete.
         invitationContent.style.willChange = 'auto';
@@ -6133,6 +6528,13 @@
 
     techIntro?.addEventListener('click', openInvitationSmoothly);
 
+    // Desktop wheel safety: never let a stale overlay or body lock freeze the letter.
+    window.addEventListener('wheel', () => {
+      if (document.body.classList.contains('invitation-opened')) {
+        document.documentElement.style.overflowY = 'auto';
+        document.body.style.overflowY = 'auto';
+      }
+    }, { passive: true });
 
     techIntro?.addEventListener('keydown', event => {
       if (event.key === 'Enter' || event.key === ' ') {
@@ -6276,12 +6678,15 @@ function setLoadingState() {
 
       if (!invitationToken) {
         nameElement.textContent = 'Ahamover';
-        responseStatus.textContent = 'Đường dẫn thư mời không hợp lệ hoặc thiếu token.';
-        responseStatus.style.color = '#ff9d9d';
-        confirmButton.disabled = false;
-        declineButton.disabled = false;
+        responseStatus.textContent =
+          'Bạn chưa mở bằng đường dẫn cá nhân. Hãy tra cứu thư mời bằng email Ahamove.';
+        responseStatus.style.color = '#9fd4ff';
+        confirmButton.disabled = true;
+        declineButton.disabled = true;
         confirmButton.dataset.unavailable = 'true';
         declineButton.dataset.unavailable = 'true';
+
+        window.setTimeout(openEmailLookup, 350);
         return;
       }
 
@@ -6313,12 +6718,17 @@ function setLoadingState() {
       } catch (error) {
         nameElement.textContent = 'Ahamover';
         responseStatus.textContent =
-          error.message || 'Không thể tải thông tin thư mời.';
+          'Đường dẫn thư mời không hợp lệ hoặc đã hết hạn. Vui lòng tra cứu lại bằng email Ahamove.';
         responseStatus.style.color = '#ff9d9d';
-        confirmButton.disabled = false;
-        declineButton.disabled = false;
+        confirmButton.disabled = true;
+        declineButton.disabled = true;
         confirmButton.dataset.unavailable = 'true';
         declineButton.dataset.unavailable = 'true';
+
+        emailLookupStatus.textContent =
+          error.message || 'Không tìm thấy thư mời từ đường dẫn này.';
+        emailLookupStatus.style.color = '#ff9d9d';
+        window.setTimeout(openEmailLookup, 350);
       }
     }
 
@@ -6510,7 +6920,13 @@ function setLoadingState() {
 
       hero.addEventListener('pointerleave', resetHeroParallax);
     }
-loadInvitation();
+if (isDedicatedLookupPage) {
+      emailLookupOverlay.classList.add('active');
+      emailLookupOverlay.setAttribute('aria-hidden', 'false');
+      window.setTimeout(() => emailLookupInput?.focus(), 180);
+    } else {
+      loadInvitation();
+    }
   
 
   </script>
@@ -6518,56 +6934,5 @@ loadInvitation();
 <script>
 (()=>{const t=matchMedia('(hover: none), (pointer: coarse)').matches,n=matchMedia('(max-width: 720px)').matches;document.documentElement.classList.toggle('is-touch-device',t);document.documentElement.classList.toggle('is-mobile-layout',n);const s=()=>document.documentElement.style.setProperty('--app-vh',`${innerHeight*.01}px`);s();addEventListener('resize',s,{passive:true});addEventListener('orientationchange',s,{passive:true});if(t)document.querySelectorAll('[data-parallax],.parallax-layer').forEach(e=>e.style.transform='')})();
 </script>
-
-<script>
-(() => {
-  let wheelIdleTimer = 0;
-
-  const ensureNativeScroll = () => {
-    const root = document.documentElement;
-    const body = document.body;
-
-    root.style.scrollBehavior = 'auto';
-    root.style.overflowX = 'hidden';
-    root.style.overflowY = 'auto';
-    root.style.height = 'auto';
-    root.style.maxHeight = 'none';
-
-    body.style.scrollBehavior = 'auto';
-    body.style.overflowX = 'hidden';
-    body.style.overflowY = 'auto';
-    body.style.height = 'auto';
-    body.style.maxHeight = 'none';
-    body.style.position = 'static';
-    body.style.top = 'auto';
-  };
-
-  window.addEventListener('wheel', () => {
-    if (!document.body.classList.contains('invitation-opened')) return;
-
-    ensureNativeScroll();
-    document.body.classList.add('wheel-scrolling');
-    window.clearTimeout(wheelIdleTimer);
-    wheelIdleTimer = window.setTimeout(() => {
-      document.body.classList.remove('wheel-scrolling');
-    }, 140);
-  }, { passive: true });
-
-  window.addEventListener('scroll', () => {
-    if (document.body.classList.contains('invitation-opened')) {
-      ensureNativeScroll();
-    }
-  }, { passive: true });
-
-  const observer = new MutationObserver(() => {
-    if (document.body.classList.contains('invitation-opened')) {
-      ensureNativeScroll();
-    }
-  });
-
-  observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
-})();
-</script>
-
 </body>
 </html>
