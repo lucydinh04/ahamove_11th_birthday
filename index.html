@@ -7239,6 +7239,164 @@
       }
     }
 
+  
+    /* =========================================================
+       SCROLL PERFORMANCE OPTIMIZATION
+       - Reduce repaint-heavy effects
+       - Improve mobile scrolling smoothness
+       - Preserve the overall visual style
+       ========================================================= */
+
+    html {
+      scroll-behavior: auto !important;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      overscroll-behavior-y: auto;
+      touch-action: pan-y;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .invite-shell,
+    .hero,
+    .combined-card-shell,
+    .combined-invite-card {
+      transform: translateZ(0);
+      backface-visibility: hidden;
+    }
+
+    .hero {
+      background-attachment: scroll !important;
+      contain: layout paint;
+    }
+
+    .combined-card-shell {
+      contain: layout style;
+    }
+
+    .combined-invite-card {
+      contain: layout paint;
+    }
+
+    /* Avoid keeping too many elements on permanent GPU layers */
+    .hero-number-image,
+    .campaign-title-tech,
+    .theme-birthday-cake,
+    .theme-birthday-hat {
+      will-change: auto !important;
+    }
+
+    /* Reduce expensive glow repaint without changing the design language */
+    .hero-number-image {
+      filter:
+        drop-shadow(0 0 9px rgba(255,255,255,.20))
+        drop-shadow(-5px 0 12px rgba(242,101,34,.24))
+        drop-shadow(5px 5px 15px rgba(38,159,255,.28)) !important;
+    }
+
+    .theme-birthday-cake,
+    .theme-birthday-hat {
+      filter:
+        drop-shadow(0 0 7px rgba(37,183,255,.20))
+        drop-shadow(0 0 5px rgba(255,119,43,.10)) !important;
+    }
+
+    .combined-invite-card,
+    .hero-tech-card,
+    .combined-story,
+    .combined-story-item,
+    .combined-details,
+    .email-lookup-card {
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+
+    /* Pause decorative animation when browser/user requests less motion */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    @media (max-width: 600px) {
+      /* Hide nonessential animated decoration on mobile */
+      .digital-firework,
+      .holo-ribbon,
+      .birthday-tech-layer,
+      .anniversary-reactor,
+      .reactor-ring,
+      .reactor-node,
+      .floating-cube,
+      .data-stream,
+      .particle,
+      .spark,
+      .light-streak {
+        display: none !important;
+      }
+
+      .theme-birthday-cake,
+      .theme-birthday-hat {
+        animation: none !important;
+      }
+
+      .hero,
+      .invite-shell {
+        background-attachment: scroll !important;
+      }
+
+      .hero {
+        contain: layout paint;
+      }
+
+      .combined-invite-card {
+        box-shadow:
+          0 12px 28px rgba(0,0,0,.26),
+          inset 0 0 20px rgba(15,83,158,.04) !important;
+      }
+
+      .brand,
+      .combined-theme-pill,
+      .rsvp-button,
+      .email-lookup-card {
+        box-shadow: none !important;
+      }
+
+      .confirm-button,
+      .decline-button {
+        transition:
+          transform .16s ease,
+          opacity .16s ease !important;
+      }
+
+      .confirm-button:active,
+      .decline-button:active,
+      .email-lookup-submit:active,
+      .email-lookup-open:active {
+        transform: scale(.985) !important;
+      }
+
+      /* Prevent horizontal overflow and browser relayout */
+      .invite-shell,
+      .hero,
+      .combined-card-shell,
+      .combined-invite-card,
+      .combined-story,
+      .combined-details {
+        max-width: 100% !important;
+        overflow-x: clip !important;
+      }
+
+      img {
+        content-visibility: auto;
+      }
+    }
+
   </style>
 </head>
 
@@ -8514,5 +8672,28 @@ if (isDedicatedLookupPage) {
 <script>
 (()=>{const t=matchMedia('(hover: none), (pointer: coarse)').matches,n=matchMedia('(max-width: 720px)').matches;document.documentElement.classList.toggle('is-touch-device',t);document.documentElement.classList.toggle('is-mobile-layout',n);const s=()=>document.documentElement.style.setProperty('--app-vh',`${innerHeight*.01}px`);s();addEventListener('resize',s,{passive:true});addEventListener('orientationchange',s,{passive:true});if(t)document.querySelectorAll('[data-parallax],.parallax-layer').forEach(e=>e.style.transform='')})();
 </script>
+
+  <script>
+    // Mobile scroll performance: keep touch and wheel listeners passive.
+    (() => {
+      const passiveEvents = ['touchstart', 'touchmove', 'wheel'];
+      const originalAddEventListener = EventTarget.prototype.addEventListener;
+
+      EventTarget.prototype.addEventListener = function(type, listener, options) {
+        if (passiveEvents.includes(type)) {
+          if (options === undefined) {
+            options = { passive: true };
+          } else if (typeof options === 'boolean') {
+            options = { capture: options, passive: true };
+          } else if (options && typeof options === 'object') {
+            options = { ...options, passive: options.passive ?? true };
+          }
+        }
+
+        return originalAddEventListener.call(this, type, listener, options);
+      };
+    })();
+  </script>
+
 </body>
 </html>
