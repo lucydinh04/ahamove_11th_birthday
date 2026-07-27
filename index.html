@@ -8615,6 +8615,145 @@
       }
     }
 
+
+    /* FINAL SHARE CARD REFERENCE LAYOUT */
+    .share-card-brand-row {
+      display: flex;
+      min-height: 68px;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+    }
+
+    .share-card-brand-row .share-card-logo {
+      min-width: 0 !important;
+      min-height: 0 !important;
+      padding: 0 !important;
+      border: 0 !important;
+      border-radius: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+    }
+
+    .share-card-brand-row .share-card-logo img {
+      width: 178px;
+      max-height: 46px;
+      object-fit: contain;
+    }
+
+    .share-card-brand-divider {
+      width: 1px;
+      height: 50px;
+      background: linear-gradient(180deg, transparent, rgba(182,231,255,.94), transparent);
+      box-shadow: 0 0 10px rgba(38,159,255,.28);
+    }
+
+    .share-card-11-logo {
+      width: 86px;
+      height: 70px;
+      object-fit: contain;
+      filter:
+        drop-shadow(0 0 7px rgba(255,255,255,.16))
+        drop-shadow(-4px 0 10px rgba(242,101,34,.22))
+        drop-shadow(4px 4px 12px rgba(38,159,255,.28));
+    }
+
+    .share-card-number,
+    .share-card-years,
+    .share-card-caption {
+      display: none !important;
+    }
+
+    .share-card-theme {
+      margin-top: 24px !important;
+      font-size: clamp(30px, 8vw, 44px) !important;
+      line-height: 1.01 !important;
+    }
+
+    .share-card-photo-frame {
+      width: 212px !important;
+      height: 212px !important;
+      margin: 26px auto 0 !important;
+      border-width: 3px !important;
+      box-shadow:
+        0 0 0 8px rgba(38,159,255,.06),
+        0 0 36px rgba(38,159,255,.32),
+        10px 10px 0 rgba(242,101,34,.11) !important;
+    }
+
+    .employee-share-card h3 {
+      margin-top: 24px !important;
+      font-size: clamp(24px, 6.8vw, 34px) !important;
+    }
+
+    .share-card-department {
+      margin-top: 7px !important;
+      font-size: 12px !important;
+    }
+
+    .share-card-divider {
+      margin: 18px auto 0 !important;
+    }
+
+    .share-card-event {
+      margin-top: 18px !important;
+      font-size: 13px !important;
+    }
+
+    .share-card-venue {
+      margin-top: 10px !important;
+      color: #e1f3ff !important;
+      font-size: 15px !important;
+      font-weight: 700 !important;
+      line-height: 1.45 !important;
+    }
+
+    .share-card-hashtag {
+      position: static !important;
+      margin-top: 12px !important;
+      font-size: 9px !important;
+    }
+
+    @media (max-width: 420px) {
+      .share-card-brand-row {
+        min-height: 58px;
+        gap: 12px;
+      }
+
+      .share-card-brand-row .share-card-logo img {
+        width: 144px;
+        max-height: 38px;
+      }
+
+      .share-card-brand-divider {
+        height: 40px;
+      }
+
+      .share-card-11-logo {
+        width: 68px;
+        height: 56px;
+      }
+
+      .share-card-theme {
+        margin-top: 18px !important;
+        font-size: clamp(28px, 8.8vw, 38px) !important;
+      }
+
+      .share-card-photo-frame {
+        width: 178px !important;
+        height: 178px !important;
+        margin-top: 20px !important;
+      }
+
+      .employee-share-card h3 {
+        margin-top: 20px !important;
+      }
+
+      .share-card-venue {
+        font-size: 14px !important;
+      }
+    }
+
 </style>
 </head>
 
@@ -9026,10 +9165,18 @@
         <div class="share-card-glow share-card-glow-blue" aria-hidden="true"></div>
         <div class="share-card-glow share-card-glow-orange" aria-hidden="true"></div>
 
-        <div class="share-card-logo"><img src="/ahamove-logo.svg" alt="Ahamove" crossorigin="anonymous"></div>
+        <div class="share-card-brand-row">
+          <div class="share-card-logo">
+            <img src="/ahamove-logo.svg" alt="Ahamove" crossorigin="anonymous">
+          </div>
+          <div class="share-card-brand-divider" aria-hidden="true"></div>
+          <img class="share-card-11-logo" src="/11_3D.png" alt="11 năm" crossorigin="anonymous">
+        </div>
 
-        <div class="share-card-number">11</div>
-        <div class="share-card-years">YEARS</div>
+        <div class="share-card-theme">
+          <span>CHUYỂN MÌNH</span>
+          <strong>BỨT PHÁ</strong>
+        </div>
 
         <div id="shareCardPhotoFrame" class="share-card-photo-frame">
           <div id="shareCardPhotoPlaceholder" class="share-card-photo-placeholder">
@@ -9039,13 +9186,7 @@
           <img id="shareCardPhoto" class="share-card-photo" alt="Ảnh cá nhân">
         </div>
 
-        <div class="share-card-theme">
-          <span>CHUYỂN MÌNH</span>
-          <strong>BỨT PHÁ</strong>
-        </div>
-
         <div class="share-card-divider"></div>
-
         <h3 id="shareCardName">Ahamover</h3>
         <p id="shareCardDepartment" class="share-card-department"></p>
 
@@ -9901,45 +10042,58 @@ function setLoadingState() {
 
       ctx.textAlign = 'center';
 
-      roundedRectPath(ctx, 380, 88, 320, 78, 39);
-      ctx.fillStyle = 'rgba(6,31,68,.88)';
-      ctx.fill();
-      ctx.strokeStyle = 'rgba(85,198,255,.62)';
-      ctx.lineWidth = 2;
-      ctx.stroke();
-
       try {
-        const logoImage = await loadImageSource('/ahamove-logo.svg');
-        const logoRatio = logoImage.width / logoImage.height;
-        const logoHeight = 42;
-        const logoWidth = Math.min(240, logoHeight * logoRatio);
+        const brandLogo = await loadImageSource('/ahamove-logo.svg');
+        const anniversaryLogo = await loadImageSource('/11_3D.png');
+
+        const brandHeight = 56;
+        const brandWidth = Math.min(
+          330,
+          brandHeight * (brandLogo.width / brandLogo.height)
+        );
+        const anniversaryHeight = 92;
+        const anniversaryWidth = Math.min(
+          150,
+          anniversaryHeight * (anniversaryLogo.width / anniversaryLogo.height)
+        );
+
+        const totalWidth = brandWidth + 48 + anniversaryWidth;
+        const startX = 540 - totalWidth / 2;
+
+        ctx.drawImage(brandLogo, startX, 108, brandWidth, brandHeight);
+
+        const dividerX = startX + brandWidth + 24;
+        const dividerGradient = ctx.createLinearGradient(dividerX, 102, dividerX, 176);
+        dividerGradient.addColorStop(0, 'rgba(160,225,255,0)');
+        dividerGradient.addColorStop(.5, 'rgba(160,225,255,.95)');
+        dividerGradient.addColorStop(1, 'rgba(160,225,255,0)');
+        ctx.fillStyle = dividerGradient;
+        ctx.fillRect(dividerX, 102, 2, 74);
+
         ctx.drawImage(
-          logoImage,
-          540 - logoWidth / 2,
-          127 - logoHeight / 2,
-          logoWidth,
-          logoHeight
+          anniversaryLogo,
+          startX + brandWidth + 48,
+          90,
+          anniversaryWidth,
+          anniversaryHeight
         );
       } catch (error) {
         ctx.fillStyle = '#ffffff';
         ctx.font = '800 30px Lexend, Arial, sans-serif';
-        ctx.fillText('AHAMOVE', 540, 137);
+        ctx.fillText('AHAMOVE 11 YEARS', 540, 140);
       }
 
-      ctx.shadowColor = 'rgba(38,159,255,.75)';
-      ctx.shadowBlur = 30;
-      ctx.fillStyle = '#ffffff';
-      ctx.font = '800 260px Lexend, Arial, sans-serif';
-      ctx.fillText('11', 540, 410);
-      ctx.shadowBlur = 0;
+      ctx.fillStyle = '#ff8b43';
+      ctx.font = '800 82px Lexend, Arial, sans-serif';
+      ctx.fillText('CHUYỂN MÌNH', 540, 325);
 
-      ctx.fillStyle = '#bde8ff';
-      ctx.font = '700 24px Lexend, Arial, sans-serif';
-      ctx.fillText('Y E A R S', 540, 455);
+      ctx.fillStyle = '#59c6ff';
+      ctx.font = '800 92px Lexend, Arial, sans-serif';
+      ctx.fillText('BỨT PHÁ', 540, 415);
 
-      const photoX = 430;
-      const photoY = 485;
-      const photoSize = 220;
+      const photoSize = 400;
+      const photoX = 540 - photoSize / 2;
+      const photoY = 475;
 
       ctx.save();
       ctx.beginPath();
@@ -9956,66 +10110,61 @@ function setLoadingState() {
           ctx.fillRect(photoX, photoY, photoSize, photoSize);
         }
       } else {
-        const photoGradient = ctx.createRadialGradient(540, 550, 20, 540, 595, 140);
+        const photoGradient = ctx.createRadialGradient(
+          540,
+          photoY + 140,
+          20,
+          540,
+          photoY + 200,
+          250
+        );
         photoGradient.addColorStop(0, 'rgba(52,175,255,.26)');
         photoGradient.addColorStop(1, 'rgba(2,13,31,.96)');
         ctx.fillStyle = photoGradient;
         ctx.fillRect(photoX, photoY, photoSize, photoSize);
 
         ctx.fillStyle = '#a8ddff';
-        ctx.font = '300 70px Lexend, Arial, sans-serif';
-        ctx.fillText('+', 540, 605);
+        ctx.font = '300 110px Lexend, Arial, sans-serif';
+        ctx.fillText('+', 540, photoY + 235);
       }
       ctx.restore();
 
       ctx.beginPath();
-      ctx.arc(540, photoY + photoSize / 2, photoSize / 2 + 3, 0, Math.PI * 2);
-      ctx.strokeStyle = 'rgba(94,205,255,.88)';
-      ctx.lineWidth = 6;
+      ctx.arc(540, photoY + photoSize / 2, photoSize / 2 + 5, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(94,205,255,.92)';
+      ctx.lineWidth = 10;
       ctx.stroke();
-
-      ctx.fillStyle = '#ff8b43';
-      ctx.font = '800 76px Lexend, Arial, sans-serif';
-      ctx.fillText('CHUYỂN MÌNH', 540, 790);
-
-      ctx.fillStyle = '#59c6ff';
-      ctx.font = '800 86px Lexend, Arial, sans-serif';
-      ctx.fillText('BỨT PHÁ', 540, 872);
-
-      const lineGradient = ctx.createLinearGradient(420, 0, 660, 0);
-      lineGradient.addColorStop(0, '#269fff');
-      lineGradient.addColorStop(1, '#f26522');
-      ctx.fillStyle = lineGradient;
-      ctx.fillRect(430, 914, 220, 4);
-
-      ctx.fillStyle = '#9fc4de';
-      ctx.font = '700 22px Lexend, Arial, sans-serif';
-      ctx.fillText('TÔI SẼ CÓ MẶT TẠI', 540, 970);
 
       const employeeName =
         document.getElementById('shareCardName').textContent.trim() ||
         'Ahamover';
 
-      const nameSize = fitCanvasText(ctx, employeeName, 860, 64, 38);
+      const nameSize = fitCanvasText(ctx, employeeName, 850, 66, 40);
       ctx.fillStyle = '#ffffff';
       ctx.font = `700 ${nameSize}px Lexend, Arial, sans-serif`;
-      ctx.fillText(employeeName, 540, 1045);
+      ctx.fillText(employeeName, 540, 970);
 
       const department =
         document.getElementById('shareCardDepartment').textContent.trim();
 
       if (department) {
         ctx.fillStyle = '#ff9c5b';
-        ctx.font = '500 25px Lexend, Arial, sans-serif';
-        ctx.fillText(department.slice(0, 58), 540, 1092);
+        ctx.font = '500 28px Lexend, Arial, sans-serif';
+        ctx.fillText(department.slice(0, 58), 540, 1018);
       }
 
+      const lineGradient = ctx.createLinearGradient(430, 0, 650, 0);
+      lineGradient.addColorStop(0, '#269fff');
+      lineGradient.addColorStop(1, '#f26522');
+      ctx.fillStyle = lineGradient;
+      ctx.fillRect(430, 1050, 220, 4);
+
       ctx.fillStyle = '#dff4ff';
-      ctx.font = '700 31px Lexend, Arial, sans-serif';
+      ctx.font = '700 32px Lexend, Arial, sans-serif';
       ctx.fillText(
         `${currentEvent?.eventDate || '--/--/----'}  •  ${currentEvent?.eventTime || '--:--'}`,
         540,
-        1160
+        1120
       );
 
       const venue =
@@ -10024,17 +10173,17 @@ function setLoadingState() {
           .join(' • ') ||
         'Địa điểm sẽ được cập nhật';
 
-      const venueSize = fitCanvasText(ctx, venue, 860, 34, 24);
-      ctx.fillStyle = '#a8bdd0';
-      ctx.font = `500 ${venueSize}px Lexend, Arial, sans-serif`;
-      ctx.fillText(venue, 540, 1210);
+      const venueSize = fitCanvasText(ctx, venue, 880, 38, 26);
+      ctx.fillStyle = '#e1f3ff';
+      ctx.font = `700 ${venueSize}px Lexend, Arial, sans-serif`;
+      ctx.fillText(venue, 540, 1185);
 
       ctx.fillStyle = '#68caff';
-      ctx.font = '600 23px Lexend, Arial, sans-serif';
+      ctx.font = '600 24px Lexend, Arial, sans-serif';
       ctx.fillText(
         '#Ahamove11Years   #ChuyenMinhButPha',
         540,
-        1280
+        1275
       );
 
       return canvas;
