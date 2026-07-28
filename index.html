@@ -11802,10 +11802,8 @@ function setLoadingState() {
 
       ctx.textAlign = 'center';
 
-      ctx.fillStyle = 'rgba(244,250,255,.92)';
-      ctx.font = '800 28px Lexend, Arial, sans-serif';
-      ctx.fillText('AHAMOVE 11TH BIRTHDAY', 540, 68);
-
+      // Header order matches preview: brand logo row on top, then "AHAMOVE 11TH BIRTHDAY"
+      let headerTextY = 172;
       try {
         const brandLogo = await loadImageSource('/ahamove-logo.svg');
         const anniversaryLogo = await loadImageSource('/11_3D.png');
@@ -11823,31 +11821,35 @@ function setLoadingState() {
 
         const totalWidth = brandWidth + 42 + anniversaryWidth;
         const startX = 540 - totalWidth / 2;
+        const rowTop = 44;
 
-        ctx.drawImage(brandLogo, startX, 102, brandWidth, brandHeight);
+        ctx.drawImage(brandLogo, startX, rowTop + (anniversaryHeight - brandHeight) / 2, brandWidth, brandHeight);
 
         const dividerX = startX + brandWidth + 21;
         const dividerGradient = ctx.createLinearGradient(
-          dividerX, 98, dividerX, 162
+          dividerX, rowTop, dividerX, rowTop + anniversaryHeight
         );
         dividerGradient.addColorStop(0, 'rgba(220,244,255,0)');
         dividerGradient.addColorStop(.5, 'rgba(220,244,255,.82)');
         dividerGradient.addColorStop(1, 'rgba(220,244,255,0)');
         ctx.fillStyle = dividerGradient;
-        ctx.fillRect(dividerX, 98, 2, 64);
+        ctx.fillRect(dividerX, rowTop + 6, 2, anniversaryHeight - 12);
 
         ctx.drawImage(
           anniversaryLogo,
           startX + brandWidth + 42,
-          88,
+          rowTop,
           anniversaryWidth,
           anniversaryHeight
         );
       } catch (error) {
-        ctx.fillStyle = '#ffffff';
-        ctx.font = '800 30px Lexend, Arial, sans-serif';
-        ctx.fillText('AHAMOVE 11 YEARS', 540, 138);
+        headerTextY = 96; // no logos: keep title near top
       }
+
+      ctx.textAlign = 'center';
+      ctx.fillStyle = 'rgba(244,250,255,.92)';
+      ctx.font = '800 28px Lexend, Arial, sans-serif';
+      ctx.fillText('AHAMOVE 11TH BIRTHDAY', 540, headerTextY);
 
       ctx.fillStyle = '#ff7a2d';
       ctx.font = '900 82px Lexend, Arial, sans-serif';
