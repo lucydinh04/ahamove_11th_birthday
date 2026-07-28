@@ -11792,6 +11792,14 @@ function setLoadingState() {
       ctx.fillStyle = overlay;
       ctx.fillRect(0, 0, 1080, 1350);
 
+      /* balance + fill top/bottom spacing of exported card (uniform scale keeps photo circle round) */
+      const CARD_TOP_SRC = 40, CARD_TOP_DST = 56, CARD_BOT_SRC = 1207, CARD_BOT_DST = 1294;
+      const CARD_SC = (CARD_BOT_DST - CARD_TOP_DST) / (CARD_BOT_SRC - CARD_TOP_SRC);
+      ctx.save();
+      ctx.translate(540, CARD_TOP_DST);
+      ctx.scale(CARD_SC, CARD_SC);
+      ctx.translate(-540, -CARD_TOP_SRC);
+
       ctx.textAlign = 'center';
 
       ctx.fillStyle = 'rgba(244,250,255,.92)';
@@ -12016,6 +12024,7 @@ function setLoadingState() {
         1248
       );
 
+      ctx.restore();
       return canvas;
     }
 
