@@ -13199,6 +13199,7 @@ var qrcode = function() {
 </script>
 <style id="checkin-qr-style">
 .checkin-qr{margin:18px auto 2px;display:flex;flex-direction:column;align-items:center;gap:7px}
+.checkin-qr[hidden]{display:none!important}
 .checkin-qr-img{width:168px;height:168px;image-rendering:pixelated;background:#fff;padding:8px;border-radius:14px;box-shadow:0 0 0 1px rgba(89,198,255,.35),0 8px 26px rgba(0,0,0,.4)}
 .checkin-qr-cap{margin:0;font-family:'Lexend',sans-serif;font-weight:700;letter-spacing:.06em;font-size:13px;color:#eaf4ff}
 .checkin-qr-id{margin:0;font-size:12.5px;color:#9fd4ff}
@@ -14805,15 +14806,15 @@ window.addEventListener('load',()=>{
   /* === FIX: share-card preview shows full content, scales to fit (no clipping) === */
   .share-card-overlay{align-items:flex-start!important;overflow-y:auto!important;}
   .share-card-overlay .share-card-popup{max-height:none!important;overflow:visible!important;}
-  .share-card-preview-column{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:flex-start!important;min-width:0;}
+  .share-card-preview-column{display:flex!important;flex-direction:column!important;align-items:flex-start!important;justify-content:flex-start!important;min-width:0;overflow:hidden!important;}
   .share-card-preview-column .employee-share-card{
     width:var(--sc-w,720px)!important;
     aspect-ratio:auto!important;
     height:auto!important;
     max-height:none!important;
-    transform:scale(var(--sc-fit,1))!important;
-    transform-origin:top center!important;
-    margin:0 auto var(--sc-mb,0px)!important;
+    transform:translateX(var(--sc-tx,0px)) scale(var(--sc-fit,1))!important;
+    transform-origin:top left!important;
+    margin:0 0 var(--sc-mb,0px) 0!important;
   }
 </style>
 <script id="sharecard-fit-js">
@@ -14824,13 +14825,17 @@ window.addEventListener('load',()=>{
     var REF=720;
     card.style.setProperty('--sc-w',REF+'px');
     card.style.setProperty('--sc-fit','1');
+    card.style.setProperty('--sc-tx','0px');
     card.style.setProperty('--sc-mb','0px');
     var availW=col.clientWidth||REF;
     var nat=card.offsetHeight;                 // natural height at REF width (unaffected by transform)
     var availH=(window.innerHeight||800)-32;
     var scale=Math.min(1, availW/REF, availH/nat);
     if(!isFinite(scale)||scale<=0) scale=1;
+    var scaledW=REF*scale;
+    var tx=Math.max(0, (availW-scaledW)/2);    // center horizontally (origin is top-left)
     card.style.setProperty('--sc-fit',String(scale));
+    card.style.setProperty('--sc-tx', tx+'px');
     card.style.setProperty('--sc-mb', (-(1-scale)*nat)+'px');
   }
   function schedule(){ requestAnimationFrame(function(){ setTimeout(fit,60); }); }
