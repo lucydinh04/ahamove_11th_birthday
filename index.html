@@ -14919,5 +14919,24 @@ window.addEventListener('load',()=>{
 })();
 </script>
 
+<style id="title-and-reveal-tweaks">
+  /* Mobile: giảm cỡ chữ CHUYỂN MÌNH / BỨT PHÁ để không sát viền khung */
+  @media (max-width:560px){
+    .campaign-title-tech{width:100%!important;padding-left:22px!important;padding-right:22px!important;box-sizing:border-box!important}
+    .campaign-title-orange,.campaign-title-blue{font-size:clamp(28px,7.6vw,42px)!important;letter-spacing:-.02em!important;line-height:1.04!important;white-space:normal!important}
+  }
+  @media (max-width:380px){
+    .campaign-title-orange,.campaign-title-blue{font-size:clamp(24px,7vw,32px)!important}
+  }
+  /* Bỏ hiệu ứng "đi lên" khi mở thư mời -> chỉ fade nhẹ, không trượt lên */
+  .invitation-content.visible{
+    animation:invContentFadeIn .5s ease both!important;
+    transform:none!important;
+    filter:none!important;
+    clip-path:none!important;
+  }
+  @keyframes invContentFadeIn{from{opacity:0}to{opacity:1}}
+</style>
+
 </body>
 </html>
