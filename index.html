@@ -15023,5 +15023,22 @@ window.addEventListener('load',()=>{
   }
 </style>
 
+<style id="mobile-hero-liveliness">
+  /* Mobile: animation nhẹ (chỉ transform -> chạy trên GPU, không giật) cho logo 11 + tiêu đề.
+     Vẫn tự tạm dừng khi cuộn nhờ cơ chế .is-scrolling. */
+  @media (max-width:560px){
+    @keyframes mobLogoFloat{0%,100%{transform:translateY(0) scale(1.02)}50%{transform:translateY(-9px) scale(1.05)}}
+    @keyframes mobTitleFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+    /* dùng longhand (không set animation-play-state) để cơ chế tạm dừng khi cuộn vẫn hoạt động */
+    .hero .hero-number-image{animation-name:mobLogoFloat!important;animation-duration:3.6s!important;animation-timing-function:ease-in-out!important;animation-iteration-count:infinite!important;will-change:transform;backface-visibility:hidden}
+    .hero .campaign-title-orange{animation-name:mobTitleFloat!important;animation-duration:4.4s!important;animation-timing-function:ease-in-out!important;animation-iteration-count:infinite!important;will-change:transform}
+    .hero .campaign-title-blue{animation-name:mobTitleFloat!important;animation-duration:4.4s!important;animation-timing-function:ease-in-out!important;animation-iteration-count:infinite!important;animation-delay:.55s!important;will-change:transform}
+    /* đảm bảo dừng khi cuộn (đặc thù cao hơn rule animation ở trên) */
+    html.is-scrolling .hero .hero-number-image,
+    html.is-scrolling .hero .campaign-title-orange,
+    html.is-scrolling .hero .campaign-title-blue{animation-play-state:paused!important}
+  }
+</style>
+
 </body>
 </html>
