@@ -14929,6 +14929,13 @@ window.addEventListener('load',()=>{
     .hero-number-visual{animation:none!important}
     .hero-number-visual::before{display:none!important}
     .hero::before{display:none!important}
+    /* ƯU TIÊN CUỘN MƯỢT: ẩn các lớp trang trí động nặng (pháo hoa, ruy-băng, mạng neural,
+       tia sáng, khối bay...) + tắt mọi animation hero + bỏ layer GPU để giảm vẽ lại khi cuộn */
+    .birthday-tech-layer,.ai-scene{display:none!important}
+    .hero *,.hero *::before,.hero *::after{animation:none!important}
+    .anniversary-reactor{display:none!important;will-change:auto!important;transform:none!important}
+    .combined-chevron{animation:none!important}
+    .birthday-tech-layer,.anniversary-reactor{will-change:auto!important}
   }
   @media (max-width:380px){
     .campaign-title-tech{margin-top:-26px!important}
