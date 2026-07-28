@@ -14946,5 +14946,25 @@ window.addEventListener('load',()=>{
   .intro-title span{display:block;line-height:1.12;margin:0}
 </style>
 
+<style id="scroll-pause">
+  /* Tạm dừng mọi animation trong lúc đang cuộn -> cuộn mượt, không giật.
+     Khi ngừng cuộn ~150ms, animation chạy lại bình thường. */
+  html.is-scrolling *,
+  html.is-scrolling *::before,
+  html.is-scrolling *::after{animation-play-state:paused!important}
+</style>
+<script id="scroll-pause-js">
+(function(){
+  var root=document.documentElement, timer=null;
+  function onScroll(){
+    if(!root.classList.contains('is-scrolling')) root.classList.add('is-scrolling');
+    if(timer) clearTimeout(timer);
+    timer=setTimeout(function(){ root.classList.remove('is-scrolling'); }, 160);
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('touchmove', onScroll, {passive:true});
+})();
+</script>
+
 </body>
 </html>
