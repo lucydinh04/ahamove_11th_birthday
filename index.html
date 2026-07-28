@@ -33,7 +33,7 @@
 
     * { box-sizing: border-box; }
 
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: auto; }
 
     body {
       margin: 0;
@@ -14881,8 +14881,9 @@ window.addEventListener('load',()=>{
 </style>
 
 <style id="perf-optimizations">
-  html{overflow-x:hidden}
-  body{overflow-x:hidden;-webkit-tap-highlight-color:transparent}
+  /* KHÔNG đặt overflow-x:hidden trên html (làm mất cuộn native mượt trên mobile).
+     Horizontal overflow đã được xử lý ở các phần tử con + body{overflow:hidden}. */
+  body{-webkit-tap-highlight-color:transparent}
   /* MAIN SCROLL FIX: remove backdrop-filter from always-visible content.
      Re-blurring the background behind these on every scroll frame is the biggest
      jank source (laptop + phone). Their backgrounds are already near-opaque, so
@@ -14946,6 +14947,10 @@ window.addEventListener('load',()=>{
     animation:invRiseUp .72s cubic-bezier(.22,.78,.2,1) both!important;
     filter:none!important;
     clip-path:none!important;
+    /* QUAN TRỌNG cho scroll mượt: bỏ lớp filter/will-change toàn trang sau khi hiện xong.
+       will-change:filter trên cả trang khiến trình duyệt xử lý filter mỗi frame khi cuộn -> lag (cả mobile & laptop). */
+    will-change:auto!important;
+    backface-visibility:visible!important;
   }
   @keyframes invRiseUp{from{opacity:0;transform:translateY(46px)}to{opacity:1;transform:translateY(0)}}
   /* Gate: "CHẠM ĐỂ MỞ" / "THƯ MỜI" 2 dòng, sát nhau (không dùng <br> để tránh dòng trống) */
