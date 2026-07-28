@@ -14925,6 +14925,11 @@ window.addEventListener('load',()=>{
     .campaign-title-tech{width:100%!important;margin-top:-44px!important;margin-bottom:18px!important;padding-left:22px!important;padding-right:22px!important;box-sizing:border-box!important}
     .combined-card-shell{margin-top:24px!important}
     .campaign-title-orange,.campaign-title-blue{font-size:clamp(28px,7.6vw,42px)!important;letter-spacing:-.02em!important;line-height:1.04!important;white-space:normal!important}
+    /* Mobile: bỏ hiệu ứng logo "11" (float + hào quang) và bỏ vòng tròn galaxy dưới nền */
+    .hero-stage-ring{display:none!important}
+    .hero-number-visual{animation:none!important}
+    .hero-number-visual::before{display:none!important}
+    .hero::before{display:none!important}
   }
   @media (max-width:380px){
     .campaign-title-tech{margin-top:-26px!important}
