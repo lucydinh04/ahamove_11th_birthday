@@ -11793,7 +11793,7 @@ function setLoadingState() {
       ctx.fillRect(0, 0, 1080, 1350);
 
       /* balance + fill top/bottom spacing of exported card (uniform scale keeps photo circle round) */
-      const CARD_TOP_SRC = 40, CARD_TOP_DST = 56, CARD_BOT_SRC = 1207, CARD_BOT_DST = 1294;
+      const CARD_TOP_SRC = 24, CARD_TOP_DST = 52, CARD_BOT_SRC = 1207, CARD_BOT_DST = 1298;
       const CARD_SC = (CARD_BOT_DST - CARD_TOP_DST) / (CARD_BOT_SRC - CARD_TOP_SRC);
       ctx.save();
       ctx.translate(540, CARD_TOP_DST);
@@ -11803,7 +11803,7 @@ function setLoadingState() {
       ctx.textAlign = 'center';
 
       // Header order matches preview: brand logo row on top, then "AHAMOVE 11TH BIRTHDAY"
-      let headerTextY = 172;
+      let headerTextY = 138;
       try {
         const brandLogo = await loadImageSource('/ahamove-logo.svg');
         const anniversaryLogo = await loadImageSource('/11_3D.png');
@@ -11821,7 +11821,7 @@ function setLoadingState() {
 
         const totalWidth = brandWidth + 42 + anniversaryWidth;
         const startX = 540 - totalWidth / 2;
-        const rowTop = 44;
+        const rowTop = 24;
 
         ctx.drawImage(brandLogo, startX, rowTop + (anniversaryHeight - brandHeight) / 2, brandWidth, brandHeight);
 
@@ -11990,7 +11990,7 @@ function setLoadingState() {
       ctx.fillText('DRESSCODE', labelX, 1192);
 
       ctx.font = '800 22px Lexend, Arial, sans-serif';
-      let dresscodeX = valueX;
+      let dresscodeX = valueX + 8; // align dot's left edge with the value column above
       const dresscodeY = 1192;
 
       const drawDresscodeDot = (x, color, stroke = 'rgba(255,255,255,.45)') => {
