@@ -4790,7 +4790,7 @@
       min-height: 100%;
       overflow-x: hidden;
       overflow-y: auto;
-      scroll-behavior: smooth;
+      scroll-behavior: auto; /* native/tức thì -> cuộn chuột laptop không bị "trôi" chậm */
     }
 
     body {
@@ -13732,7 +13732,8 @@ var qrcode = function() {
 
     // Desktop wheel safety: never let a stale overlay or body lock freeze the letter.
     window.addEventListener('wheel', () => {
-      if (document.body.classList.contains('invitation-opened')) {
+      if (document.body.classList.contains('invitation-opened') &&
+          document.documentElement.style.overflowY !== 'auto') {
         document.documentElement.style.overflowY = 'auto';
         document.body.style.overflowY = 'auto';
       }
