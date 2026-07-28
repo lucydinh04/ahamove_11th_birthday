@@ -10864,7 +10864,7 @@
 <p class="combined-detail-label">Hạn chót đăng ký</p>
 <p class="combined-detail-value">
 <span class="theme-orange">12:00</span>
-<span> | 29/07/2026</span>
+<span> | 31/07/2026</span>
 </p>
 </div>
 </div>
@@ -12483,6 +12483,28 @@ window.addEventListener('load',()=>{
   setTimeout(fit,450);
 })();
 </script>
+
+
+<style id="mobile-thumoi-polish">
+@media (max-width:560px){
+  /* THƯ MỜI card + event details — mobile polish */
+  /* Easier-to-tap map link (min 40px touch target) */
+  .combined-map-link{min-height:40px!important;padding:9px 2px 6px!important;align-items:center!important;margin-top:2px!important}
+  /* Keep DRESSCODE on one line for more phones (tighter separators/dots) */
+  .dresscode-palette{gap:4px 6px!important;flex-wrap:wrap!important}
+  .dresscode-separator{margin:0 1px!important;font-size:9px!important}
+  .dresscode-choice{gap:5px!important;font-size:12px!important;white-space:nowrap!important}
+  .dresscode-dot{width:7px!important;height:7px!important;flex-basis:7px!important}
+  /* Comfortable, slightly tighter vertical rhythm to reduce scroll */
+  .combined-detail-item{padding:14px 13px!important}
+  .combined-detail-value{line-height:1.32!important}
+}
+@media (max-width:360px){
+  /* very small phones: shrink dresscode a touch so TRẮNG•BẠC•XANH DƯƠNG still fits one line */
+  .dresscode-choice{font-size:11px!important;letter-spacing:0!important}
+  .dresscode-palette{gap:3px 5px!important}
+}
+</style>
 
 </body>
 </html>
