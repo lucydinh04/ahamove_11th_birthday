@@ -10608,7 +10608,7 @@
 </div>
 <div class="intro-copy">
 <p class="intro-eyebrow">AHAMOVE 11 YEARS</p>
-<h2 class="intro-title"><span>CHẠM ĐỂ MỞ</span><br><span>THƯ MỜI</span></h2>
+<h2 class="intro-title"><span>CHẠM ĐỂ MỞ</span><span>THƯ MỜI</span></h2>
 <p class="intro-hint">Một hành trình chuyển mình đang chờ bạn</p>
 </div>
 </div>
@@ -14937,13 +14937,9 @@ window.addEventListener('load',()=>{
     clip-path:none!important;
   }
   @keyframes invRiseUp{from{opacity:0;transform:translateY(46px)}to{opacity:1;transform:translateY(0)}}
-  /* Gate: tách "CHẠM ĐỂ MỞ" / "THƯ MỜI" thành 2 dòng cho thoáng */
-  .intro-title span{display:block;line-height:1.18}
-  /* Mobile scroll mượt hơn: tắt animation trang trí chạy liên tục trong hero (giữ hình tĩnh) */
-  @media (max-width:560px){
-    .hero *,.hero *::before,.hero *::after{animation:none!important}
-    .combined-chevron{animation:none!important}
-  }
+  /* Gate: "CHẠM ĐỂ MỞ" / "THƯ MỜI" 2 dòng, sát nhau (không dùng <br> để tránh dòng trống) */
+  .intro-title{line-height:1.12!important}
+  .intro-title span{display:block;line-height:1.12;margin:0}
 </style>
 
 </body>
