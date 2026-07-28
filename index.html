@@ -14995,19 +14995,29 @@ window.addEventListener('load',()=>{
 <style id="scroll-unlock-guarantee">
   /* BẢO ĐẢM CUỘN: sau khi mở thư mời, ép trang luôn cuộn được (không kẹt),
      bất kể rule/JS nào khác. Chỉ áp dụng khi đã mở (.invitation-opened / .visible). */
-  html.invitation-opened, body.invitation-opened{
+  /* Chỉ 1 vùng cuộn duy nhất = viewport (html). Body KHÔNG cuộn riêng -> cuộn liền mạch,
+     thanh cuộn native chạy hết màn hình, không có khung cuộn con. */
+  html.invitation-opened{
     overflow-x:hidden!important;
     overflow-y:auto!important;
     height:auto!important;
-    min-height:100%!important;
     max-height:none!important;
     position:static!important;
     touch-action:pan-y!important;
     -webkit-overflow-scrolling:auto!important;
   }
+  body.invitation-opened{
+    overflow-x:hidden!important;  /* cắt tràn ngang + tránh vùng cuộn thừa, nhưng KHÔNG tự cuộn (body cao bằng nội dung) */
+    overflow-y:hidden!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    position:static!important;
+  }
   .invitation-content.visible{
     position:relative!important;
     height:auto!important;
+    min-height:0!important;
     max-height:none!important;
     overflow:visible!important;
   }
