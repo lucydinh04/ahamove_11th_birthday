@@ -10608,7 +10608,7 @@
 </div>
 <div class="intro-copy">
 <p class="intro-eyebrow">AHAMOVE 11 YEARS</p>
-<h2 class="intro-title">CHẠM ĐỂ MỞ THƯ MỜI</h2>
+<h2 class="intro-title"><span>CHẠM ĐỂ MỞ</span><br><span>THƯ MỜI</span></h2>
 <p class="intro-hint">Một hành trình chuyển mình đang chờ bạn</p>
 </div>
 </div>
@@ -14920,22 +14920,30 @@ window.addEventListener('load',()=>{
 </script>
 
 <style id="title-and-reveal-tweaks">
-  /* Mobile: giảm cỡ chữ CHUYỂN MÌNH / BỨT PHÁ để không sát viền khung */
+  /* Mobile: chữ CHUYỂN MÌNH / BỨT PHÁ vừa khung + đẩy lên gần logo 11 (cách xa khung thư mời) */
   @media (max-width:560px){
-    .campaign-title-tech{width:100%!important;padding-left:22px!important;padding-right:22px!important;box-sizing:border-box!important}
+    .campaign-title-tech{width:100%!important;margin-top:-44px!important;margin-bottom:18px!important;padding-left:22px!important;padding-right:22px!important;box-sizing:border-box!important}
+    .combined-card-shell{margin-top:24px!important}
     .campaign-title-orange,.campaign-title-blue{font-size:clamp(28px,7.6vw,42px)!important;letter-spacing:-.02em!important;line-height:1.04!important;white-space:normal!important}
   }
   @media (max-width:380px){
+    .campaign-title-tech{margin-top:-26px!important}
     .campaign-title-orange,.campaign-title-blue{font-size:clamp(24px,7vw,32px)!important}
   }
-  /* Bỏ hiệu ứng "đi lên" khi mở thư mời -> chỉ fade nhẹ, không trượt lên */
+  /* Hiệu ứng đi lên khi chạm mở thư mời (rise + fade, nhẹ để mượt) */
   .invitation-content.visible{
-    animation:invContentFadeIn .5s ease both!important;
-    transform:none!important;
+    animation:invRiseUp .72s cubic-bezier(.22,.78,.2,1) both!important;
     filter:none!important;
     clip-path:none!important;
   }
-  @keyframes invContentFadeIn{from{opacity:0}to{opacity:1}}
+  @keyframes invRiseUp{from{opacity:0;transform:translateY(46px)}to{opacity:1;transform:translateY(0)}}
+  /* Gate: tách "CHẠM ĐỂ MỞ" / "THƯ MỜI" thành 2 dòng cho thoáng */
+  .intro-title span{display:block;line-height:1.18}
+  /* Mobile scroll mượt hơn: tắt animation trang trí chạy liên tục trong hero (giữ hình tĩnh) */
+  @media (max-width:560px){
+    .hero *,.hero *::before,.hero *::after{animation:none!important}
+    .combined-chevron{animation:none!important}
+  }
 </style>
 
 </body>
