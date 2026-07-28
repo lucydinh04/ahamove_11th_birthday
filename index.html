@@ -10894,6 +10894,26 @@
 </main>
 </div>
 </div>
+<style id="processing-style">
+.processing-popup{background:linear-gradient(180deg,rgba(9,24,48,.96),rgba(4,14,32,.98));border:1px solid rgba(89,198,255,.42);border-radius:22px;padding:40px 42px;text-align:center;max-width:420px;width:calc(100% - 40px);box-shadow:0 24px 70px rgba(0,0,0,.55),0 0 46px rgba(38,159,255,.16)}
+.processing-spinner{width:66px;height:66px;margin:0 auto 24px;position:relative}
+.processing-spinner::before,.processing-spinner::after{content:"";position:absolute;border-radius:50%;border:3px solid transparent}
+.processing-spinner::before{inset:0;border-top-color:#38a8ff;border-right-color:#38a8ff;animation:procSpin .9s linear infinite;box-shadow:0 0 16px rgba(56,168,255,.35)}
+.processing-spinner::after{inset:11px;border-bottom-color:#ff7a2d;border-left-color:#ff7a2d;animation:procSpin 1.25s linear infinite reverse}
+@keyframes procSpin{to{transform:rotate(360deg)}}
+.processing-title{font-family:'Lexend',sans-serif;font-weight:700;letter-spacing:.16em;font-size:15px;color:#eaf4ff;margin:0}
+.processing-text{color:#a9c2e0;font-size:14px;line-height:1.6;margin:10px 0 0}
+.processing-dots::after{display:inline-block;width:1.1em;text-align:left;content:"";animation:procDots 1.4s steps(1,end) infinite}
+@keyframes procDots{0%{content:""}25%{content:"."}50%{content:".."}75%{content:"..."}}
+@media (prefers-reduced-motion:reduce){.processing-spinner::before,.processing-spinner::after{animation-duration:2s}}
+</style>
+<div aria-live="polite" aria-hidden="true" class="overlay processing-overlay" id="processingOverlay">
+<div class="popup processing-popup">
+<div aria-hidden="true" class="processing-spinner"></div>
+<p class="processing-title">ĐANG XÁC NHẬN THÔNG TIN</p>
+<p class="processing-text">Vui lòng chờ trong giây lát<span class="processing-dots"></span><br/>BTC đang ghi nhận phản hồi của bạn.</p>
+</div>
+</div>
 <div aria-live="polite" class="overlay celebration-overlay" id="successOverlay">
 <div aria-hidden="true" class="celebration-particles">
 <i></i><i></i><i></i><i></i><i></i><i></i>
@@ -11396,6 +11416,7 @@
     const declineButton = document.getElementById('declineButton');
     const responseStatus = document.getElementById('responseStatus');
     const successOverlay = document.getElementById('successOverlay');
+    const processingOverlay = document.getElementById('processingOverlay');
     const shareCardOverlay = document.getElementById('shareCardOverlay');
     const closeShareCardButton = document.getElementById('closeShareCard');
     const shareInvitationCardButton = document.getElementById('shareInvitationCard');
@@ -12157,6 +12178,8 @@ function setLoadingState() {
       }
 
       setLoadingState();
+      if (processingOverlay) processingOverlay.classList.add('active');
+      const processingStartedAt = Date.now();
 
       try {
         const response = await fetch('/api/rsvp', {
@@ -12179,6 +12202,12 @@ function setLoadingState() {
             result.message || 'Có lỗi xảy ra khi ghi nhận phản hồi.'
           );
         }
+
+        const processingElapsed = Date.now() - processingStartedAt;
+        if (processingElapsed < 650) {
+          await new Promise(r => setTimeout(r, 650 - processingElapsed));
+        }
+        if (processingOverlay) processingOverlay.classList.remove('active');
 
         currentStatus = normalizeRsvpStatus(
           result.status ||
@@ -12213,6 +12242,7 @@ function setLoadingState() {
 
         restoreButtons();
       } catch (error) {
+        if (processingOverlay) processingOverlay.classList.remove('active');
         restoreButtons();
         responseStatus.textContent =
           error.message || 'Có lỗi xảy ra. Vui lòng thử lại.';
