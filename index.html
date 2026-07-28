@@ -10885,8 +10885,7 @@
 <div class="checkin-qr checkin-qr-card" id="inviteQrCard" hidden>
 <p class="checkin-qr-title">MÃ QR CHECK-IN</p>
 <img alt="Mã QR check-in" class="checkin-qr-img" id="inviteQrImg"/>
-<p class="checkin-qr-id" style="margin-top:9px">ID nhân viên: <span id="inviteQrId"></span></p>
-<p class="checkin-qr-note">Xuất trình mã QR này tại quầy check-in của sự kiện.</p>
+<p class="checkin-qr-note" style="margin-top:11px">Xuất trình mã QR này tại quầy check-in của sự kiện.</p>
 </div>
 </section>
 <div aria-hidden="true" class="combined-chevron">
@@ -13247,7 +13246,6 @@ var qrcode = function() {
 <div class="checkin-qr" id="successQrWrap" hidden>
 <img alt="Mã QR check-in" class="checkin-qr-img" id="successQrImg"/>
 <p class="checkin-qr-cap">Mã QR check-in của bạn</p>
-<p class="checkin-qr-id">ID nhân viên: <span id="successQrId"></span></p>
 </div>
 <div class="popup-detail" id="successEventDetail">Đang tải thông tin sự kiện...</div>
 <button class="close-button" id="closeSuccess" type="button">XEM THIỆP CỦA TÔI</button>
@@ -13857,6 +13855,15 @@ function setLoadingState() {
     }
 
     function renderCheckinQr() {
+      var sw = document.getElementById('successQrWrap');
+      var pc = document.getElementById('inviteQrCard');
+      // Chỉ hiển thị mã QR check-in khi đã XÁC NHẬN THAM DỰ.
+      // Chưa phản hồi hoặc chọn KHÔNG THAM GIA -> luôn ẩn.
+      if (normalizeRsvpStatus(currentStatus) !== 'THAM DỰ') {
+        if (sw) sw.hidden = true;
+        if (pc) pc.hidden = true;
+        return;
+      }
       var id = getCheckinId();
       if (!id) return;
       var url = makeQrDataUrl(id, 6);
@@ -13864,11 +13871,8 @@ function setLoadingState() {
       ['successQrImg', 'inviteQrImg'].forEach(function (k) {
         var el = document.getElementById(k); if (el) el.src = url;
       });
-      ['successQrId', 'inviteQrId'].forEach(function (k) {
-        var el = document.getElementById(k); if (el) el.textContent = id;
-      });
-      var sw = document.getElementById('successQrWrap'); if (sw) sw.hidden = false;
-      var pc = document.getElementById('inviteQrCard'); if (pc) pc.hidden = false;
+      if (sw) sw.hidden = false;
+      if (pc) pc.hidden = false;
     }
 
     function showExistingStatus(status) {
@@ -13887,6 +13891,9 @@ function setLoadingState() {
         declineButton.style.background = 'rgba(255,255,255,.12)';
         responseStatus.textContent = 'BTC đã ghi nhận bạn không thể tham dự.';
         responseStatus.style.color = '#93c5fd';
+        renderCheckinQr();
+      } else {
+        renderCheckinQr();
       }
     }
 
@@ -14582,6 +14589,7 @@ function setLoadingState() {
         } else {
           declineButton.innerHTML =
             '<span class="button-tech-icon">✓</span><span>ĐÃ GHI NHẬN</span>';
+          renderCheckinQr();
           responseStatus.textContent =
             result.message || 'BTC đã ghi nhận bạn không thể tham dự.';
           responseStatus.style.color = '#93c5fd';
