@@ -13492,7 +13492,7 @@ var qrcode = function() {
        * }
        */
       const response = await fetch(
-        '/api/invitation?email=' + encodeURIComponent(normalizedEmail),
+        '/api/invitation?action=lookupbyemail&email=' + encodeURIComponent(normalizedEmail),
         {
           method: 'GET',
           headers: { 'Accept': 'application/json' },
